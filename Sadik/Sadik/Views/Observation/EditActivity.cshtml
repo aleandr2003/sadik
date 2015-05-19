@@ -1,0 +1,73 @@
+﻿@using System.Web.Optimization
+@model Activity
+@{
+    ViewBag.Title = "Редактировать запись";
+}
+@section HEAD{
+       @* <script type="text/javascript" src="@Url.Content("~/Scripts/orm/model.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/orm/observation.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/orm/cameInClass.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/orm/emotion.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/orm/activity.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/orm/itemUsageDetails.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/BaseObservationLogger.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/ActivityLogger.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/CameInClassLogger.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/EmotionLogger.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/ObservationLoggerModule.js")"></script>*@
+    <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
+}
+<h2>Редактировать запись</h2>
+@Html.Partial("LogActivityForm", new LogActivityModel() {
+    Id = Model.Id, 
+    KidId = Model.KidId, 
+    ItemId = Model.ItemId,
+    Comment = Model.Comment,
+    DateObserved = Model.DateObserved,
+    Duration = Model.Duration,
+    Polarization = Model.Polarization,
+    ChoseHimSelf = Model.ChoseHimSelf,
+    Hours = Model.DateObserved.Hour,
+    Minutes = Model.DateObserved.Minute,
+    UniqueId = Model.UniqueId
+})
+
+@Html.ActionLink("Отменить","View","Kids",new {Id = Model.KidId, KindergartenId = ViewBag.KindergartenId}, null)
+<script type="text/javascript">
+    $.validator.setDefaults({ ignore: "" });
+
+    var getPresentationUrl = '@Url.Action("GetPresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+    var updatePresentationUrl = '@Url.Action("UpdatePresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+    var getSkillUrl = '@Url.Action("GetSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+    var updateSkillUrl = '@Url.Action("UpdateSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+    var getItemUsageDetailsUrl = '@Url.Action("GetItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+    var updateItemUsageDetailsUrl = '@Url.Action("UpdateItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+
+    var activityUrl = '@Url.Action("Activity", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+
+    var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
+    var itemsSource = @Html.Action("IndexShortJsonSerialized", "Inventory", new { KindergartenId = ViewBag.KindergartenId });
+
+    var kidId = '@Model.KidId';
+    var itemId = '@Model.ItemId';
+
+    $(function () {
+        var observationLoggerModule = new ObservationLoggerModule({
+            activityLogger: {
+                block:$('.js_logObservationBlock_activity'),
+                saveObservationUrl:activityUrl,
+                getPresentationUrl:getPresentationUrl,
+                updatePresentationUrl:updatePresentationUrl,
+                getSkillUrl:getSkillUrl,
+                updateSkillUrl: updateSkillUrl,
+                getItemUsageDetailsUrl: getItemUsageDetailsUrl,
+                updateItemUsageDetailsUrl:updateItemUsageDetailsUrl
+            },
+            hideUseCurrentTime:true
+        });
+        observationLoggerModule.SetKidsSource(kidsSource);
+        observationLoggerModule.SetItemsSource(itemsSource);
+        observationLoggerModule.SelectKid(kidId);
+        observationLoggerModule.SelectItem(itemId);
+    });
+</script>

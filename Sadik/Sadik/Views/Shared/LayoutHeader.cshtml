@@ -1,0 +1,97 @@
+﻿@{
+    Layout = null;
+}
+<style>
+    .siteNavigator_item_current .siteNavigator_item_link{
+        background-color:aqua;
+    }
+    .siteNavigator_item .siteNavigator_item_link {
+        color:blue;
+    }
+    .siteNavigatorContainer {
+        float:left;
+        margin-right:10px;
+        width:150px;
+    }
+    #upcomingADRContainer {
+        float:left;
+        margin:0 10px;
+    }
+    .clearFloatBoth {
+        clear:both;
+    }
+    .upcomingADRColumn {
+        float:left;
+        margin-right:10px;
+    }
+</style>
+<div class="siteNavigatorContainer">
+<ul class="siteNavigator">
+    @if (ViewBag.currentUser as User != null)
+    {
+        <li class="siteNavigator_item @(ViewBag.SelectedTab == HeaderTabs.MyProfile ? "siteNavigator_item_current" : "")">
+            @Html.ActionLink("Мой Профиль", "View", "User", new { Id = ViewBag.currentUser.Id}, new { @class = "siteNavigator_item_link" })
+        </li>
+        if (((User)ViewBag.currentUser).RoleId == UserRole.Admin)
+        {
+            <li class="siteNavigator_item @(ViewBag.SelectedTab == HeaderTabs.Admin ? "siteNavigator_item_current" : "")">
+                @Html.ActionLink("Пользователи", "Index", "User", null, new { @class = "siteNavigator_item_link" })
+            </li>
+            <li class="siteNavigator_item @(ViewBag.SelectedTab == HeaderTabs.Kindergarten ? "siteNavigator_item_current" : "")">
+                @Html.ActionLink("Садики", "Index", "Kindergarten", null, new { @class = "siteNavigator_item_link" })
+            </li>
+        }
+        if (ViewBag.CanCreateKindergarten == true)
+        {
+            <li class="siteNavigator_item @(ViewBag.SelectedTab == HeaderTabs.Kindergarten ? "siteNavigator_item_current" : "")">
+                @Html.ActionLink("Добавить садик", "Create", "Kindergarten", null, new { @class = "siteNavigator_item_link" })
+            </li>
+        }
+        
+        <li class="siteNavigator_item">
+            <div class="LogOutForm">
+                <form action="@Url.Action("LogOut", "Login", null)" method="post">
+                    <input type="submit" value="выйти"/>
+                </form>
+            </div>
+        </li>
+        
+    }
+    else
+    {
+        <li class="siteNavigator_item @(Request.Url.AbsoluteUri.EndsWith("Login") ? "siteNavigator_item_current" : "")">
+            @Html.ActionLink("Вход", "Index", "Login", null, new { @class = "siteNavigator_item_link" })
+        </li>
+        <li class="siteNavigator_item @(Request.Url.AbsoluteUri.EndsWith("Register") ? "siteNavigator_item_current" : "")">
+            @Html.ActionLink("Регистрация", "Register", "User", null, new { @class = "siteNavigator_item_link" })
+        </li>
+    }
+</ul>
+@if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+{
+    if (ViewBag.KindergartenId != null)
+    {
+        @Html.Action("KindergartenList", "Layout", new { Id = ViewBag.KindergartenId})
+        @Html.Action("KindergartenMenu", "Layout", new { Id = ViewBag.KindergartenId, tab = ViewData["SelectedTab"] == null ? null : (int?)((int)ViewData["SelectedTab"])})
+    }
+    else if (ViewBag.userKindergartenIds != null && ViewBag.userKindergartenIds.Count > 0)
+    {
+        @Html.Action("KindergartenList", "Layout", new { Id = ViewBag.userKindergartenIds[0]})
+        @Html.Action("KindergartenMenu", "Layout", new { Id = ViewBag.userKindergartenIds[0], tab = ViewData["SelectedTab"] == null ? null : (int?)((int)ViewData["SelectedTab"])})
+    }
+}
+</div>
+@if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+{
+    <div id="upcomingADRContainer">
+        @if (ViewBag.KindergartenId != null)
+        {
+            @Html.Action("UpcomingIndex", "ADR", new { KindergartenId = ViewBag.KindergartenId})
+        }
+        else if (ViewBag.userKindergartenIds != null && ViewBag.userKindergartenIds.Count > 0)
+        {
+            @Html.Action("UpcomingIndex", "ADR", new { KindergartenId = ViewBag.userKindergartenIds[0]})
+        }
+    </div>
+}
+<div class="clearFloatBoth"></div>

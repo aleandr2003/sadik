@@ -1,0 +1,38 @@
+﻿@model Inventory
+@{
+    ViewBag.Title = "Редактировать Материал";
+}
+
+<h2>Редактировать Материал</h2>
+@{
+    if (ViewBag.ErrorMessage != null)
+    {
+	    <div id="errorMessage" class="errorMessage">@ViewBag.ErrorMessage</div>
+    }
+    if(Model != null){
+        using (Html.BeginForm("EditItem", "Inventory", new{Id = Model.Id, KindergartenId = Model.KindergartenId}, FormMethod.Post, null))
+        {
+
+            <fieldset>
+                <label for="itemName">Название:</label>
+                <br/>
+		        <input type="text" name="itemName" id="itemName" value="@Model.Name"/>
+
+                <br/>
+                <select name="parentZoneId">
+                    @{
+                        var DropdownItems = (List<ZoneDropdownItem>)ViewBag.ZoneDropdownContent;
+                        foreach (var item in DropdownItems)
+                        {
+                            <option value="@item.Id" @if(item.Id == Model.ParentZoneId){ @Html.Raw("selected")}>@item.Name</option>
+                        }
+                    }
+                </select>
+	        </fieldset>
+	        @Html.SubmitButton(null, "Сохранить")
+            @Html.ActionLink("Отменить", "Index", "Inventory", new { KindergartenId = Model.KindergartenId}, null)
+        }
+    }else{
+        @Html.ActionLink("Отменить", "Index", "Inventory", new { KindergartenId = Model.KindergartenId}, null)
+    }
+}

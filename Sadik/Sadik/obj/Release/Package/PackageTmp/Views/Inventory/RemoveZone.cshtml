@@ -1,0 +1,43 @@
+﻿@model Tuple<IEnumerable<Inventory>, IEnumerable<Zone>, Zone>
+
+@{
+    ViewBag.Title = "Удалить зону";
+}
+
+@if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+{
+    using (Html.BeginForm("RemoveZonePost", "Inventory", new { Id = Model.Item3.Id, KindergartenId = Model.Item3.KindergartenId}, FormMethod.Post, null))
+    {
+        if(Model.Item1.Any() || Model.Item2.Any()){
+            <div id="childElementsContainer">
+                @{
+                    var zoneDisplayName = Model.Item3.ParentZone.ParentZoneId == null ? Zone.globalZoneDisplayName : Model.Item3.ParentZone.Name;
+                    <span>Следующие элементы будут перемещены в зону @zoneDisplayName:</span>
+                }
+                @if(Model.Item1.Any())
+                {
+                    <h3>Материалы:</h3>
+                    <ul id="childItemsList">
+                        @foreach(var item in Model.Item1){
+                            <li>@item.Name</li>
+                        }
+                    </ul>    
+                }
+                @if(Model.Item2.Any())
+                {
+                    <h3>Зоны:</h3>
+                    <ul id="childZonesList">
+                        @foreach (var zone in Model.Item2)
+                        {
+                            <li>@zone.Name</li>
+                        }
+                    </ul>
+                }
+            </div>    
+        }
+        @Html.SubmitButton(null, "Удалить", new { Id = "DeleteZoneButton" })
+
+        @Html.ActionLink("Отменить", "Index", "Inventory",new { KindergartenId = Model.Item3.KindergartenId},null)
+    }
+}
+

@@ -1,0 +1,67 @@
+﻿@model List<ADR>
+@{
+    Layout = null;
+}
+
+<h3>ДТР</h3>
+<table>
+@foreach (var adr in Model)
+{
+    <tr class="ADRRecord">
+        <td>
+            <a href="javascript:void(0)" class="ADRExpandLink">@adr.Date.ToString("dd MMMM yyyy") @(adr.Performed ? "Состоялось":"Запланировано")</a>
+            <div class="ADRDataContainer">
+                <div>Возраст @((ViewBag.Kid as Kid).GetFormattedAge(adr.Date))</div>
+                @if (adr.StartPeriod.HasValue || adr.EndPeriod.HasValue)
+                {
+                    <div>ДТР за период 
+                        @if(adr.StartPeriod.HasValue)
+                        {
+                            <span>с @adr.StartPeriod.Value.ToString("dd MMMM yyyy")</span>
+                        }
+                        @if(adr.EndPeriod.HasValue)
+                        {
+                            <span>по @adr.EndPeriod.Value.ToString("dd MMMM yyyy")</span>
+                        }
+                    </div>
+                }
+                <table class="ADRTable">
+                    <tr>
+                        <th></th><th>Воспитатели</th><th>Родители</th>
+                    </tr>
+                    <tr>
+                        <td>Достижения</td><td class="ADRTeachersCell">@adr.AchievementsTeachers</td><td class="ADRParentsCell">@adr.AchievementsParents</td>
+                    </tr>
+                    <tr>
+                        <td>Трудности</td><td class="ADRTeachersCell">@adr.DifficultiesTeachers</td><td class="ADRParentsCell">@adr.DifficultiesParents</td>
+                    </tr>
+                    <tr>
+                        <td>Рекомендации</td><td class="ADRTeachersCell">@adr.RecommendationsTeachers</td><td class="ADRParentsCell">@adr.RecommendationsParents</td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+
+        @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+        {
+        <td>
+            @using (Html.BeginForm("Delete", "ADR", new { Id = adr.Id, KidId = adr.KidId, KindergartenId = ViewBag.KindergartenId }, FormMethod.Post, null))
+            {
+                @Html.SubmitButton(null, "Удалить")
+            }
+        </td>
+        <td>
+            @Html.ActionLink("Редактировать", "Edit", "ADR", new { Id = adr.Id, KidId = adr.KidId, KindergartenId = ViewBag.KindergartenId }, null)
+        </td>
+        }
+    </tr>
+}
+</table>
+<script type="text/javascript">
+    $(function () {
+        $('.ADRDataContainer').hide();
+        $('.ADRExpandLink').click(function () {
+            $(this).closest('.ADRRecord').find('.ADRDataContainer').toggle();
+        });
+    });
+</script>

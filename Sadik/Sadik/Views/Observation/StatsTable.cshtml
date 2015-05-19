@@ -1,0 +1,195 @@
+﻿@model IList<StatReportLine>
+@{
+    Layout = null;
+}
+<style>
+    .zoneName {
+        font-weight:bold;
+        font-size:larger;
+    }
+    .statCell {
+        border:solid 1px black;
+    }
+    .numCell {
+        font-weight:bold;
+    }
+    .color_XL {
+        background-color: #4f69ee;
+        color:white;
+    }
+    .color_L {
+        background-color: #738aff;
+    }
+    .color_M {
+        background-color: #a2b1ff;
+    }
+    .color_S {
+        background-color: #bdc8ff;
+    }
+    .color_XS {
+        background-color: #dae0ff;
+    }
+    .zoneLine 
+    {
+        background-color:#fad9c2;
+    }
+</style>
+<h3>Краткая статистика</h3>
+<table>
+    <tr>
+        <th>Зона</th><th>Поляр.</th><th>Сам</th><th>@ActivityDuration.Brief.DisplayName()</th><th>@ActivityDuration.Short.DisplayName()</th><th>@ActivityDuration.Long.DisplayName()</th><th>Всего</th>
+    </tr>
+    @foreach (var line in Model.Where(l => l is ZoneStatReportLine && l.ZonePath.Count == 1))
+    {
+        <tr class="zoneLine">
+            @{
+                var zoneStat = (line as ZoneStatReportLine).stat;
+                <td class="statCell"><div class="zoneName">@line.ZonePath[0].Name</div></td>
+                <td class="statCell alignCenter numCell @selectColor(zoneStat.statPolarization ?? 0)">@(zoneStat.statPolarization > 0 ? (zoneStat.statPolarization ?? 0).ToString() :"")</td>
+                <td class="statCell alignCenter numCell @selectColor(zoneStat.statChoseHimSelf ?? 0)">@(zoneStat.statChoseHimSelf > 0 ? (zoneStat.statChoseHimSelf ?? 0).ToString() :"")</td>
+                <td class="statCell alignCenter numCell @selectColor(zoneStat.statBrief ?? 0)">@(zoneStat.statBrief > 0 ? (zoneStat.statBrief ?? 0).ToString() :"")</td>
+                <td class="statCell alignCenter numCell @selectColor(zoneStat.statShort ?? 0)">@(zoneStat.statShort > 0 ? (zoneStat.statShort ?? 0).ToString() :"")</td>
+                <td class="statCell alignCenter numCell @selectColor(zoneStat.statLong ?? 0)">@(zoneStat.statLong > 0 ? (zoneStat.statLong ?? 0).ToString() :"")</td>
+                <td class="statCell alignCenter numCell @selectColor(zoneStat.Total)">
+                    @{
+                        var total = zoneStat.Total;
+                        @(total > 0 ? total.ToString() : "")
+                    }
+                </td>
+                <td class="statCell alignCenter numCell @selectColor(zoneStat.Total)">
+                    @(zoneStat.percentage != null ? String.Format("{0:0.0}%",zoneStat.percentage ?? 0) : "")
+                </td>
+            }
+        </tr>
+    }
+</table>
+<h3>Полная статистика</h3>
+<table>
+    <tr>
+        @{
+            int ZoneTreeDepth = ViewBag.ZoneTreeDepth;
+            for (int i = 0; i < ZoneTreeDepth; i++)
+            {
+                <th>Зона</th>
+            }
+        }
+        <th>Материал</th><th>Навык</th><th>Презентация</th><th>Поляр.</th><th>Сам</th><th>@ActivityDuration.Brief.DisplayName()</th><th>@ActivityDuration.Short.DisplayName()</th><th>@ActivityDuration.Long.DisplayName()</th><th>Всего</th>
+    </tr>
+    @{
+        foreach (var line in Model)
+        {
+            var rowClass = "";
+            if(line is ItemStatReportLine)
+            {
+                rowClass = "itemLine";
+            }
+            else if (line is ZoneStatReportLine)
+            {
+                rowClass = "zoneLine";
+            }
+            <tr class="@rowClass">
+                @for (int j = 0; j < ZoneTreeDepth; j++)
+                {
+                    if (j < line.ZonePath.Count)
+                    {
+                        <td class="statCell"><div class="zoneName">@line.ZonePath[j].Name</div></td>
+                    }
+                    else{
+                        <td class="statCell"></td>
+                    }
+                }
+                @{
+                    if(line is ItemStatReportLine)
+                    {
+                        var itemStat = (line as ItemStatReportLine).stat;
+                        <td class="statCell">@itemStat.ItemName</td>
+                        <td class="statCell @selectSkillColor(itemStat.skillDegree ?? SkillDegree.None)">
+                            @if (itemStat.skillDegree.HasValue){
+                                @itemStat.skillDegree.Value.DisplayName();
+                            }else{
+                                @SkillDegree.None.DisplayName();
+                            }
+                        </td>
+                        <td class="statCell">
+                            @if (itemStat.PresentationDate.HasValue)
+                            {
+                                <span>@itemStat.PresentationDate.Value.ToString("dd MMMM yyyy")</span>
+                            }else{
+                                <span></span>
+                            }
+                        </td>
+                        <td class="statCell alignCenter numCell @selectColor(itemStat.statPolarization ?? 0)">@(itemStat.statPolarization > 0 ? (itemStat.statPolarization ?? 0).ToString() :"")</td>
+                        <td class="statCell alignCenter numCell @selectColor(itemStat.statChoseHimSelf ?? 0)">@(itemStat.statChoseHimSelf > 0 ? (itemStat.statChoseHimSelf ?? 0).ToString() :"")</td>
+                        <td class="statCell alignCenter numCell @selectColor(itemStat.statBrief ?? 0)">@(itemStat.statBrief > 0 ? (itemStat.statBrief ?? 0).ToString() :"")</td>
+                        <td class="statCell alignCenter numCell @selectColor(itemStat.statShort ?? 0)">@(itemStat.statShort > 0 ? (itemStat.statShort ?? 0).ToString() :"")</td>
+                        <td class="statCell alignCenter numCell @selectColor(itemStat.statLong ?? 0)">@(itemStat.statLong > 0 ? (itemStat.statLong ?? 0).ToString() :"")</td>
+                        <td class="statCell alignCenter numCell @selectColor(itemStat.Total)">
+                            @{
+                                var total = itemStat.Total;
+                                @(total > 0 ? total.ToString() : "")
+                            }
+                        </td>
+                    }
+                    else if (line is ZoneStatReportLine)
+                    {
+                        var zoneStat = (line as ZoneStatReportLine).stat;
+                        <td class="statCell"></td>
+                        <td class="statCell"></td>
+                        <td class="statCell"></td>
+                        <td class="statCell alignCenter numCell @selectColor(zoneStat.statPolarization ?? 0)">@(zoneStat.statPolarization > 0 ? (zoneStat.statPolarization ?? 0).ToString() :"")</td>
+                        <td class="statCell alignCenter numCell @selectColor(zoneStat.statChoseHimSelf ?? 0)">@(zoneStat.statChoseHimSelf > 0 ? (zoneStat.statChoseHimSelf ?? 0).ToString() :"")</td>
+                        <td class="statCell alignCenter numCell @selectColor(zoneStat.statBrief ?? 0)">@(zoneStat.statBrief > 0 ? (zoneStat.statBrief ?? 0).ToString() :"")</td>
+                        <td class="statCell alignCenter numCell @selectColor(zoneStat.statShort ?? 0)">@(zoneStat.statShort > 0 ? (zoneStat.statShort ?? 0).ToString() :"")</td>
+                        <td class="statCell alignCenter numCell @selectColor(zoneStat.statLong ?? 0)">@(zoneStat.statLong > 0 ? (zoneStat.statLong ?? 0).ToString() :"")</td>
+                        <td class="statCell alignCenter numCell @selectColor(zoneStat.Total)">
+                            @{
+                                var total = zoneStat.Total;
+                                @(total > 0 ? total.ToString() : "")
+                            }
+                        </td>
+                    }
+                }
+            </tr>
+        }
+    }
+</table>
+
+@helper selectSkillColor(SkillDegree degree){
+    if (degree == SkillDegree.Advanced)
+    {
+        @("color_L")
+    }
+    else if (degree == SkillDegree.UpperIntermediate)
+    {
+        @("color_M")
+    }
+    else if (degree == SkillDegree.Intermediate)
+    {
+        @("color_S")
+    }
+    else if (degree == SkillDegree.Basic)
+    {
+        @("color_XS")
+    }
+}
+
+@helper selectColor(int value){
+    if(value > 50){
+        @("color_XL")
+    }else if(value > 30){
+        @("color_L")
+    }
+    else if (value > 20)
+    {
+        @("color_M")
+    }
+    else if (value > 10)
+    {
+        @("color_S")
+    }
+    else if (value > 5)
+    {
+        @("color_XS")
+    }
+}
+

@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="Хранилище SadikModelsContainer" CdmEntityContainer="SadikEntities">
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="Sadik.Models.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+          <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Inventory">
+      <EntityTypeMapping TypeName="Sadik.Models.Inventory">
+        <MappingFragment StoreEntitySet="Inventory">
+          <ScalarProperty Name="KindergartenId" ColumnName="KindergartenId" />
+          <ScalarProperty Name="ParentZoneId" ColumnName="ParentZoneId" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Kids">
+      <EntityTypeMapping TypeName="Sadik.Models.Kid">
+        <MappingFragment StoreEntitySet="Kids">
+          <ScalarProperty Name="KindergartenId" ColumnName="KindergartenId" />
+          <ScalarProperty Name="IsDismissed" ColumnName="IsDismissed" />
+          <ScalarProperty Name="DateDismissed" ColumnName="DateDismissed" />
+          <ScalarProperty Name="DateAccepted" ColumnName="DateAccepted" />
+          <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+          <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Activities">
+      <EntityTypeMapping TypeName="Sadik.Models.Activity">
+        <MappingFragment StoreEntitySet="Activities">
+          <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
+          <ScalarProperty Name="ChoseHimSelf" ColumnName="ChoseHimSelf" />
+          <ScalarProperty Name="Polarization" ColumnName="Polarization" />
+          <ScalarProperty Name="Duration" ColumnName="Duration" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="DateObserved" ColumnName="DateObserved" />
+          <ScalarProperty Name="TeacherId" ColumnName="TeacherId" />
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="KidId" ColumnName="KidId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Presentations">
+      <EntityTypeMapping TypeName="Sadik.Models.Presentation">
+        <MappingFragment StoreEntitySet="Presentations">
+          <ScalarProperty Name="DatePerformed" ColumnName="DatePerformed" />
+          <ScalarProperty Name="TeacherId" ColumnName="TeacherId" />
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="KidId" ColumnName="KidId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Skills">
+      <EntityTypeMapping TypeName="Sadik.Models.Skill">
+        <MappingFragment StoreEntitySet="Skills">
+          <ScalarProperty Name="Degree" ColumnName="Degree" />
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="KidId" ColumnName="KidId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ActivityStats">
+      <EntityTypeMapping TypeName="Sadik.Models.ActivityStat">
+        <MappingFragment StoreEntitySet="ActivityStats">
+          <ScalarProperty Name="ChoseHimSelf" ColumnName="ChoseHimSelf" />
+          <ScalarProperty Name="Polarization" ColumnName="Polarization" />
+          <ScalarProperty Name="Long" ColumnName="Long" />
+          <ScalarProperty Name="Short" ColumnName="Short" />
+          <ScalarProperty Name="Brief" ColumnName="Brief" />
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="KidId" ColumnName="KidId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="UpdateKidActivityStats" FunctionName="Хранилище Sadik.Models.UpdateKidActivityStats" />
+    <EntitySetMapping Name="Zones">
+      <EntityTypeMapping TypeName="Sadik.Models.Zone">
+        <MappingFragment StoreEntitySet="Zones">
+          <ScalarProperty Name="KindergartenId" ColumnName="KindergartenId" />
+          <ScalarProperty Name="ParentZoneId" ColumnName="ParentZoneId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ADRs">
+      <EntityTypeMapping TypeName="Sadik.Models.ADR">
+        <MappingFragment StoreEntitySet="ADR">
+          <ScalarProperty Name="EndPeriod" ColumnName="EndPeriod" />
+          <ScalarProperty Name="StartPeriod" ColumnName="StartPeriod" />
+          <ScalarProperty Name="Performed" ColumnName="Performed" />
+          <ScalarProperty Name="RecommendationsParents" ColumnName="RecommendationsParents" />
+          <ScalarProperty Name="RecommendationsTeachers" ColumnName="RecommendationsTeachers" />
+          <ScalarProperty Name="DifficultiesParents" ColumnName="DifficultiesParents" />
+          <ScalarProperty Name="DifficultiesTeachers" ColumnName="DifficultiesTeachers" />
+          <ScalarProperty Name="AchievementsParents" ColumnName="AchievementsParents" />
+          <ScalarProperty Name="AchievementsTeachers" ColumnName="AchievementsTeachers" />
+          <ScalarProperty Name="KidId" ColumnName="KidId" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CameInClasses">
+      <EntityTypeMapping TypeName="Sadik.Models.CameInClass">
+        <MappingFragment StoreEntitySet="CameInClass">
+          <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="TeacherId" ColumnName="TeacherId" />
+          <ScalarProperty Name="DateTimeCameInClass" ColumnName="DateTimeCameInClass" />
+          <ScalarProperty Name="KidId" ColumnName="KidId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmotionObservations">
+      <EntityTypeMapping TypeName="Sadik.Models.EmotionObservation">
+        <MappingFragment StoreEntitySet="EmotionObservations">
+          <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
+          <ScalarProperty Name="Emotion" ColumnName="Emotion" />
+          <ScalarProperty Name="DateObserved" ColumnName="DateObserved" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="TeacherId" ColumnName="TeacherId" />
+          <ScalarProperty Name="KidId" ColumnName="KidId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="CalculateKidActivityStats" FunctionName="Хранилище Sadik.Models.CalculateKidActivityStats">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="Sadik.Models.CalculateKidActivityStats_Result">
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="KidId" ColumnName="KidId" />
+          <ScalarProperty Name="Brief" ColumnName="Brief" />
+          <ScalarProperty Name="Short" ColumnName="Short" />
+          <ScalarProperty Name="Long" ColumnName="Long" />
+          <ScalarProperty Name="Polarization" ColumnName="Polarization" />
+          <ScalarProperty Name="ChoseHimSelf" ColumnName="ChoseHimSelf" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="Kindergartens">
+      <EntityTypeMapping TypeName="Sadik.Models.Kindergarten">
+        <MappingFragment StoreEntitySet="Kindergarten">
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TemplateInventories">
+      <EntityTypeMapping TypeName="Sadik.Models.TemplateInventory">
+        <MappingFragment StoreEntitySet="TemplateInventory">
+          <ScalarProperty Name="ParentZoneId" ColumnName="ParentZoneId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TemplateZones">
+      <EntityTypeMapping TypeName="Sadik.Models.TemplateZone">
+        <MappingFragment StoreEntitySet="TemplateZones">
+          <ScalarProperty Name="ParentZoneId" ColumnName="ParentZoneId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserKindergartens">
+      <EntityTypeMapping TypeName="Sadik.Models.UserKindergarten">
+        <MappingFragment StoreEntitySet="UserKindergarten">
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+          <ScalarProperty Name="KindergartenId" ColumnName="KindergartenId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Cities">
+      <EntityTypeMapping TypeName="Sadik.Models.Cities">
+        <MappingFragment StoreEntitySet="Cities">
+          <ScalarProperty Name="IsSearched" ColumnName="IsSearched" />
+          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+          <ScalarProperty Name="Population" ColumnName="Population" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FutureCustomers">
+      <EntityTypeMapping TypeName="Sadik.Models.FutureCustomer">
+        <MappingFragment StoreEntitySet="FutureCustomers">
+          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+          <ScalarProperty Name="Reference" ColumnName="Reference" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Website" ColumnName="Website" />
+          <ScalarProperty Name="GoogleMapsUrl" ColumnName="GoogleMapsUrl" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Building" ColumnName="Building" />
+          <ScalarProperty Name="Street" ColumnName="Street" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="PlaceId" ColumnName="PlaceId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ItemUsageDetails">
+      <EntityTypeMapping TypeName="Sadik.Models.ItemUsageDetail">
+        <MappingFragment StoreEntitySet="ItemUsageDetails">
+          <ScalarProperty Name="Degree" ColumnName="Degree" />
+          <ScalarProperty Name="PresentationDate" ColumnName="PresentationDate" />
+          <ScalarProperty Name="TeacherId" ColumnName="TeacherId" />
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="KidId" ColumnName="KidId" />
+          <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

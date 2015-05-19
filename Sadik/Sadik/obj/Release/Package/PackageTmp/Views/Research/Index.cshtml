@@ -1,0 +1,323 @@
+﻿@{
+    ViewBag.Title = "Place searches";
+}
+@section HEAD{
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      #map-canvas {
+        height: 80%;
+        margin: 0px;
+        padding: 0px
+      }
+      td {
+          width:200px;
+      }
+        .searchedArea {
+            color: green;
+        }
+        .savedItem {
+            color: green;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&sensor=false"></script>
+}
+<h2>Place searches</h2>
+<ul id="areas">
+
+</ul>
+
+<div id="map-canvas">
+
+</div>
+
+<table id="results-table">
+</table>
+<div id="message"></div>
+    <script>
+        var getAreasUrl = '@Url.Action("IndexJson", "StatArea")';
+        var setSearchedUrl = '@Url.Action("SetSearchedJson", "StatArea")';
+        var saveSchoolUrl = '@Url.Action("AddJson", "FutureCustomers")';
+        var saveSchoolDetailsUrl = '@Url.Action("UpdateJson", "FutureCustomers")';
+        var getSchoolsUrl = '@Url.Action("IndexJson", "FutureCustomers")';
+        var infowindow;
+        var map;
+        var pageNum = 1;
+        var service;
+        function startCitySearch(cityEl) {
+            var city = new google.maps.LatLng(cityEl.attr('lat'), cityEl.attr('lon'));
+
+            map = new google.maps.Map(document.getElementById('map-canvas'), {
+                center: city,
+                zoom: 15
+            });
+
+            var request = {
+                location: city,
+                radius: 50000,
+                keyword : 'montessori'
+            };
+            infowindow = new google.maps.InfoWindow();
+            service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(request, function (results, status, pagination) { callback(results, status, pagination, cityEl); });
+            $('#message').text("Started...");
+        }
+
+        function callback(results, status, pagination, cityEl) {
+            console.log('callback status ' + status);
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    createMarker(results[i]);
+                    var schoolsList = cityEl.find('.schoolsList');
+                    var schoolItem = $('<li></li>');
+                    schoolItem.addClass('schoolItem')
+                        .attr('place-id', results[i].id)
+                        .attr('reference', results[i].reference)
+                        .attr('name', results[i].name)
+                        .text(results[i].name + '|' + results[i].types.join() + '|' + results[i].vicinity);
+                    schoolItem.appendTo(schoolsList);
+                }
+                if (pagination.hasNextPage) {
+                    setTimeout(function () { pagination.nextPage(); }, 2000);
+                } else {
+                    citySearched(cityEl);
+                }
+            } else if (status == google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+                cityEl.attr('searched', 'true');
+                var nextCity = $('#areas .areaItem:not([searched="true"])')[0];
+                if (nextCity) {
+                    startCitySearch($(nextCity));
+                }
+            }
+        }
+
+        function citySearched(cityEl) {
+            setSearched(cityEl.attr('id'));
+            cityEl.attr('searched', 'true');
+            saveSchoolsList(cityEl.find('ul.schoolsList'));
+
+            var nextCity = $('#areas .areaItem:not([searched="true"])')[0];
+            if (nextCity) {
+                startCitySearch($(nextCity));
+            }
+        }
+
+        function saveSchoolsList(listEl) {
+            var schoolItems = listEl.find('.schoolItem');
+            var len = schoolItems.length;
+            var i = 0;
+            var saveSchoolsInterval = setInterval(function () {
+                if (i == len) {
+                    clearInterval(saveSchoolsInterval);
+                    return;
+                };
+                saveSchool($(schoolItems[i]));
+                i++;
+            }, 200);
+        }
+
+        function saveSchool(schoolItem) {
+            var data = {
+                PlaceId: schoolItem.attr('place-id'),
+                Name: schoolItem.attr('name'),
+                Reference: schoolItem.attr('reference'),
+                Country:'USA'
+            };
+            $.ajax({
+                'url': saveSchoolUrl,
+                'data': data,
+                'type': 'POST',
+                'dataType': 'json',
+                'success': saveSchoolOnSuccess,
+                'error': function () { }
+            });
+        }
+        function saveSchoolOnSuccess(data) {
+            $('.schoolItem[place-id="' + data.PlaceId + '"]').addClass('savedItem');
+        }
+
+        function startDetailsDownload() {
+            var city = new google.maps.LatLng(39.1, -94.58);
+
+            map = new google.maps.Map(document.getElementById('map-canvas'), {
+                center: city,
+                zoom: 15
+            });
+
+            infowindow = new google.maps.InfoWindow();
+            service = new google.maps.places.PlacesService(map);
+            fillDetails();
+        }
+
+        function fillDetails() {
+            var rows = $('tr.schoolRow:not([checked])');
+            if (rows.length == 0) return;
+            var row = $(rows[0]);
+            row.attr('checked', 1);
+            getPlaceDetails(row, function () {
+                setTimeout(fillDetails, 2000);
+            });
+        }
+
+        function getPlaceDetails(row, callback) {
+            var reference = row.attr('reference');
+            var request = {
+                reference: reference
+            };
+            service.getDetails(request, function (place, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    var locality = get_address_component(place, 'locality');
+                    if (locality == null) locality = get_address_component(place, 'sublocality');
+                    if (locality == null) locality = get_address_component(place, 'neighborhood');
+                    row.append('<td>' + get_address_component(place, 'country', true) + '</td>');
+                    row.append('<td>' + get_address_component(place, 'administrative_area_level_1', true) + '</td>');
+                    row.append('<td>' + locality + '</td>');
+                    row.append('<td>' + get_address_component(place, 'route') + '</td>');
+                    row.append('<td>' + get_address_component(place, 'street_number') + '</td>');
+                    row.append('<td>' + place.international_phone_number + '</td>');
+                    row.append('<td>' + place.url + '</td>');
+                    row.append('<td>' + place.website + '</td>');
+                }
+                saveSchoolDetails(place);
+                callback();
+            });
+        }
+
+        function saveSchoolDetails(place) {
+            //console.log(place.name);
+            var locality = get_address_component(place, 'locality');
+            if (locality == null) locality = get_address_component(place, 'sublocality');
+            if (locality == null) locality = get_address_component(place, 'neighborhood');
+            var data = {
+                PlaceId: place.id,
+                Name: place.name,
+                Reference: place.reference,
+                Phone: place.international_phone_number,
+                GoogleMapsUrl: place.url,
+                Website: place.website,
+                Country: get_address_component(place, 'country', true),
+                State: get_address_component(place, 'administrative_area_level_1', true),
+                City: locality,
+                Street: get_address_component(place, 'route'),
+                Building: get_address_component(place, 'street_number'),
+                Latitude: place.geometry.location.lat().toString().replace('.', ','),
+                Longitude: place.geometry.location.lng().toString().replace('.', ',')
+            };
+            $.ajax({
+                'url': saveSchoolDetailsUrl,
+                'data': data,
+                'type': 'PUT',
+                'dataType': 'json',
+                'success': saveSchoolDetailsOnSuccess,
+                'error': function (jqXHR, textStatus, errorThrown) { console.log('upload error: ' + errorThrown); }
+            });
+        }
+
+        function saveSchoolDetailsOnSuccess(data) {
+            if (data.result != '0') {
+                console.log('response received ' + data.message);
+            }
+            $('tr.schoolRow[placeid="' + data.PlaceId + '"]').addClass('savedItem');
+        }
+
+        function get_address_component(place, component_type, takeshort) {
+            if (takeshort !== true) takeshort = false;
+            //console.log('search type ' + component_type);
+            for (var i in place.address_components) {
+                var address_component = place.address_components[i];
+                //console.log('type ' + address_component.types.join());
+                if ($.inArray(component_type, address_component.types) > -1) {
+                    //console.log('long_name: ' + address_component.long_name);
+                    //console.log('short_name: ' + address_component.short_name);
+                    return takeshort ? address_component.short_name : address_component.long_name;
+                }
+            }
+            return null;
+        }
+
+        function createMarker(place) {
+            var placeLoc = place.geometry.location;
+            var marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(place.name);
+                infowindow.open(map, this);
+            });
+        }
+        function getAreas() {
+            console.log('getAreas function started');
+            console.log(getAreasUrl);
+            $.ajax({
+                'url': getAreasUrl,
+                'type': 'GET',
+                'dataType': 'json',
+                'success': getAreasOnSuccess,
+                'error': function () { }
+            });
+        }
+        function getAreasOnSuccess(data) {
+            for (var i in data['areas']) {
+                var area = data['areas'][i];
+                var li = $('<li></li>');
+                li.text(area.Name).addClass('areaItem').attr('lat', area.Latitude).attr('lon', area.Longitude).attr('id', area.Id).attr('searched', area.IsSearched);
+                if (area.IsSearched == 'true') li.addClass('searchedArea');
+                li.append($('<div><ul class="schoolsList"></ul></div>'));
+                $('#areas').append(li);
+            }
+            startCitySearch($($('li.areaItem')[0]));
+        }
+
+        function getSchools() {
+            console.log('getSchools function started');
+            console.log(getSchoolsUrl);
+            $.ajax({
+                'url': getSchoolsUrl,
+                'type': 'GET',
+                'dataType': 'json',
+                'success': getSchoolsOnSuccess,
+                'error': function () { }
+            });
+        }
+        function getSchoolsOnSuccess(data) {
+            for (var i in data['schools']) {
+                var school = data['schools'][i];
+                var row = $('<tr></tr>');
+                row.addClass('schoolRow').attr('reference', school.Reference).attr('placeid', school.PlaceId)
+                    .append('<td>' + school.Name + '</td>');
+                $('#results-table').append(row);
+            }
+            startDetailsDownload();
+        }
+
+
+        function setSearched(Id) {
+            console.log('setSearched function started');
+            console.log(setSearchedUrl);
+            $.ajax({
+                'url': setSearchedUrl,
+                'data': {Id: Id, searched:'true'},
+                'type': 'POST',
+                'dataType': 'json',
+                'success': setSearchedOnSuccess,
+                'error': function () { }
+            });
+        }
+
+        function setSearchedOnSuccess(data) {
+            if (data.result == 1) {
+                alert(data.message);
+                return;
+            }
+            var li = $('#'+data.Id);
+            li.attr('searched', data.IsSearched);
+            if (data.IsSearched == true) li.addClass('searchedArea');
+            else li.removeClass('searchedArea');
+        }
+
+        
+        google.maps.event.addDomListener(window, 'load', getSchools);
+        //getAreas();
+    </script>

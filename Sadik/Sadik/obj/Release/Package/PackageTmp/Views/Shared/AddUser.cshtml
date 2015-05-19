@@ -1,0 +1,20 @@
+﻿@model int
+@{
+    Layout = null;
+}
+@{
+    <h2>Добавить воспитателя</h2>
+    int KindergartenId = Model;
+    using (Html.BeginForm("AddUser", "Kindergarten", new { KindergartenId = KindergartenId }, FormMethod.Post, null))
+    {
+        <label for="userReference">Емейл пользователя или ссылка на профиль</label>
+		<input id="userReference" name="userReference" type="text" value="" required/>
+        
+        if (ViewBag.ErrorMessage != null)
+        {
+	        <div id="errorMessage" class="errorMessage">@ViewBag.ErrorMessage</div>
+        }
+        <br />
+	    @Html.SubmitButton(null, "Добавить")
+    }
+}

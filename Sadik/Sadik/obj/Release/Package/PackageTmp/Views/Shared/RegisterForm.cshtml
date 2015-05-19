@@ -1,0 +1,31 @@
+﻿@model RegisterModel
+@{
+    Layout = null;
+}
+<h2>Регистрация</h2>
+
+@using (Html.BeginForm<UserController>(x => x.Register(null, Request.Url.AbsoluteUri), FormMethod.Post))
+  {
+		<fieldset>
+			@Html.LabelFor(x => x.FirstName, "Имя")
+			@Html.TextBoxFor(x => x.FirstName, new { placeholder = "Александр" })
+            @Html.ValidationMessageFor(x => x.FirstName)
+
+			<br />
+   			@Html.LabelFor(x => x.LastName, "Фамилия")
+			@Html.TextBoxFor(x => x.LastName, new { placeholder = "Пушкин" })
+            @Html.ValidationMessageFor(x => x.LastName)
+
+			<br />
+			@Html.LabelFor(x => x.Email, "E-mail")
+			@Html.TextBoxFor(x => x.Email, new { placeholder = "alepush@gmail.com" })
+            @Html.ValidationMessageFor(x => x.Email)
+
+			<br />
+			@Html.Label("Password", "Пароль")
+			@Html.PasswordFor(x => x.Password, new { placeholder = "придумайте пароль" })
+			@Html.ValidationMessageFor(x => x.Password)
+		</fieldset>
+		<div id="errorMessage" class="errorMessage">@ViewBag.ErrorMessage</div>
+		@Html.SubmitButton(null, "Зарегистрировать")
+  }

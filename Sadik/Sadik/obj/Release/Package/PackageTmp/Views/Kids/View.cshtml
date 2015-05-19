@@ -1,0 +1,299 @@
+﻿@using System.Web.Optimization
+@model Kid
+@{
+    ViewBag.Title = Model.FirstName + " " + Model.LastName;
+}
+@section HEAD{
+    <link href="@Url.Content("~/Content/jqPlot/jquery.jqplot.min.css")" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
+    <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_jqPlot")"></script>
+}
+<style>
+    #LogObservationContainer {
+        width:300px;
+    }
+
+    .LogObservationArea {
+        border: solid 1px black;
+        margin:5px 0;
+        padding: 10px;
+        float:left;
+        margin-right: 1em;
+    }
+    .clearFloatBoth {
+        clear:both;
+    }
+    .LogObservationAreaHeader {
+        margin: 0 0 5px 0;
+    }
+    .chartContainer {
+        width: 600px;
+        float:left;
+        margin-right:20px;
+    }
+    .js_updateChartButton {
+        display:none;
+    }
+</style>
+
+<h3>@Model.LastName @Model.FirstName @Model.Patronymic (@Model.GetFormattedAge())</h3>
+
+<div id="tabs">
+    <ul>
+        @if (ViewBag.CurrentUser != null && ((User)ViewBag.CurrentUser).RoleId == UserRole.Teacher)
+        {
+            <li><a href="#tabs-addObservation">Добавить Наблюдение</a></li>
+            <li><a href="#tabs-editKid">Профиль</a></li>
+            <li><a href="#tabs-addADR">Добавить ДТР</a></li>
+        }
+        <li><a href="#tabs-indexADR">Список ДТР</a></li>
+        <li><a href="#tabs-statistics">Статистика</a></li>
+        <li><a href="#tabs-charts">Графики</a></li>
+        <li><a href="@Url.Action("Index", "Observation", new { Id = Model.Id, KindergartenId = Model.KindergartenId })">Наблюдения</a></li>
+    </ul>
+    @if (ViewBag.CurrentUser != null && ((User)ViewBag.CurrentUser).RoleId == UserRole.Teacher)
+    {
+        if((bool)ViewBag.CanAddObservation){
+            var returnUrl = Url.Action("View", "Kids", new { Id = Model.Id, KindergartenId = Model.KindergartenId });
+            <div id="tabs-addObservation">
+                <div class="LogObservationArea">
+                    <h3 class="LogObservationAreaHeader">Записать наблюдение</h3>
+                    @Html.Action("LogActivity", "Observation", new { returnUrl = returnUrl, KindergartenId = Model.KindergartenId })
+                </div>
+                <div class="LogObservationArea">
+                    <h3 class="LogObservationAreaHeader">Зашел в класс</h3>
+                    @Html.Action("LogCameInClass", "Observation", new { returnUrl = returnUrl, KindergartenId = Model.KindergartenId })
+                </div>
+                <div class="LogObservationArea">
+                    <h3 class="LogObservationAreaHeader">Настроение</h3>
+                    @Html.Action("LogEmotion", "Observation", new { returnUrl = returnUrl, KindergartenId = Model.KindergartenId })
+                </div>
+                <div class="clearFloatBoth"></div>
+                <script type="text/javascript">
+                    $.validator.setDefaults({ ignore: "" });
+                    
+                    var getPresentationUrl = '@Url.Action("GetPresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+                    var updatePresentationUrl = '@Url.Action("UpdatePresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+                    var getSkillUrl = '@Url.Action("GetSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+                    var updateSkillUrl = '@Url.Action("UpdateSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+                    var getItemUsageDetailsUrl = '@Url.Action("GetItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+                    var updateItemUsageDetailsUrl = '@Url.Action("UpdateItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+
+                    var activityUrl = '@Url.Action("Activity", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+                    var cameInClassUrl = '@Url.Action("CameInClass", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+                    var emotionUrl = '@Url.Action("Emotion", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+
+                    var itemsSource = @Html.Action("IndexShortJsonSerialized", "Inventory", new { KindergartenId = ViewBag.KindergartenId });
+                    var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
+                    
+                    var kidId = '@Model.Id';
+
+                    $(function () {
+                        $('.js_KidSelectorContainer').hide();
+                        var observationLoggerModule = new ObservationLoggerModule({
+                            activityLogger: {
+                                block: $('.js_logObservationBlock_activity'),
+                                saveObservationUrl: activityUrl,
+                                getPresentationUrl: getPresentationUrl,
+                                updatePresentationUrl: updatePresentationUrl,
+                                getSkillUrl: getSkillUrl,
+                                updateSkillUrl: updateSkillUrl,
+                                getItemUsageDetailsUrl: getItemUsageDetailsUrl,
+                                updateItemUsageDetailsUrl:updateItemUsageDetailsUrl
+                            },
+                            cameInClassLogger: {
+                                block: $('.js_logObservationBlock_cameInClass'),
+                                saveObservationUrl: cameInClassUrl
+                            },
+                            emotionLogger: {
+                                block: $('.js_logObservationBlock_emotion'),
+                                saveObservationUrl: emotionUrl
+                            },
+                            useCurrentTime: false
+                        });
+                        observationLoggerModule.SetKidsSource(kidsSource);
+                        observationLoggerModule.SetItemsSource(itemsSource);
+                        observationLoggerModule.SelectKid(kidId);
+                    });
+                </script>
+            </div>
+        }
+        <div id="tabs-editKid">
+            @Html.Action("EditKid", "Kids", new { KidId = Model.Id, KindergartenId = Model.KindergartenId })
+        </div>
+        if((bool)ViewBag.CanAddADR)
+        {
+            <div id="tabs-addADR">
+                @Html.Action("Add", "ADR", new { KidId = Model.Id, KindergartenId = Model.KindergartenId })
+            </div>
+        }
+        <div id="tabs-indexADR">
+            @Html.Action("Index", "ADR", new { Id = Model.Id, KindergartenId = Model.KindergartenId })
+        </div>
+        <div id="tabs-statistics">
+            @using (Ajax.BeginForm("Stats", "Observation", new { KindergartenId = Model.KindergartenId },
+                new AjaxOptions
+                {
+                    HttpMethod = "post",
+                    UpdateTargetId = "statistics-container",
+                    OnBegin = "sadikAjaxStart",
+                    OnComplete = "sadikAjaxStop",
+                }, null))
+            {
+            <div>
+                @Html.Hidden("Id", Model.Id)
+                <span class="field-validation-valid" data-valmsg-for="Id" data-valmsg-replace="true"></span>
+                С: 
+                <input type="text" class="js_datetimebox" id="startStatPeriod" name="startPeriod" />
+                По: 
+                <input type="text" class="js_datetimebox" id="endStatPeriod" name="endPeriod"/> 
+                @Html.SubmitButton(null, "Обновить", new { @class = "js_updateStatButton" })
+                @Html.Button("wholeTimeButton", "За все время", HtmlButtonType.Button, null, new { id = "updateStatisticsWholeTime" })
+                @Html.Button("threeMonthsButton", "За 3 месяца", HtmlButtonType.Button, null, new { id = "updateStatistics3Months" })
+                @Html.Button("aMonthButton", "За месяц", HtmlButtonType.Button, null, new { id = "updateStatistics1Month" })
+                @Html.Button("aWeekButton", "За неделю", HtmlButtonType.Button, null, new { id = "updateStatistics1Week" })
+            </div>
+            }
+            <div id="statistics-container"></div>
+        </div>
+        <div id="tabs-charts">
+            @Html.Button("downloadActivityChartButton", "Обновить", HtmlButtonType.Button, "downloadActivityChart();", new { @class = "js_updateChartButton js_updateActivityChartButton" })
+            <div id="activity-charts-container" class="chartContainer"></div>
+            @Html.Button("downloadCameInClassChartButton", "Обновить", HtmlButtonType.Button, "downloadCameInClassChart();", new { @class = "js_updateChartButton js_updateCameInClassChartButton" })
+            <div id="cameInClass-charts-container" class="chartContainer"></div>
+            <div class="clearFloatBoth"></div>
+        </div>
+    }
+    
+</div>
+<script type="text/javascript">
+    var threeMonthsAgo = '@DateTime.Now.AddMonths(-3).ToString("dd-MM-yyyy")';
+    var aMonthAgo = '@DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy")';
+    var aWeekAgo = '@DateTime.Now.AddDays(-7).ToString("dd-MM-yyyy")';
+    var activityChartUrl = '@Url.Action("ActivityCharts", "Observation", new { Id = Model.Id, KindergartenId = Model.KindergartenId})';
+    var cameInClassChartUrl = '@Url.Action("CameInClassChart", "Observation", new { Id = Model.Id, KindergartenId = Model.KindergartenId})';
+
+    $(function () {
+        $("#tabs").tabs({
+            activate: function (evt, ui) {
+                var tabUrl = $(ui.newTab).find('a.ui-tabs-anchor').attr('href');
+                if (tabUrl == '#tabs-statistics') {
+                    $('.js_updateStatButton').click();
+                }
+                else if (tabUrl == '#tabs-charts') {
+                    $('.js_updateActivityChartButton').click();
+                    $('.js_updateCameInClassChartButton').click();
+                }
+            }
+        });
+        $('#updateStatisticsWholeTime').click(function () {
+            $('#startStatPeriod').val('');
+            $('#endStatPeriod').val('');
+            $('.js_updateStatButton').click();
+        });
+        $('#updateStatistics3Months').click(function () {
+            $('#startStatPeriod').val(threeMonthsAgo);
+            $('#endStatPeriod').val('');
+            $('.js_updateStatButton').click();
+        });
+        $('#updateStatistics1Month').click(function () {
+            $('#startStatPeriod').val(aMonthAgo);
+            $('#endStatPeriod').val('');
+            $('.js_updateStatButton').click();
+        });
+        $('#updateStatistics1Week').click(function () {
+            $('#startStatPeriod').val(aWeekAgo);
+            $('#endStatPeriod').val('');
+            $('.js_updateStatButton').click();
+        });
+    });
+    function downloadActivityChart() {
+        $.ajax({
+            url: activityChartUrl,
+            type: "POST",
+            dataType: "json",
+            success: showActivityChart
+        })
+    }
+
+    function downloadCameInClassChart() {
+        $.ajax({
+            url: cameInClassChartUrl,
+            type: "POST",
+            dataType: "json",
+            success: showCameInClassChart
+        })
+    }
+
+    function showActivityChart(data) {
+        $('#activity-charts-container').empty();
+        var series = [];
+        var seriesSettings = [];
+        var colors = ['#5b9bd5', '#ed7d31', '#a5a5a5', '#ffc000', '#4472c4', '#70ad47'];
+        for (var i in data) {
+            var chart = data[i].chart;
+            var serie = [];
+            for (var j in chart) {
+                serie.push([chart[j].date, chart[j].count]);
+            }
+            series.push(serie);
+            if (i >= colors.length) {
+                seriesSettings.push({ label: data[i].zone });
+            } else {
+                seriesSettings.push({ label: data[i].zone, color:colors[i] });
+            }
+        }
+        $.jqplot('activity-charts-container', series,
+        {
+            title: 'Прогресс',
+            axes: {
+                xaxis: {
+                    renderer: $.jqplot.DateAxisRenderer,
+                    tickOptions: { formatString: '%#d %b %y' },
+                    tickInterval: '1 week'
+                }
+            },
+            series: seriesSettings,
+            legend: {
+                show: true,
+                placement: 'outsideGrid'
+            },
+        });
+    }
+    function showCameInClassChart(data) {
+        $('#cameInClass-charts-container').empty();
+        var serie = [];
+        for (var j in data) {
+            var dateTime = new $.jsDate(ticksToMilliseconds(parseInt(data[j])));
+            var date = new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate());
+            var time = new Date(2001, 1, 1, dateTime.getHours() + dateTime.getTimezoneOffset() / 60, dateTime.getMinutes());
+            serie.push([date, time]);
+        }
+        $.jqplot('cameInClass-charts-container', [serie],
+        {
+            title: 'Пришел в класс',
+            axes: {
+                xaxis: {
+                    renderer: $.jqplot.DateAxisRenderer,
+                    tickOptions: { formatString: '%#d %b %y' },
+                    tickInterval: '1 week'
+                },
+                yaxis: {
+                    renderer: $.jqplot.DateAxisRenderer,
+                    tickOptions: { formatString: '%H:%M' },
+                    tickInterval: '10 minutes',
+                    min: new Date(2001, 1, 1, 8, 0),
+                    max: new Date(2001, 1, 1, 12, 0)
+                }
+            },
+            series: {color: '#5b9bd5'}
+        });
+    }
+    function ticksToMilliseconds(ticks) {
+        var epochTicks = 621355968000000000;
+        var ticksPerMillisecond = 10000;
+        return (ticks - epochTicks) / ticksPerMillisecond;
+    }
+</script>
+

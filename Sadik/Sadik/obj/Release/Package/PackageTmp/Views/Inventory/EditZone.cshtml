@@ -1,0 +1,41 @@
+﻿@model EditZoneModel
+
+@{
+    ViewBag.Title = "Редактировать зону";
+}
+
+@if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+{
+    <h2>Редактировать зону</h2>
+    int KindergartenId = ViewBag.KindergartenId;
+    using (Html.BeginForm("EditZone", "Inventory", new {Id = Model.Id, KindergartenId = KindergartenId }, FormMethod.Post, null))
+    {
+        <fieldset>
+            @Html.LabelFor(x => x.Name, "Название")
+            @Html.TextBoxFor(x => x.Name)
+            @Html.ValidationMessageFor(x => x.Name)
+            <br/>
+            <span>Родительская зона:</span>
+            <br/>
+            <select name="parentZoneId">
+                @{
+                    var DropdownItems = (List<ZoneDropdownItem>)ViewBag.ZoneDropdownContent;
+                    foreach (var item in DropdownItems)
+                    {
+                        <option value="@item.Id" @if (item.Id == Model.parentZoneId)
+                                                    { @Html.Raw("selected")}>@item.Name</option>
+                    }
+                }
+            </select>
+            <br/>
+            @Html.ValidationMessageFor(x => x.parentZoneId)
+        </fieldset>
+        if (ViewBag.ErrorMessage != null)
+        {
+	        <div id="errorMessage" class="errorMessage">@ViewBag.ErrorMessage</div>
+        }
+	    @Html.SubmitButton(null, "Сохранить")
+        @Html.ActionLink("Отменить", "Index", "Inventory", new { KindergartenId = KindergartenId }, null)
+        
+    }
+}

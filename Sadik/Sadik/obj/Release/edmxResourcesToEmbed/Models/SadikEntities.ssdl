@@ -1,0 +1,673 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище Sadik.Models" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="Хранилище SadikModelsContainer">
+    <EntitySet Name="Activities" EntityType="Хранилище Sadik.Models.Activities" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ActivityStats" EntityType="Хранилище Sadik.Models.ActivityStats" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ADR" EntityType="Хранилище Sadik.Models.ADR" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CameInClass" EntityType="Хранилище Sadik.Models.CameInClass" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Cities" EntityType="Хранилище Sadik.Models.Cities" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="EmotionObservations" EntityType="Хранилище Sadik.Models.EmotionObservations" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="FutureCustomers" EntityType="Хранилище Sadik.Models.FutureCustomers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Inventory" EntityType="Хранилище Sadik.Models.Inventory" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ItemUsageDetails" EntityType="Хранилище Sadik.Models.ItemUsageDetails" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Kids" EntityType="Хранилище Sadik.Models.Kids" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Kindergarten" EntityType="Хранилище Sadik.Models.Kindergarten" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Presentations" EntityType="Хранилище Sadik.Models.Presentations" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Skills" EntityType="Хранилище Sadik.Models.Skills" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TemplateInventory" EntityType="Хранилище Sadik.Models.TemplateInventory" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TemplateZones" EntityType="Хранилище Sadik.Models.TemplateZones" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UserKindergarten" EntityType="Хранилище Sadik.Models.UserKindergarten" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Users" EntityType="Хранилище Sadik.Models.Users" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Zones" EntityType="Хранилище Sadik.Models.Zones" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_Activities_Inventory" Association="Хранилище Sadik.Models.FK_Activities_Inventory">
+      <End Role="Inventory" EntitySet="Inventory" />
+      <End Role="Activities" EntitySet="Activities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Activities_Kids" Association="Хранилище Sadik.Models.FK_Activities_Kids">
+      <End Role="Kids" EntitySet="Kids" />
+      <End Role="Activities" EntitySet="Activities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Activities_Users" Association="Хранилище Sadik.Models.FK_Activities_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Activities" EntitySet="Activities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ActivityStats_Inventory" Association="Хранилище Sadik.Models.FK_ActivityStats_Inventory">
+      <End Role="Inventory" EntitySet="Inventory" />
+      <End Role="ActivityStats" EntitySet="ActivityStats" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ActivityStats_Kids" Association="Хранилище Sadik.Models.FK_ActivityStats_Kids">
+      <End Role="Kids" EntitySet="Kids" />
+      <End Role="ActivityStats" EntitySet="ActivityStats" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ADR_Kids" Association="Хранилище Sadik.Models.FK_ADR_Kids">
+      <End Role="Kids" EntitySet="Kids" />
+      <End Role="ADR" EntitySet="ADR" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CameInClass_Kids" Association="Хранилище Sadik.Models.FK_CameInClass_Kids">
+      <End Role="Kids" EntitySet="Kids" />
+      <End Role="CameInClass" EntitySet="CameInClass" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CameInClass_Users" Association="Хранилище Sadik.Models.FK_CameInClass_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="CameInClass" EntitySet="CameInClass" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Emotions_Kids" Association="Хранилище Sadik.Models.FK_Emotions_Kids">
+      <End Role="Kids" EntitySet="Kids" />
+      <End Role="EmotionObservations" EntitySet="EmotionObservations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Emotions_Users" Association="Хранилище Sadik.Models.FK_Emotions_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="EmotionObservations" EntitySet="EmotionObservations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Inventory_Kindergarten" Association="Хранилище Sadik.Models.FK_Inventory_Kindergarten">
+      <End Role="Kindergarten" EntitySet="Kindergarten" />
+      <End Role="Inventory" EntitySet="Inventory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Inventory_Zones" Association="Хранилище Sadik.Models.FK_Inventory_Zones">
+      <End Role="Zones" EntitySet="Zones" />
+      <End Role="Inventory" EntitySet="Inventory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItemUsageDetails_Inventory" Association="Хранилище Sadik.Models.FK_ItemUsageDetails_Inventory">
+      <End Role="Inventory" EntitySet="Inventory" />
+      <End Role="ItemUsageDetails" EntitySet="ItemUsageDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItemUsageDetails_Kids" Association="Хранилище Sadik.Models.FK_ItemUsageDetails_Kids">
+      <End Role="Kids" EntitySet="Kids" />
+      <End Role="ItemUsageDetails" EntitySet="ItemUsageDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItemUsageDetails_Users" Association="Хранилище Sadik.Models.FK_ItemUsageDetails_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="ItemUsageDetails" EntitySet="ItemUsageDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Kids_Kindergarten" Association="Хранилище Sadik.Models.FK_Kids_Kindergarten">
+      <End Role="Kindergarten" EntitySet="Kindergarten" />
+      <End Role="Kids" EntitySet="Kids" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Presentations_Inventory" Association="Хранилище Sadik.Models.FK_Presentations_Inventory">
+      <End Role="Inventory" EntitySet="Inventory" />
+      <End Role="Presentations" EntitySet="Presentations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Presentations_Kids" Association="Хранилище Sadik.Models.FK_Presentations_Kids">
+      <End Role="Kids" EntitySet="Kids" />
+      <End Role="Presentations" EntitySet="Presentations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Presentations_Users" Association="Хранилище Sadik.Models.FK_Presentations_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Presentations" EntitySet="Presentations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Skill_Inventory" Association="Хранилище Sadik.Models.FK_Skill_Inventory">
+      <End Role="Inventory" EntitySet="Inventory" />
+      <End Role="Skills" EntitySet="Skills" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Skill_Kids" Association="Хранилище Sadik.Models.FK_Skill_Kids">
+      <End Role="Kids" EntitySet="Kids" />
+      <End Role="Skills" EntitySet="Skills" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TemplateInventory_TemplateZones" Association="Хранилище Sadik.Models.FK_TemplateInventory_TemplateZones">
+      <End Role="TemplateZones" EntitySet="TemplateZones" />
+      <End Role="TemplateInventory" EntitySet="TemplateInventory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TemplateZones_TemplateZones" Association="Хранилище Sadik.Models.FK_TemplateZones_TemplateZones">
+      <End Role="TemplateZones" EntitySet="TemplateZones" />
+      <End Role="TemplateZones1" EntitySet="TemplateZones" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserKindergarten_Kindergarten" Association="Хранилище Sadik.Models.FK_UserKindergarten_Kindergarten">
+      <End Role="Kindergarten" EntitySet="Kindergarten" />
+      <End Role="UserKindergarten" EntitySet="UserKindergarten" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserKindergarten_Users" Association="Хранилище Sadik.Models.FK_UserKindergarten_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="UserKindergarten" EntitySet="UserKindergarten" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Zones_Kindergarten" Association="Хранилище Sadik.Models.FK_Zones_Kindergarten">
+      <End Role="Kindergarten" EntitySet="Kindergarten" />
+      <End Role="Zones" EntitySet="Zones" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Zones_Zones" Association="Хранилище Sadik.Models.FK_Zones_Zones">
+      <End Role="Zones" EntitySet="Zones" />
+      <End Role="Zones1" EntitySet="Zones" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Activities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="KidId" Type="int" Nullable="false" />
+    <Property Name="ItemId" Type="int" />
+    <Property Name="TeacherId" Type="int" />
+    <Property Name="DateObserved" Type="datetime" Nullable="false" />
+    <Property Name="Comment" Type="nvarchar(max)" />
+    <Property Name="Duration" Type="tinyint" Nullable="false" />
+    <Property Name="Polarization" Type="bit" Nullable="false" />
+    <Property Name="ChoseHimSelf" Type="bit" Nullable="false" />
+    <Property Name="UniqueId" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ActivityStats">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="KidId" Type="int" Nullable="false" />
+    <Property Name="ItemId" Type="int" Nullable="false" />
+    <Property Name="Brief" Type="int" Nullable="false" />
+    <Property Name="Short" Type="int" Nullable="false" />
+    <Property Name="Long" Type="int" Nullable="false" />
+    <Property Name="Polarization" Type="int" Nullable="false" />
+    <Property Name="ChoseHimSelf" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ADR">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="KidId" Type="int" Nullable="false" />
+    <Property Name="AchievementsTeachers" Type="nvarchar(max)" />
+    <Property Name="AchievementsParents" Type="nvarchar(max)" />
+    <Property Name="DifficultiesTeachers" Type="nvarchar(max)" />
+    <Property Name="DifficultiesParents" Type="nvarchar(max)" />
+    <Property Name="RecommendationsTeachers" Type="nvarchar(max)" />
+    <Property Name="RecommendationsParents" Type="nvarchar(max)" />
+    <Property Name="Performed" Type="bit" Nullable="false" />
+    <Property Name="StartPeriod" Type="datetime" />
+    <Property Name="EndPeriod" Type="datetime" />
+  </EntityType>
+  <EntityType Name="CameInClass">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="KidId" Type="int" Nullable="false" />
+    <Property Name="DateTimeCameInClass" Type="datetime" Nullable="false" />
+    <Property Name="TeacherId" Type="int" />
+    <Property Name="Comment" Type="nvarchar(max)" />
+    <Property Name="UniqueId" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Cities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="nvarchar" MaxLength="255" />
+    <Property Name="Country" Type="nvarchar" MaxLength="255" />
+    <Property Name="Population" Type="int" />
+    <Property Name="Latitude" Type="real" />
+    <Property Name="Longitude" Type="real" />
+    <Property Name="IsSearched" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EmotionObservations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="KidId" Type="int" Nullable="false" />
+    <Property Name="TeacherId" Type="int" />
+    <Property Name="Comment" Type="nvarchar(max)" />
+    <Property Name="DateObserved" Type="datetime" Nullable="false" />
+    <Property Name="Emotion" Type="int" Nullable="false" />
+    <Property Name="UniqueId" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="FutureCustomers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="PlaceId" Type="nvarchar" Nullable="false" MaxLength="1024" />
+    <Property Name="Name" Type="nvarchar" MaxLength="1024" />
+    <Property Name="Country" Type="nvarchar" MaxLength="255" />
+    <Property Name="State" Type="nvarchar" MaxLength="255" />
+    <Property Name="City" Type="nvarchar" MaxLength="255" />
+    <Property Name="Street" Type="nvarchar" MaxLength="255" />
+    <Property Name="Building" Type="nvarchar" MaxLength="20" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="30" />
+    <Property Name="GoogleMapsUrl" Type="nvarchar(max)" />
+    <Property Name="Website" Type="nvarchar" MaxLength="1024" />
+    <Property Name="Email" Type="nvarchar" MaxLength="1024" />
+    <Property Name="Reference" Type="nvarchar(max)" />
+    <Property Name="Latitude" Type="decimal" Scale="15" />
+    <Property Name="Longitude" Type="decimal" Scale="15" />
+  </EntityType>
+  <EntityType Name="Inventory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="nvarchar" MaxLength="255" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+    <Property Name="ParentZoneId" Type="int" Nullable="false" />
+    <Property Name="KindergartenId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ItemUsageDetails">
+    <Key>
+      <PropertyRef Name="UniqueId" />
+    </Key>
+    <Property Name="UniqueId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="KidId" Type="int" Nullable="false" />
+    <Property Name="ItemId" Type="int" Nullable="false" />
+    <Property Name="TeacherId" Type="int" />
+    <Property Name="PresentationDate" Type="datetime" />
+    <Property Name="Degree" Type="tinyint" />
+  </EntityType>
+  <EntityType Name="Kids">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="nvarchar(max)" />
+    <Property Name="LastName" Type="nvarchar(max)" />
+    <Property Name="Patronymic" Type="nvarchar(max)" />
+    <Property Name="DateOfBirth" Type="datetime" Nullable="false" />
+    <Property Name="DateAccepted" Type="datetime" Nullable="false" />
+    <Property Name="DateDismissed" Type="datetime" />
+    <Property Name="IsDismissed" Type="bit" Nullable="false" />
+    <Property Name="KindergartenId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Kindergarten">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Presentations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="KidId" Type="int" Nullable="false" />
+    <Property Name="ItemId" Type="int" Nullable="false" />
+    <Property Name="TeacherId" Type="int" />
+    <Property Name="DatePerformed" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Skills">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="KidId" Type="int" Nullable="false" />
+    <Property Name="ItemId" Type="int" Nullable="false" />
+    <Property Name="Degree" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TemplateInventory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="nvarchar" MaxLength="255" />
+    <Property Name="ParentZoneId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TemplateZones">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" />
+    <Property Name="ParentZoneId" Type="int" />
+  </EntityType>
+  <EntityType Name="UserKindergarten">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="KindergartenId" Type="int" Nullable="false" />
+    <Property Name="RoleId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="nvarchar(max)" />
+    <Property Name="LastName" Type="nvarchar(max)" />
+    <Property Name="Email" Type="nvarchar(max)" />
+    <Property Name="PasswordHash" Type="varbinary(max)" />
+    <Property Name="PasswordSalt" Type="varbinary(max)" />
+    <Property Name="RoleId" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Zones">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" />
+    <Property Name="ParentZoneId" Type="int" />
+    <Property Name="KindergartenId" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Activities_Inventory">
+    <End Role="Inventory" Type="Хранилище Sadik.Models.Inventory" Multiplicity="0..1" />
+    <End Role="Activities" Type="Хранилище Sadik.Models.Activities" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Inventory">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Activities">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Activities_Kids">
+    <End Role="Kids" Type="Хранилище Sadik.Models.Kids" Multiplicity="1" />
+    <End Role="Activities" Type="Хранилище Sadik.Models.Activities" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kids">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Activities">
+        <PropertyRef Name="KidId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Activities_Users">
+    <End Role="Users" Type="Хранилище Sadik.Models.Users" Multiplicity="0..1" />
+    <End Role="Activities" Type="Хранилище Sadik.Models.Activities" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Activities">
+        <PropertyRef Name="TeacherId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ActivityStats_Inventory">
+    <End Role="Inventory" Type="Хранилище Sadik.Models.Inventory" Multiplicity="1" />
+    <End Role="ActivityStats" Type="Хранилище Sadik.Models.ActivityStats" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Inventory">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ActivityStats">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ActivityStats_Kids">
+    <End Role="Kids" Type="Хранилище Sadik.Models.Kids" Multiplicity="1" />
+    <End Role="ActivityStats" Type="Хранилище Sadik.Models.ActivityStats" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kids">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ActivityStats">
+        <PropertyRef Name="KidId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ADR_Kids">
+    <End Role="Kids" Type="Хранилище Sadik.Models.Kids" Multiplicity="1" />
+    <End Role="ADR" Type="Хранилище Sadik.Models.ADR" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kids">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ADR">
+        <PropertyRef Name="KidId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CameInClass_Kids">
+    <End Role="Kids" Type="Хранилище Sadik.Models.Kids" Multiplicity="1" />
+    <End Role="CameInClass" Type="Хранилище Sadik.Models.CameInClass" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kids">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CameInClass">
+        <PropertyRef Name="KidId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CameInClass_Users">
+    <End Role="Users" Type="Хранилище Sadik.Models.Users" Multiplicity="0..1" />
+    <End Role="CameInClass" Type="Хранилище Sadik.Models.CameInClass" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CameInClass">
+        <PropertyRef Name="TeacherId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Emotions_Kids">
+    <End Role="Kids" Type="Хранилище Sadik.Models.Kids" Multiplicity="1" />
+    <End Role="EmotionObservations" Type="Хранилище Sadik.Models.EmotionObservations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kids">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EmotionObservations">
+        <PropertyRef Name="KidId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Emotions_Users">
+    <End Role="Users" Type="Хранилище Sadik.Models.Users" Multiplicity="0..1" />
+    <End Role="EmotionObservations" Type="Хранилище Sadik.Models.EmotionObservations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EmotionObservations">
+        <PropertyRef Name="TeacherId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Inventory_Kindergarten">
+    <End Role="Kindergarten" Type="Хранилище Sadik.Models.Kindergarten" Multiplicity="1" />
+    <End Role="Inventory" Type="Хранилище Sadik.Models.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kindergarten">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="KindergartenId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Inventory_Zones">
+    <End Role="Zones" Type="Хранилище Sadik.Models.Zones" Multiplicity="1" />
+    <End Role="Inventory" Type="Хранилище Sadik.Models.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Zones">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="ParentZoneId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItemUsageDetails_Inventory">
+    <End Role="Inventory" Type="Хранилище Sadik.Models.Inventory" Multiplicity="1" />
+    <End Role="ItemUsageDetails" Type="Хранилище Sadik.Models.ItemUsageDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Inventory">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ItemUsageDetails">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItemUsageDetails_Kids">
+    <End Role="Kids" Type="Хранилище Sadik.Models.Kids" Multiplicity="1" />
+    <End Role="ItemUsageDetails" Type="Хранилище Sadik.Models.ItemUsageDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kids">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ItemUsageDetails">
+        <PropertyRef Name="KidId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItemUsageDetails_Users">
+    <End Role="Users" Type="Хранилище Sadik.Models.Users" Multiplicity="0..1" />
+    <End Role="ItemUsageDetails" Type="Хранилище Sadik.Models.ItemUsageDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ItemUsageDetails">
+        <PropertyRef Name="TeacherId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Kids_Kindergarten">
+    <End Role="Kindergarten" Type="Хранилище Sadik.Models.Kindergarten" Multiplicity="1" />
+    <End Role="Kids" Type="Хранилище Sadik.Models.Kids" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kindergarten">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Kids">
+        <PropertyRef Name="KindergartenId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Presentations_Inventory">
+    <End Role="Inventory" Type="Хранилище Sadik.Models.Inventory" Multiplicity="1" />
+    <End Role="Presentations" Type="Хранилище Sadik.Models.Presentations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Inventory">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Presentations">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Presentations_Kids">
+    <End Role="Kids" Type="Хранилище Sadik.Models.Kids" Multiplicity="1" />
+    <End Role="Presentations" Type="Хранилище Sadik.Models.Presentations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kids">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Presentations">
+        <PropertyRef Name="KidId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Presentations_Users">
+    <End Role="Users" Type="Хранилище Sadik.Models.Users" Multiplicity="0..1" />
+    <End Role="Presentations" Type="Хранилище Sadik.Models.Presentations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Presentations">
+        <PropertyRef Name="TeacherId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Skill_Inventory">
+    <End Role="Inventory" Type="Хранилище Sadik.Models.Inventory" Multiplicity="1" />
+    <End Role="Skills" Type="Хранилище Sadik.Models.Skills" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Inventory">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Skills">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Skill_Kids">
+    <End Role="Kids" Type="Хранилище Sadik.Models.Kids" Multiplicity="1" />
+    <End Role="Skills" Type="Хранилище Sadik.Models.Skills" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kids">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Skills">
+        <PropertyRef Name="KidId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TemplateInventory_TemplateZones">
+    <End Role="TemplateZones" Type="Хранилище Sadik.Models.TemplateZones" Multiplicity="1" />
+    <End Role="TemplateInventory" Type="Хранилище Sadik.Models.TemplateInventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TemplateZones">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TemplateInventory">
+        <PropertyRef Name="ParentZoneId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TemplateZones_TemplateZones">
+    <End Role="TemplateZones" Type="Хранилище Sadik.Models.TemplateZones" Multiplicity="0..1" />
+    <End Role="TemplateZones1" Type="Хранилище Sadik.Models.TemplateZones" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TemplateZones">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TemplateZones1">
+        <PropertyRef Name="ParentZoneId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserKindergarten_Kindergarten">
+    <End Role="Kindergarten" Type="Хранилище Sadik.Models.Kindergarten" Multiplicity="1" />
+    <End Role="UserKindergarten" Type="Хранилище Sadik.Models.UserKindergarten" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kindergarten">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserKindergarten">
+        <PropertyRef Name="KindergartenId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserKindergarten_Users">
+    <End Role="Users" Type="Хранилище Sadik.Models.Users" Multiplicity="1" />
+    <End Role="UserKindergarten" Type="Хранилище Sadik.Models.UserKindergarten" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserKindergarten">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Zones_Kindergarten">
+    <End Role="Kindergarten" Type="Хранилище Sadik.Models.Kindergarten" Multiplicity="1" />
+    <End Role="Zones" Type="Хранилище Sadik.Models.Zones" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kindergarten">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Zones">
+        <PropertyRef Name="KindergartenId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Zones_Zones">
+    <End Role="Zones" Type="Хранилище Sadik.Models.Zones" Multiplicity="0..1" />
+    <End Role="Zones1" Type="Хранилище Sadik.Models.Zones" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Zones">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Zones1">
+        <PropertyRef Name="ParentZoneId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="CalculateKidActivityStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="KidId" Type="int" Mode="In" />
+    <Parameter Name="startPeriod" Type="datetime" Mode="In" />
+    <Parameter Name="endPeriod" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="UpdateKidActivityStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="KidId" Type="int" Mode="In" />
+  </Function>
+</Schema>

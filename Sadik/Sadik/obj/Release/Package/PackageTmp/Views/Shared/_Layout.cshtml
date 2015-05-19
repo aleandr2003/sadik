@@ -1,0 +1,61 @@
+﻿@using System.Web.Optimization
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @*<link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Modifiers.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/jquery-ui.min.css")" rel="stylesheet" type="text/css" />*@
+    <link href="@BundleTable.Bundles.ResolveBundleUrl("~/Content/css")" rel="stylesheet" type="text/css"/>
+    @*<script src="@Url.Content("~/Scripts/jquery-ui-1.11.2.custom/jquery.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.11.2.custom/jquery-ui.min.js")" type="text/javascript"></script>
+        
+    <script src="@Url.Content("~/Scripts/jquery.ui.datepicker-ru.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+
+    <script src="@Url.Content("~/Scripts/Sadik/Misc.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Sadik/pubsub.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Sadik/Collections.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Sadik/Collapsible.js")" type="text/javascript"></script>*@
+
+    <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js")"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $.datepicker.setDefaults($.datepicker.regional['ru']);
+            $.datepicker.setDefaults({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true,
+                maxDate: new Date
+            });
+            $(".js_datetimebox").datepicker();
+            $(".js_datetimebox_past_future").datepicker({
+                maxDate: null
+            });
+            
+        });
+        function sadikAjaxStart() {
+            //		alert('ПОказать крутилку');
+            $('input[type=submit]').attr('disabled', 'disabled');
+        }
+
+        function sadikAjaxStop() {
+            //		alert('Убрать крутилку');
+            $('input[type=submit]').removeAttr('disabled');
+        }
+    </script>
+    @RenderSection("HEAD", false)
+</head>
+
+<body>
+    
+    <div id="header"><div id="header_inner">@Html.Action("Header", "Layout", new { KindergartenId = ViewBag.KindergartenId, tab = ViewData["SelectedTab"] == null ? null : (int?)((int)ViewData["SelectedTab"]) })</div></div>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

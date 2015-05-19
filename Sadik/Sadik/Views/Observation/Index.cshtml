@@ -1,0 +1,378 @@
+﻿@model IEnumerable<ObservationModel>
+@{
+    Layout = null;
+}
+<style type="text/css">
+    .ActivityListItemContainer {
+        padding:5px 0;
+    }
+    .ActivityListItemContainer_DateObserved {
+        float:left;
+        width:200px;
+    }
+    .ActivityListItemContainer_InventoryItem {
+        float:left;
+        width:150px;
+    }
+    .ActivityListItemContainer_ChoseHimSelf {
+        float:left;
+        text-align:left;
+        width:20px;
+    }
+    .ActivityListItemContainer_Polarization {
+        float:left;
+        text-align:right;
+        width:10px;
+    }
+    .ActivityListItemContainer_Duration {
+        min-height:1px;
+        float:left;
+        width:60px;
+    }
+    .ActivityListItemContainer_TeacherName {
+        float:left;
+        width:120px;
+    }
+    .ActivityListItemContainer_DeleteButton {
+        float:left;
+        width:100px;
+    }
+    .ActivityListItemContainer_EditButton {
+        float:left;
+        width:100px;
+    }
+    .ActivityListItemContainer_Comment {
+        margin:5px 0 0 0;
+        width:600px;
+    }
+    .CameInClassListItemContainer {
+        padding:5px 0;
+    }
+    .CameInClassListItemContainer_DateObserved {
+        float:left;
+        width:200px;
+    }
+    .CameInClassListItemContainer_Dummy {
+        float:left;
+        width:270px;
+    }
+    .CameInClassListItemContainer_TeacherName {
+        float:left;
+        width:120px;
+    }
+    .CameInClassListItemContainer_DeleteButton {
+        float:left;
+        width:100px;
+    }
+    .CameInClassListItemContainer_EditButton {
+        float:left;
+        width:100px;
+    }
+    .CameInClassListItemContainer_Comment {
+        margin:5px 0 0 0;
+        width:600px;
+    }
+    .EmotionListItemContainer {
+        padding:5px 0;
+    }
+    .EmotionListItemContainer_DateObserved {
+        float:left;
+        width:200px;
+    }
+    .EmotionListItemContainer_EmotionType {
+        float:left;
+        width:100px;
+    }
+    .EmotionListItemContainer_Dummy {
+        float:left;
+        width:160px;
+    }
+    .EmotionListItemContainer_TeacherName {
+        float:left;
+        width:120px;
+    }
+    .EmotionListItemContainer_DeleteButton {
+        float:left;
+        width:100px;
+    }
+    .EmotionListItemContainer_EditButton {
+        float:left;
+        width:100px;
+    }
+    .EmotionListItemContainer_Comment {
+        margin:5px 0 0 0;
+        width:600px;
+    }
+    .observationCell {
+        padding:0 3px;
+        margin:0 2px;
+    }
+    .clearFloatBoth {
+        clear:both;
+    }
+    .nbsp {
+        min-height:1px;
+        padding:0 1px 0 0;
+    }
+    .filterLink {
+        margin: 20px 10px 5px 10px;
+        display:block;
+        float:left;
+    }
+    .commentText {
+        font-style:italic;
+        font-weight:bolder;
+    }
+</style>
+@if (Model.Count() > 0)
+{
+    <a href="javascript:void(0)" class="js_filterObservationsAll filterLink">Все</a>
+    <a href="javascript:void(0)" class="js_filterObservationsActivities filterLink">Работа с материалами</a>
+    <a href="javascript:void(0)" class="js_filterObservationsCameInClass filterLink">Вход в класс</a>
+    <a href="javascript:void(0)" class="js_filterObservationsEmotion filterLink">Настроение</a>
+    <a href="javascript:void(0)" class="js_filterObservationsComments filterLink">Комментарии</a>
+    <div class="clearFloatBoth"></div>
+    foreach (var observationModel in Model)
+    {
+        
+        if (observationModel is ObservationActivityModel)
+        {
+            @RenderActivity((observationModel as ObservationActivityModel).observation);
+        }
+        else if (observationModel is ObservationCameInClassModel)
+        {
+            @RenderCameInClass((observationModel as ObservationCameInClassModel).observation);
+        }
+        else if (observationModel is ObservationEmotionModel)
+        {
+            @RenderEmotion((observationModel as ObservationEmotionModel).observation);
+        }
+    }
+}
+else
+{
+    <span>Наблюдений ещё не было</span>
+}
+<script type="text/javascript">
+    $(function () {
+        $('.js_filterObservationsAll').click(function () {
+            $('.js_ObservationItem').show();
+        });
+        $('.js_filterObservationsActivities').click(function () {
+            $('.js_ObservationItem').each(function(){
+                if($(this).hasClass('js_ObservationItemActivity')){
+                    $(this).show();
+                }else{
+                    $(this).hide();
+                }
+            });
+        });
+        $('.js_filterObservationsCameInClass').click(function () {
+            $('.js_ObservationItem').each(function () {
+                if ($(this).hasClass('js_ObservationItemCameInClass')) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+        $('.js_filterObservationsEmotion').click(function () {
+            $('.js_ObservationItem').each(function () {
+                if ($(this).hasClass('js_ObservationItemEmotion')) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+        $('.js_filterObservationsComments').click(function () {
+            $('.js_ObservationItem').each(function () {
+                if ($(this).find('.js_comment_container').length > 0) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    })
+</script>
+@helper RenderActivity(Activity observation)
+{
+    
+    <div class="ActivityListItemContainer js_ObservationItem js_ObservationItemActivity">
+        <div class="ActivityListItemContainer_DateObserved observationCell">@observation.DateObserved.ToString("dd MMMM yyyy HH:mm")</div>
+        <div class="ActivityListItemContainer_InventoryItem observationCell">
+            @if (observation.Inventory != null)
+            {
+                @observation.Inventory.Name;
+            }
+        </div>
+        <div class="ActivityListItemContainer_ChoseHimSelf observationCell">
+            @if (observation.ChoseHimSelf)
+            { 
+                @("Сам")
+            }
+            else
+            {
+                <div class="nbsp"></div>
+            }
+        </div>
+        <div class="ActivityListItemContainer_Polarization observationCell">
+            @if (observation.Polarization)
+            { 
+                @("*")
+            }
+            else
+            {
+                <div class="nbsp"></div>
+            }
+        </div>
+        <div class="ActivityListItemContainer_Duration observationCell">
+            @observation.Duration.DisplayName()
+        </div>
+        <div class="ActivityListItemContainer_TeacherName observationCell">
+            @if (observation.User != null)
+            {
+                @observation.User.FirstName;
+            }
+        </div>
+        <div class="ActivityListItemContainer_DeleteButton observationCell">             
+            @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+            {
+                using (Html.BeginForm("DeleteActivity", "Observation", new { Id = observation.Id, KindergartenId = ViewBag.KindergartenId }, FormMethod.Post, null))
+                {
+                    @Html.SubmitButton(null, "Удалить")
+                }
+            }
+        </div>
+        <div class="ActivityListItemContainer_EditButton observationCell">             
+            @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+            {
+                var returnUrl = Url.Action("View", "Kids", new { id = observation.KidId, KindergartenId = ViewBag.KindergartenId });
+                @Html.ActionLink("редактировать", "EditActivity", "Observation", new { Id = observation.Id, returnUrl = returnUrl, KindergartenId = ViewBag.KindergartenId }, null);
+            }
+        </div>
+        <div class="clearFloatBoth"></div>
+        @if (observation.Comment != null)
+        {
+            <div class="ActivityListItemContainer_Comment js_comment_container">
+                <span class="commentText">
+                @{
+                    int lengthlimit = 140;
+                    if (observation.Comment.Length < lengthlimit)
+                    {
+                        @Html.Raw(observation.Comment);
+                    }
+                    else
+                    {
+                        @Html.Raw(observation.Comment.Substring(0, lengthlimit) + "...");
+                    }
+                }
+                </span>
+            </div>
+        }
+    </div>
+}
+
+@helper RenderCameInClass(CameInClass observation)
+{
+    <div class="CameInClassListItemContainer js_ObservationItem js_ObservationItemCameInClass">
+        <div class="CameInClassListItemContainer_DateObserved observationCell">@observation.DateTimeCameInClass.ToString("dd MMMM yyyy HH:mm")</div>
+        <div class="CameInClassListItemContainer_Dummy observationCell">
+            Пришел в класс<div class="nbsp"></div>
+        </div>
+        <div class="CameInClassListItemContainer_TeacherName observationCell">
+            @if (observation.User != null)
+            {
+                @observation.User.FirstName;
+            }
+        </div>
+        <div class="CameInClassListItemContainer_DeleteButton observationCell">             
+            @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+            {
+                using (Html.BeginForm("DeleteCameInClass", "Observation", new { Id = observation.Id, KindergartenId = ViewBag.KindergartenId }, FormMethod.Post, null))
+                {
+                    @Html.SubmitButton(null, "Удалить")
+                }
+            }
+        </div>
+        <div class="CameInClassListItemContainer_EditButton observationCell">             
+            @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+            {
+                var returnUrl = Url.Action("View", "Kids", new { id = observation.KidId, KindergartenId = ViewBag.KindergartenId });
+                @Html.ActionLink("редактировать", "EditCameInClass", "Observation", new { Id = observation.Id, returnUrl = returnUrl, KindergartenId = ViewBag.KindergartenId }, null);
+            }
+        </div>
+        <div class="clearFloatBoth"></div>
+        @if (observation.Comment != null)
+        {
+            <div class="CameInClassListItemContainer_Comment js_comment_container">
+                <span class="commentText">
+                @{
+                    int lengthlimit = 140;
+                    if (observation.Comment.Length < lengthlimit)
+                    {
+                        @Html.Raw(observation.Comment);
+                    }
+                    else
+                    {
+                        @Html.Raw(observation.Comment.Substring(0, lengthlimit) + "...");
+                    }
+                }
+                </span>
+            </div>
+        }
+    </div>
+}
+
+@helper RenderEmotion(EmotionObservation observation)
+{
+    <div class="EmotionListItemContainer js_ObservationItem js_ObservationItemEmotion">
+        <div class="EmotionListItemContainer_DateObserved observationCell">@observation.DateObserved.ToString("dd MMMM yyyy HH:mm")</div>
+        <div class="EmotionListItemContainer_EmotionType observationCell">@observation.Emotion.DisplayName()</div>
+        <div class="EmotionListItemContainer_Dummy observationCell">
+            <div class="nbsp"></div>
+        </div>
+        <div class="EmotionListItemContainer_TeacherName observationCell">
+            @if (observation.User != null)
+            {
+                @observation.User.FirstName;
+            }
+        </div>
+        <div class="EmotionListItemContainer_DeleteButton observationCell">             
+            @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+            {
+                using (Html.BeginForm("DeleteEmotion", "Observation", new { Id = observation.Id, KindergartenId = ViewBag.KindergartenId }, FormMethod.Post, null))
+                {
+                    @Html.SubmitButton(null, "Удалить")
+                }
+            }
+        </div>
+        <div class="EmotionListItemContainer_EditButton observationCell">             
+            @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+            {
+                var returnUrl = Url.Action("View", "Kids", new { id = observation.KidId, KindergartenId = ViewBag.KindergartenId });
+                @Html.ActionLink("редактировать", "EditEmotion", "Observation", new { Id = observation.Id, returnUrl = returnUrl, KindergartenId = ViewBag.KindergartenId }, null);
+            }
+        </div>
+        <div class="clearFloatBoth"></div>
+        @if (observation.Comment != null)
+        {
+            <div class="EmotionListItemContainer_Comment js_comment_container">
+                <span class="commentText">
+                @{
+                    int lengthlimit = 140;
+                    if (observation.Comment.Length < lengthlimit)
+                    {
+                        @Html.Raw(observation.Comment);
+                    }
+                    else
+                    {
+                        @Html.Raw(observation.Comment.Substring(0, lengthlimit) + "...");
+                    }
+                }
+                </span>
+            </div>
+        }
+    </div>
+}

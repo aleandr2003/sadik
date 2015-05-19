@@ -1,0 +1,38 @@
+﻿@model AddZoneModel
+@{
+    Layout = null;
+}
+@if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+{
+    int KindergartenId = ViewBag.KindergartenId;
+    using (Html.BeginForm("AddZone", "Inventory", new { KindergartenId = KindergartenId }, FormMethod.Post, new { id = "addZoneFormTemplate", @class = "addZoneForm" }))
+    {
+        <fieldset>
+            <div>
+                @Html.LabelFor(x => x.Name, "Название")
+                @Html.TextBoxFor(x => x.Name, new { id="zoneNameBox"})
+                @Html.ValidationMessageFor(x => x.Name)
+            </div>
+            <div>
+                <select name="parentZoneId" class="selectParentZone">
+                    @{
+                        var DropdownItems = (List<ZoneDropdownItem>)ViewBag.ZoneDropdownContent;
+                        foreach (var item in DropdownItems)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            @Html.ValidationMessageFor(x => x.parentZoneId)
+        </fieldset>
+        if (ViewBag.ErrorMessage != null)
+        {
+	        <div id="errorMessage" class="errorMessage">@ViewBag.ErrorMessage</div>
+        }
+	    @Html.SubmitButton(null, "Добавить")
+        @Html.ActionLink("Отменить", "Index", "Inventory", new { KindergartenId = KindergartenId }, new { @class = "cancelAddZoneLink" })
+        @*<a href="javascript:void(0)" class = "cancelAddZoneLink">Отменить</a>*@
+        
+    }
+}

@@ -1,0 +1,18 @@
+﻿@model Kindergarten
+@{
+    ViewBag.Title = "Садик " + Model.Name;
+}
+
+<h2>Садик @Model.Name</h2>
+@if (ViewBag.CanManageKindergarten == true)
+{
+    @Html.ActionLink("редактировать", "Edit", "Kindergarten", new {Id = Model.Id }, null);
+}
+
+<h3>Воспитатели</h3>
+<ul>
+@foreach (User teacher in ViewBag.KindergartenUsers)
+{
+    <li>@teacher.FirstName @teacher.LastName</li>    
+}
+</ul>

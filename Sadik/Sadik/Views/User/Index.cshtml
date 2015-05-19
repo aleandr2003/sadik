@@ -1,0 +1,29 @@
+﻿@model IEnumerable<User>
+@{
+    ViewBag.Title = "Пользователи";
+}
+
+<h2>Пользователи</h2>
+
+<table>
+    <tr><th>Имя</th><th></th></tr>
+    @foreach(var user in Model){
+        <tr>
+            <td>@Html.ActionLink(user.FirstName + " " + user.LastName, "View", "User", new {Id = user.Id }, null)</td>
+            <td>
+                @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Admin)
+                {
+                    using (Html.BeginForm<UserController>(x => x.RemoveUser(user.Id), FormMethod.Post))
+                    {
+                        @Html.SubmitButton(null, "Удалить")
+                    }
+                }
+            </td>
+        </tr>
+    }
+</table>
+<br/>
+@if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Admin)
+{
+    @Html.Partial("Register", new RegisterModel())
+}

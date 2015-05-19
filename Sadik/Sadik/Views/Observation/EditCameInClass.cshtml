@@ -1,0 +1,49 @@
+﻿@using System.Web.Optimization
+@model CameInClass
+@{
+    ViewBag.Title = "Редактировать запись";
+}
+@section HEAD{
+@*    <script type="text/javascript" src="@Url.Content("~/Scripts/orm/model.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/orm/observation.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/orm/cameInClass.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/orm/emotion.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/orm/activity.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/BaseObservationLogger.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/ActivityLogger.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/CameInClassLogger.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/EmotionLogger.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/ObservationLoggerModule.js")"></script>*@
+    <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
+}
+<h2>Редактировать запись</h2>
+@Html.Partial("LogCameInClassForm", new LogCameInClassModel() {
+    Id = Model.Id, 
+    KidId = Model.KidId, 
+    Comment = Model.Comment,
+    DateObserved = Model.DateTimeCameInClass.Date,
+    Hours = Model.DateTimeCameInClass.Hour,
+    Minutes = Model.DateTimeCameInClass.Minute,
+    UniqueId = Model.UniqueId
+})
+
+@Html.ActionLink("Отменить","View","Kids",new {Id = Model.KidId, KindergartenId = ViewBag.KindergartenId}, null)
+<script type="text/javascript">
+    $.validator.setDefaults({ ignore: "" });
+
+    var cameInClassUrl = '@Url.Action("CameInClass", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+    var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
+    var kidId = '@Model.KidId';
+
+    $(function () {
+        var observationLoggerModule = new ObservationLoggerModule({
+            cameInClassLogger: {
+                block:$('.js_logObservationBlock_cameInClass'),
+                saveObservationUrl: cameInClassUrl
+            },
+            hideUseCurrentTime:true
+        });
+        observationLoggerModule.SetKidsSource(kidsSource);
+        observationLoggerModule.SelectKid(kidId);
+    });
+</script>

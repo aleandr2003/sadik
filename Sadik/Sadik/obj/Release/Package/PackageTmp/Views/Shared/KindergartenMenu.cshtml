@@ -1,0 +1,25 @@
+﻿@model int
+@{
+    Layout = null;
+}
+
+<ul class="siteNavigator">
+    @if (ViewBag.currentUser as User != null)
+    {
+        if (((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+        {
+            <li class="siteNavigator_item @(ViewBag.SelectedTab == HeaderTabs.Observation ? "siteNavigator_item_current" : "")">
+                @Html.ActionLink("Наблюдения", "Log", "Observation", new { KindergartenId = Model }, new { @class = "siteNavigator_item_link" })
+            </li>
+        }
+    }
+    <li class="siteNavigator_item @(ViewBag.SelectedTab == HeaderTabs.Kids ? "siteNavigator_item_current" : "")">
+        @Html.ActionLink("Дети", "Index", "Kids", new { KindergartenId = Model }, new { @class = "siteNavigator_item_link" })
+    </li>
+    <li class="siteNavigator_item @(ViewBag.SelectedTab == HeaderTabs.Inventory ? "siteNavigator_item_current" : "")">
+        @Html.ActionLink("Материалы", "Index", "Inventory", new { KindergartenId = Model }, new { @class = "siteNavigator_item_link" })
+    </li>
+    <li class="siteNavigator_item @(ViewBag.SelectedTab == HeaderTabs.Kindergarten ? "siteNavigator_item_current" : "")">
+        @Html.ActionLink("Садик", "View", "Kindergarten", new { Id = Model }, new { @class = "siteNavigator_item_link" })
+    </li>
+</ul>

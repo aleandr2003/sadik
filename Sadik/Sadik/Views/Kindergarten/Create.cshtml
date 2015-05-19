@@ -1,0 +1,21 @@
+﻿@model CreateKindergartenModel
+@{
+    ViewBag.Title = "Добавить новый садик";
+}
+
+<h2>Добавить новый садик</h2>
+ @using (Html.BeginForm("Create", "Kindergarten", null, FormMethod.Post, null))
+    {
+        @Html.LabelFor(x => x.Name, "Название")
+		@Html.TextBoxFor(x => x.Name, new { placeholder = "Ракушка" })
+        @Html.ValidationMessageFor(x => x.Name)
+        
+        <br />
+        if (ViewBag.ErrorMessage != null)
+        {
+	        <div id="errorMessage" class="errorMessage">@ViewBag.ErrorMessage</div>
+        }
+        <br />
+	    @Html.SubmitButton(null, "Сохранить")
+        @Html.ActionLink("Отменить", "Index", "Kindergarten")
+    }

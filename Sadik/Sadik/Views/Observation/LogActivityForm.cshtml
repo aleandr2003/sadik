@@ -1,0 +1,131 @@
+﻿@model LogActivityModel
+@{
+    Layout = null;
+}
+<div class="js_logObservationBlock_activity">
+@using (Html.BeginForm(Model.Id == null ? "Activity" : "EditActivity", "Observation",
+    new { KindergartenId = ViewBag.KindergartenId }, FormMethod.Post , null))
+{
+    @Html.HiddenFor(x => x.Id, new { @class = "js_ObservationId" })
+    @Html.HiddenFor(x => x.UniqueId, new { @class = "js_UniqueId" })
+    if (ViewBag.ReturnUrl != null)
+    {
+        @Html.Hidden("returnUrl", (string)ViewBag.ReturnUrl)
+    }
+
+    <div class="js_useCurrentTimeBlock">
+        <input type="checkbox" name="useCurrentTime" class="js_useCurrentTime"/> <span>Использовать текущее время</span>
+    </div>
+    <div class="js_inputTimeBlock">
+        @Html.LabelFor(x => x.DateObserved, "Дата наблюдения")
+	    @Html.TextBox("DateObserved", string.Format("{0:dd-MM-yyyy}", Model.DateObserved.HasValue ? Model.DateObserved : DateTime.Now), new { @class = "js_datetimebox js_DateObserved", id = "DateObservedActivity" })
+        @Html.ValidationMessageFor(x => x.DateObserved)
+        <br />
+        <span>Время </span>
+        <select name="Hours" class="js_HoursObserved" data-val-required="Пожалуйста, укажите время (час)" data-val="true">
+            <option value=""></option>
+            @for (int i = 7; i <= 18; i++)
+            {
+            <option value="@i" @(i == Model.Hours ? "selected" : "")>@i</option>
+            }
+        </select>
+        <span> : </span>
+        <input name="Minutes" class="js_MinutesObserved timebox_minutes" 
+            data-val-required="Пожалуйста, укажите время (минуты)" 
+            data-val-number="Пожалуйста, введите число в поле Минуты." 
+            data-val-range="Пожалуйста, Введите число меньше 60-ти" 
+            data-val-range-min="0" 
+            data-val-range-max="59"
+            data-val="true" value="@(Model.Minutes < 10 ? "0" + Model.Minutes.ToString() : Model.Minutes.ToString() )"/>
+        @*<select name="Minutes" class="js_MinutesObserved" data-val-required="Пожалуйста, укажите время (минуты)" data-val="true">
+            <option value=""></option>
+            @for (int i = 0; i <= 55; i += 5)
+            {
+            <option value="@i" @(i <= Model.Minutes && Model.Minutes < i + 5 ? "selected" : "")>@( i < 10 ? "0" + i : "" + i)</option>
+            }
+        </select>*@
+        <br/>
+        <div><span class="field-validation-valid" data-valmsg-for="Hours" data-valmsg-replace="true"></span></div>
+        <div><span class="field-validation-valid" data-valmsg-for="Minutes" data-valmsg-replace="true"></span></div>
+    </div>
+    
+    <div class="js_KidSelectorContainer">
+        @Html.LabelFor(x => x.KidId, "Ребенок")
+        <input class="js_KidIdSelect" name="KidIdSelect"/>
+        @Html.HiddenFor(x => x.KidId, new { @class = "js_KidId" })
+    </div>
+    <div>@Html.ValidationMessageFor(x => x.KidId)</div>
+    <br />
+   	@Html.LabelFor(x => x.ItemId, "Материал")
+    <input class="js_ItemIdSelect" name="ItemIdSelect"/>
+    @Html.HiddenFor(x => x.ItemId, new { @class = "js_ItemId" })
+    <div>@Html.ValidationMessageFor(x => x.ItemId)</div>
+
+    <br />
+        {
+            var duration = new SelectListItem[]{ 
+                new SelectListItem { Text = ActivityDuration.Brief.DisplayName(), Value = ((int) ActivityDuration.Brief).ToString() },
+                new SelectListItem { Text = ActivityDuration.Short.DisplayName(), Value = ((int) ActivityDuration.Short).ToString() },
+                new SelectListItem { Text = ActivityDuration.Long.DisplayName(), Value = ((int) ActivityDuration.Long).ToString() }
+            };
+   	    @Html.LabelFor(x => x.Duration, "Продолжительность")
+	    <select name="Duration" class="js_Duration" data-val="true" data-val-required="Пожалуйста, выберите продолжительность">
+            <option value="@(((int)ActivityDuration.Brief).ToString())" @(Model.Duration == ActivityDuration.Brief ? "selected" : "")>@ActivityDuration.Brief.DisplayName()</option>
+            <option value="@(((int)ActivityDuration.Short).ToString())" @(Model.Duration == ActivityDuration.Short ? "selected" : "")>@ActivityDuration.Short.DisplayName()</option>
+            <option value="@(((int)ActivityDuration.Long).ToString())" @(Model.Duration == ActivityDuration.Long ? "selected" : "")>@ActivityDuration.Long.DisplayName()</option>
+	    </select>
+        <div>@Html.ValidationMessageFor(x => x.Duration)</div>
+        }
+	<br />
+	<a href="javascript:void(0)" class="js_addCommentLink">Комментарии (не обязательно)</a>
+    <br />
+	@Html.TextAreaFor(x => x.Comment, new { rows = 4, cols = 30, @class = "js_commentTextArea" })
+    <br />
+    @Html.ValidationMessageFor(x => x.Comment)
+
+    <br />
+	
+    
+    @Html.LabelFor(x => x.Polarization, "Была поляризация")
+	@Html.CheckBoxFor(x => x.Polarization, new { @class = "js_Polarization" })
+    @Html.ValidationMessageFor(x => x.Polarization)
+
+    <br />
+    @Html.LabelFor(x => x.ChoseHimSelf, "Сам взял")
+	@Html.CheckBoxFor(x => x.ChoseHimSelf, new { @class = "js_ChoseHimSelf" })
+    @Html.ValidationMessageFor(x => x.ChoseHimSelf)
+   
+    <div class="js_presentationBlock" style="display:none;">
+        <label for="presPerformed">Презентация:</label>
+        <input type="checkbox" name="presPerformed" class="js_presPerformed"/>
+        <br/>
+        <label for="datePerformed">Дата презентации:</label>
+        <input type="text" name="datePerformed" class="js_datetimebox js_datePerformed shortTextField"/>
+        <br/>
+    </div>
+    <div class="js_skillBlock" style="display:none;">
+        <label for="skillDegree">Навык:</label>
+        <select name="skillDegree" class="js_skillDegree">
+            <option value="@((int)SkillDegree.None)">@SkillDegree.None.DisplayName()</option>
+            <option value="@((int)SkillDegree.Basic)">@SkillDegree.Basic.DisplayName()</option>
+            <option value="@((int)SkillDegree.Intermediate)">@SkillDegree.Intermediate.DisplayName()</option>
+            <option value="@((int)SkillDegree.UpperIntermediate)">@SkillDegree.UpperIntermediate.DisplayName()</option>
+            <option value="@((int)SkillDegree.Advanced)">@SkillDegree.Advanced.DisplayName()</option>
+        </select>
+        <br/>
+    </div>
+    
+        if (ViewBag.ErrorMessage != null)
+        {
+	    <div id="errorMessage" class="errorMessage">@ViewBag.ErrorMessage</div>
+        }
+    <br />
+	@Html.SubmitButton(null, "Сохранить", new { @class = "js_submitButton" })
+    <div id="resultMessageActivity" class="resultMessage js_resultMessage"><span></span></div> 
+    <div id="counterActivity" class="resultMessage js_counter">
+        <img src="/Content/images/spinner.gif" width="15" height="15" alt="wait"/>
+        <span></span>
+    </div> 
+}
+
+</div>

@@ -1,0 +1,85 @@
+﻿@model ADRModel
+@{
+    ViewBag.Title = "Редактировать ДТР";
+}
+
+<h2>Редактировать ДТР (@ViewBag.KidsName)</h2>
+<div class="ADRRecord">
+    @using (Html.BeginForm("Edit", "ADR", new { KindergartenId = ViewBag.KindergartenId }, FormMethod.Post, null))
+    {
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.KidId)
+        
+        @Html.LabelFor(x => x.Date, "Дата")
+        <br/>
+        @Html.TextBox("Date", Model.Date.HasValue ? string.Format("{0:dd-MM-yyyy}", Model.Date) : "", new { @class = "js_datetimebox_past_future" })
+        @Html.ValidationMessageFor(x => x.Date)
+        <br/>
+        @Html.LabelFor(x => x.StartPeriod, "С: ")
+        @Html.TextBox("StartPeriod", Model.StartPeriod.HasValue ? string.Format("{0:dd-MM-yyyy}", Model.StartPeriod) : "", new { @class = "js_datetimebox_past_future" })
+        @Html.ValidationMessageFor(x => x.StartPeriod)
+        <br/>
+        @Html.LabelFor(x => x.EndPeriod, "По: ")
+        @Html.TextBox("EndPeriod", Model.EndPeriod.HasValue ? string.Format("{0:dd-MM-yyyy}", Model.EndPeriod) : "", new { @class = "js_datetimebox_past_future" })
+        @Html.ValidationMessageFor(x => x.EndPeriod)
+        <br/>
+        <br/>
+        <table class="AddADRTable">
+            <tr>
+                <td class="ADRTeachersCell">
+                    @Html.LabelFor(x => x.AchievementsTeachers, "Достижения (Воспитатели)")
+                    <br/>
+		            @Html.TextAreaFor(x => x.AchievementsTeachers, new { rows = "20", cols = "50" })
+                    <br/>
+                    @Html.ValidationMessageFor(x => x.AchievementsTeachers)
+                </td>
+                <td class="ADRParentsCell">
+                    @Html.LabelFor(x => x.AchievementsParents, "Достижения (Родители)")
+                    <br/>
+		            @Html.TextAreaFor(x => x.AchievementsParents, new { rows = "20", cols = "50" })
+                    <br/>
+                    @Html.ValidationMessageFor(x => x.AchievementsParents)
+                </td>
+            </tr>
+            <tr>
+                <td class="ADRTeachersCell">
+                    @Html.LabelFor(x => x.DifficultiesTeachers, "Трудности (Воспитатели)")
+                    <br/>
+		            @Html.TextAreaFor(x => x.DifficultiesTeachers, new { rows = "20", cols = "50" })
+                    <br/>
+                    @Html.ValidationMessageFor(x => x.DifficultiesTeachers)
+                </td>
+                <td class="ADRParentsCell">
+                    @Html.LabelFor(x => x.DifficultiesParents, "Трудности (Родители)")
+                    <br/>
+		            @Html.TextAreaFor(x => x.DifficultiesParents, new { rows = "20", cols = "50" })
+                    <br/>
+                    @Html.ValidationMessageFor(x => x.DifficultiesParents)
+                </td>
+            </tr>
+            <tr>
+                <td class="ADRTeachersCell">
+                    @Html.LabelFor(x => x.RecommendationsTeachers, "Рекомендации (Воспитатели)")
+                    <br/>
+		            @Html.TextAreaFor(x => x.RecommendationsTeachers, new { rows = "20", cols = "50" })
+                    <br/>
+                    @Html.ValidationMessageFor(x => x.RecommendationsTeachers)
+                </td>
+                <td class="ADRParentsCell">
+                    @Html.LabelFor(x => x.RecommendationsParents, "Рекомендации (Родители)")
+                    <br/>
+		            @Html.TextAreaFor(x => x.RecommendationsParents, new { rows = "20", cols = "50" })
+                    <br/>
+                    @Html.ValidationMessageFor(x => x.RecommendationsParents)
+                </td>
+            </tr>
+        </table>
+        <br/>
+        @Html.LabelFor(x => x.Performed, "Уже состоялось?")
+		@Html.CheckBoxFor(x => x.Performed)
+        <br/>
+        @Html.SubmitButton(null, "Сохранить")
+        <br/>
+        @Html.ActionLink("Отменить", "View", "Kids", new { Id = Model.KidId, KindergartenId = ViewBag.KindergartenId }, null)
+    }
+</div>

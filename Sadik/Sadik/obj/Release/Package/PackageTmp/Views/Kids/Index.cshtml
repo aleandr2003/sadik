@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Kid>
+@{
+    ViewBag.Title = "Дети";
+}
+
+<h2>Дети</h2>
+
+<table>
+    <tr><th>Имя</th><th>Возраст</th><th>Принят в садик</th></tr>
+    @foreach(var kid in Model){
+        <tr>
+            <td>
+                @if (ViewBag.currentUser as User != null){
+                    @Html.ActionLink(kid.LastName + " " + kid.FirstName, "View", "Kids", new {Id = kid.Id, KindergartenId = kid.KindergartenId }, null)
+                }else{
+                    <span>@kid.FirstName @kid.LastName</span>
+                }
+            </td>
+            <td>@kid.GetFormattedAge()</td>
+            <td>@kid.DateAccepted.ToString("d MMMM yyyy")</td>
+        </tr>
+    }
+</table>
+@if (ViewBag.CanAcceptKids == true)
+{
+    @Html.Partial("AcceptKid", new AcceptKidModel())
+}

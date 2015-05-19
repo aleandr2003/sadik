@@ -1,0 +1,6 @@
+﻿@model DateTime?
+@if (ViewData.ContainsKey("id")){
+@Html.TextBox((string)ViewData["name"], Model.HasValue ? string.Format("{0:dd-MM-yyyy}", Model): "", new {@class = ViewData["class"], id = ViewData["id"]})
+}else{
+@Html.TextBox((string)ViewData["name"], Model.HasValue ? string.Format("{0:dd-MM-yyyy}", Model): "", new {@class = ViewData["class"]})
+}

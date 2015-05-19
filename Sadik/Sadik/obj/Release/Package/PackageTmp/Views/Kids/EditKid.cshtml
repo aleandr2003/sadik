@@ -1,0 +1,41 @@
+﻿@model EditKidModel
+@{
+    Layout = null;
+}
+
+<h2>Редактировать профиль</h2>
+
+    @using (Html.BeginForm("EditKid", "Kids", new { Id = Model.Id, KindergartenId = ViewBag.KindergartenId }, FormMethod.Post, null))
+    {
+        @Html.LabelFor(x => x.FirstName, "Имя")
+		@Html.TextBoxFor(x => x.FirstName, new { placeholder = "Александр" })
+        @Html.ValidationMessageFor(x => x.FirstName)
+        
+        <br />
+   		@Html.LabelFor(x => x.LastName, "Фамилия")
+		@Html.TextBoxFor(x => x.LastName, new { placeholder = "Пушкин" })
+        @Html.ValidationMessageFor(x => x.LastName)
+
+        <br />
+   		@Html.LabelFor(x => x.Patronymic, "Отчество")
+		@Html.TextBoxFor(x => x.Patronymic, new { placeholder = "Сергеевич" })
+        @Html.ValidationMessageFor(x => x.Patronymic)
+
+		<br />
+		@Html.LabelFor(x => x.DateOfBirth, "День рождения")
+		@Html.EditorFor(x => x.DateOfBirth)
+        @Html.ValidationMessageFor(x => x.DateOfBirth)
+
+        <br />
+		@Html.LabelFor(x => x.DateAccepted, "Принят в садик")
+		@Html.EditorFor(x => x.DateAccepted)
+        @Html.ValidationMessageFor(x => x.DateAccepted)
+        <br />
+        if (ViewBag.ErrorMessage != null)
+        {
+	        <div id="errorMessage" class="errorMessage">@ViewBag.ErrorMessage</div>
+        }
+        <br />
+	    @Html.SubmitButton(null, "Сохранить")
+        @Html.ActionLink("Отменить", "View", "Kids", new { Id = Model.Id, KindergartenId = ViewBag.KindergartenId}, null)
+    }

@@ -1,0 +1,28 @@
+﻿@model List<ADR>
+@{
+    Layout = null;
+}
+
+@if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+{
+    if (Model.Count > 0)
+    {
+        <h3>Ближайшие ДТР</h3>
+    }
+    var columnHeight = 5;
+    var i = 0;
+    while(i < Model.Count){
+        var adrs = Model.Skip(i).Take(columnHeight);
+        <div class="upcomingADRColumn">
+        @foreach (var adr in adrs)
+        {
+            <div class="upcomingADR">
+                <span>@Html.ActionLink(adr.Kid.FirstName + " " + adr.Kid.LastName, "Edit", "ADR", new {Id = adr.Id, KidId = adr.KidId, KindergartenId = ViewBag.KindergartenId }, null)</span>
+                <span>@Html.ActionLink(adr.Date.ToString("dd MMMM"), "Edit", "ADR", new {Id = adr.Id, KidId = adr.KidId, KindergartenId = ViewBag.KindergartenId }, null)</span>
+            </div>
+        }
+        </div>
+        i += columnHeight;
+    }
+    <div class="clearFloatBoth"></div>
+}

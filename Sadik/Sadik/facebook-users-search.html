@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <script src="/Scripts/jquery-ui-1.11.2.custom/jquery.js"></script>
+</head>
+<body>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '1600133136873853',
+                xfbml: true,
+                version: 'v2.2'
+            });
+
+            getAttendingPage("702527309844632");
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+            var getAttendingPage = function (eventId, after) {
+                var url = "/" + eventId + "/attending?access_token=1600133136873853|089904c0324adb926d5abd91653309d8";
+                if (after != undefined) url += "&after=" + after;
+                FB.api(
+                    url,
+                    function (response) {
+                        console.log(response);
+                        if (response && !response.error) {
+                            showResults(response.data);
+                            if (response.paging && response.paging.cursors && response.paging.cursors.after) {
+                                //getAttendingPage(eventId, response.paging.cursors.after);
+                            }
+                        }
+                    }
+                );
+            };
+
+            var showResults = function (data) {
+                var div = $('#results');
+                for (var i in data) {
+                    var user = data[i];
+                    var userItem = $('<div></div>').addClass('userItem');
+                    $('<span></span>').addClass('userName').text(user.name).appendTo(userItem);
+                    $('<span></span>').addClass('userLink').text('https://www.facebook.com/app_scoped_user_id/' + user.id + '/').appendTo(userItem);
+                    userItem.appendTo(div);
+                }
+            };
+    </script>
+
+    <div id="results">
+
+    </div>
+</body>
+</html>

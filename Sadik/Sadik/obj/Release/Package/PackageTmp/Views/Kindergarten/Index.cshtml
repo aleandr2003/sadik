@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Kindergarten>
+@{
+    ViewBag.Title = "Садики";
+}
+
+<h2>Садики</h2>
+
+<ul>
+    @foreach (var kindergarten in Model)
+    {
+        <li>@Html.ActionLink(kindergarten.Name, "View", "Kindergarten", new {Id = kindergarten.Id}, null)</li>
+    }
+</ul>

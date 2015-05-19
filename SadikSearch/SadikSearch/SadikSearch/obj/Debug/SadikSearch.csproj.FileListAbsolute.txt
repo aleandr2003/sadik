@@ -1,0 +1,6 @@
+C:\rabota\sadik\SadikSearch\SadikSearch\SadikSearch\bin\SadikSearch.dll
+C:\rabota\sadik\SadikSearch\SadikSearch\SadikSearch\bin\SadikSearch.pdb
+C:\rabota\sadik\SadikSearch\SadikSearch\SadikSearch\bin\EntityFramework.dll
+C:\rabota\sadik\SadikSearch\SadikSearch\SadikSearch\bin\EntityFramework.xml
+C:\rabota\sadik\SadikSearch\SadikSearch\SadikSearch\obj\Debug\SadikSearch.dll
+C:\rabota\sadik\SadikSearch\SadikSearch\SadikSearch\obj\Debug\SadikSearch.pdb

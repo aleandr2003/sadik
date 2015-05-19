@@ -1,0 +1,178 @@
+﻿@model Zone
+@{
+    ViewBag.Title = "Материалы";
+}
+<style>
+    .zoneContainer {
+    }
+    .zoneContent {
+        padding-left:20px;
+    }
+    .globalZoneContent {
+        padding-left:0px;
+    }
+    .zoneName {
+        float:left;
+        font-weight:bold;
+        font-size:larger;
+    }
+    .removeZoneSpan {
+        float:left;
+        margin:0 3px;
+    }
+    .editZoneSpan {
+        float:left;
+        margin:0 3px;
+    }
+    .addZoneSpan {
+        float:left;
+        margin:0 3px;
+    }
+    .addInventoryItemSpan {
+        float:left;
+        margin:0 3px;
+    }
+    .inventoryTable {
+        background-color:Highlight;
+    }
+    .selectParentZone {
+        display:none;
+    }
+    #addInventoryItemFormTemplate {
+        display:none;
+    }
+    #addZoneFormTemplate {
+        display:none;
+    }
+</style>
+<h2>Материалы</h2>
+
+<br/>
+@displayZone(Model)
+<br/>
+@if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+{
+    int KindergartenId = ViewBag.KindergartenId;
+    using (Html.BeginForm("AddItem", "Inventory", new{KindergartenId  = KindergartenId}, FormMethod.Post, new { id = "addInventoryItemFormTemplate", @class = "addInventoryItemForm" }))
+    {
+        <fieldset>
+            <div>
+            <label for="itemName">Название:</label>
+            <br/>
+		    <input type="text" name="itemName" id="itemName"/>
+            </div>
+            <div>
+                <select name="parentZoneId" class="selectParentZone">
+                    @{
+                        var DropdownItems = (List<ZoneDropdownItem>)ViewBag.ZoneDropdownContent;
+                        foreach (var item in DropdownItems)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+	    </fieldset>
+        if (ViewBag.ErrorMessage != null)
+        {
+	        <div id="errorMessage" class="errorMessage">@ViewBag.ErrorMessage</div>
+        }
+	    @Html.SubmitButton(null, "Добавить")
+        @Html.ActionLink("Отменить", "Index", "Inventory", new { KindergartenId = KindergartenId }, new { @class = "cancelAddInventoryItemLink" })
+        @*<a href="javascript:void(0)" class = "cancelAddInventoryItemLink">Отменить</a>*@
+    }
+}
+@if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+{
+    @Html.Action("AddZone")
+}
+@helper displayZone(Zone zone)
+{
+    <div class="zoneContainer">
+        @if (zone.ParentZoneId != null)
+        {
+            <span  class="zoneName">@zone.Name</span>
+        }
+        @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+        {
+            if (zone.ParentZoneId != null)
+            {
+                <span class="removeZoneSpan">
+                    @Html.ActionLink("Удалить", "RemoveZone", "Inventory",new { id = zone.Id, KindergartenId = zone.KindergartenId }, null)
+                </span>
+                    <span class="editZoneSpan">
+                    @Html.ActionLink("Редактировать", "EditZone", "Inventory", new { id = zone.Id, KindergartenId = zone.KindergartenId  }, null)
+                </span>
+            }
+            <span class="addZoneSpan">
+                <a href="javascript:void(0)" class="addZoneLink" zone-id="@zone.Id">Добавить Зону</a>
+            </span>
+            <span class="addInventoryItemSpan">
+                <a href="javascript:void(0)" class="addInventoryItemLink" zone-id="@zone.Id">Добавить Материал</a>
+            </span>
+        }
+        <br/>
+        <br/>
+        <div class="formContainer"></div>   
+        <div class="@(zone.ParentZoneId == null ? "globalZoneContent" : "zoneContent")">
+            <table class="inventoryTable">
+                @foreach (var item in zone.Inventories.Where(i => !i.IsDeleted))
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>
+                            @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+                            {
+                                using (Html.BeginForm("RemoveItem", "Inventory", new{Id = item.Id, KindergartenId = item.KindergartenId}, FormMethod.Post, null))
+                                {
+                                    @Html.SubmitButton(null, "Удалить")
+                                }
+                            }
+                        </td>
+                        <td>
+                            @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
+                            {
+                                @Html.ActionLink("Редактировать", "EditItem", "Inventory", new { id = item.Id, KindergartenId = item.KindergartenId }, null)
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            @foreach (var childZone in zone.ChildZones)
+            {
+                @displayZone(childZone);
+            }
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $(function () {
+        $('.addZoneLink').click(function () {
+            var formContainer = $(this).closest('.zoneContainer').children('.formContainer');
+            formContainer.empty();
+            var form = $('#addZoneFormTemplate').clone().appendTo(formContainer).show();
+            var parentZoneSelector = form.find('.selectParentZone');
+            parentZoneSelector.find('option').prop('selected', false);
+            parentZoneSelector.find('option[value="' + $(this).attr('zone-id') + '"]').prop('selected', true);
+            form.find('#zoneNameBox').focus();
+            form.find('.cancelAddZoneLink').click(function (event) {
+                event.preventDefault();
+                $(this).closest('.addZoneForm').remove();
+            });
+        });
+
+        $('.addInventoryItemLink').click(function () {
+            var formContainer = $(this).closest('.zoneContainer').children('.formContainer');
+            formContainer.empty();
+            var form = $('#addInventoryItemFormTemplate').clone().appendTo(formContainer).show();
+            var parentZoneSelector = form.find('.selectParentZone');
+            parentZoneSelector.find('option').prop('selected', false);
+            parentZoneSelector.find('option[value="' + $(this).attr('zone-id') + '"]').prop('selected', true);
+            form.find('#itemName').focus();
+            form.find('.cancelAddInventoryItemLink').click(function (event) {
+                event.preventDefault();
+                $(this).closest('.addInventoryItemForm').remove();
+            });
+        });
+    });
+</script>

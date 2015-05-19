@@ -1,0 +1,1 @@
+﻿var CameInClass = Observation.setup('CameInClass', Observation.attributes);

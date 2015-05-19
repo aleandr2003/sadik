@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>Place searches</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+          <style>
+      #map-canvas {
+        height: 80%;
+        margin: 0px;
+        padding: 0px
+      }
+      td {
+          width:200px;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&sensor=false"></script>
+    <script src="/Scripts/jquery-1.8.0.min.js"></script>
+    <script>
+        var infowindow;
+        var map;
+        var pageNum = 1;
+        var service;
+        function initialize() {
+            var atlanta = new google.maps.LatLng(33.755, -84.39);
+
+            map = new google.maps.Map(document.getElementById('map-canvas'), {
+                center: atlanta,
+                zoom: 15
+            });
+
+            var request = {
+                location: atlanta,
+                radius: 50000,
+                keyword : 'montessori'
+            };
+            infowindow = new google.maps.InfoWindow();
+            service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(request, callback);
+            $('#message').text("Started...");
+        }
+
+        function callback(results, status, pagination) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    createMarker(results[i]);
+                    $('<tr place-id="' + results[i].id + '" reference="' + results[i].reference + '"><td>' +
+                        results[i].name + '</td><td>' +
+                        results[i].types.join() + '</td><td>' +
+                        results[i].vicinity + '</td></tr>').appendTo('#results-table');
+                }
+                if (pagination.hasNextPage) {
+                    pageNum++;
+                    $('#message').text("Next page " + pageNum + " ...");
+                    setTimeout(function () { pagination.nextPage(); }, 2000);
+                } else {
+                    $('#message').text("Finished");
+                    var rows = $('#results-table').find('tr');
+                    if (rows.length > 0) {
+                        fillDetails(0);
+                    }
+                }
+            }
+        }
+        function fillDetails(index) {
+            var rows = $('#results-table').find('tr');
+            if (index >= rows.length) return;
+            var row = $(rows[index]);
+            var reference = row.attr('reference');
+            getPlaceDetails(reference, row, function () { setTimeout(function () { fillDetails(index + 1); }, 2000); });
+        }
+
+        function getPlaceDetails(reference, row, callback) {
+            var request = {
+                reference: reference
+            };
+            service.getDetails(request, function (place, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    var address = '';
+                    for (var i in place.address_components) {
+                        var component = place.address_components[i];
+                        address += component.types.join() + ":" + component.long_name + ";";
+                    }
+                    row.append('<td>' + address + '</td>');
+                    row.append('<td>' + place.international_phone_number + '</td>');
+                    row.append('<td>' + place.url + '</td>');
+                    row.append('<td>' + place.website + '</td>');
+                }
+                callback();
+            });
+        }
+
+        function createMarker(place) {
+            var placeLoc = place.geometry.location;
+            var marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(place.name);
+                infowindow.open(map, this);
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas">
+
+    </div>
+
+    <table id="results-table">
+    </table>
+    <div id="message"></div>
+  </body>
+</html>

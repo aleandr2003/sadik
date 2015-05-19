@@ -1,0 +1,13 @@
+﻿@model User
+@{
+    ViewBag.Title = Model.FirstName + " " + Model.LastName;
+}
+
+<h2>@Model.FirstName @Model.LastName</h2>
+<h3>@Model.Email</h3>
+@if (ViewBag.currentUser as User != null && Model.Id == ViewBag.currentUser.Id)
+{
+    @Html.ActionLink("редактировать профиль","EditProfile")
+    <br/>
+    @Html.ActionLink("сменить пароль","ChangePassword")
+}

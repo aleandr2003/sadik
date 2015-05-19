@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="9b6800399b1841698ffb71892c9db406" Name="Диаграмма1" ZoomLevel="97">
+        <EntityTypeShape EntityType="Sadik.Models.User" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Sadik.Models.Inventory" Width="1.5" PointX="2.625" PointY="0.875" />
+        <EntityTypeShape EntityType="Sadik.Models.Kid" Width="1.5" PointX="6.625" PointY="1.25" />
+        <EntityTypeShape EntityType="Sadik.Models.Activity" Width="1.5" PointX="3.875" PointY="5" />
+        <AssociationConnector Association="Sadik.Models.FK_Activities_Inventory" />
+        <AssociationConnector Association="Sadik.Models.FK_Activities_Kids" />
+        <AssociationConnector Association="Sadik.Models.FK_Activities_Users" />
+        <EntityTypeShape EntityType="Sadik.Models.Presentation" Width="1.5" PointX="5.625" PointY="5.875" />
+        <EntityTypeShape EntityType="Sadik.Models.Skill" Width="1.5" PointX="4.625" PointY="0.5" />
+        <AssociationConnector Association="Sadik.Models.FK_Presentations_Inventory" />
+        <AssociationConnector Association="Sadik.Models.FK_Skill_Inventory" />
+        <AssociationConnector Association="Sadik.Models.FK_Presentations_Kids" />
+        <AssociationConnector Association="Sadik.Models.FK_Skill_Kids" />
+        <AssociationConnector Association="Sadik.Models.FK_Presentations_Users" />
+        <EntityTypeShape EntityType="Sadik.Models.ActivityStat" Width="1.5" PointX="4.875" PointY="9.125" />
+        <AssociationConnector Association="Sadik.Models.FK_ActivityStats_Inventory" />
+        <AssociationConnector Association="Sadik.Models.FK_ActivityStats_Kids" />
+        <EntityTypeShape EntityType="Sadik.Models.Zone" Width="1.5" PointX="1.875" PointY="4.875" />
+        <AssociationConnector Association="Sadik.Models.FK_Inventory_Zones" />
+        <AssociationConnector Association="Sadik.Models.FK_Zones_Zones" />
+        <EntityTypeShape EntityType="Sadik.Models.ADR" Width="1.5" PointX="9.125" PointY="1.625" />
+        <AssociationConnector Association="Sadik.Models.FK_ADR_Kids" />
+        <EntityTypeShape EntityType="Sadik.Models.CameInClass" Width="1.5" PointX="2.375" PointY="8.5" />
+        <AssociationConnector Association="Sadik.Models.FK_CameInClass_Kids" />
+        <AssociationConnector Association="Sadik.Models.FK_CameInClass_Users" />
+        <EntityTypeShape EntityType="Sadik.Models.EmotionObservation" Width="1.5" PointX="6.75" PointY="10.875" />
+        <AssociationConnector Association="Sadik.Models.FK_Emotions_Kids" />
+        <AssociationConnector Association="Sadik.Models.FK_Emotions_Users" />
+        <EntityTypeShape EntityType="Sadik.Models.Kindergarten" Width="1.5" PointX="7.5" PointY="6.75" />
+        <EntityTypeShape EntityType="Sadik.Models.TemplateInventory" Width="1.5" PointX="9.2583360938626971" PointY="7.8222343809074886" />
+        <EntityTypeShape EntityType="Sadik.Models.TemplateZone" Width="1.5" PointX="4.89455968183212" PointY="13.297177469961893" />
+        <EntityTypeShape EntityType="Sadik.Models.UserKindergarten" Width="1.5" PointX="4.125" PointY="16.25" />
+        <AssociationConnector Association="Sadik.Models.FK_Inventory_Kindergarten" />
+        <AssociationConnector Association="Sadik.Models.FK_Kids_Kindergarten" />
+        <AssociationConnector Association="Sadik.Models.FK_UserKindergarten_Kindergarten" />
+        <AssociationConnector Association="Sadik.Models.FK_Zones_Kindergarten" />
+        <AssociationConnector Association="Sadik.Models.FK_TemplateInventory_TemplateZones" />
+        <AssociationConnector Association="Sadik.Models.FK_TemplateZones_TemplateZones" />
+        <AssociationConnector Association="Sadik.Models.FK_UserKindergarten_Users" />
+        <EntityTypeShape EntityType="Sadik.Models.City" Width="1.5" PointX="10.062061925447576" PointY="28.785799933963361" />
+        <EntityTypeShape EntityType="Sadik.Models.Cities" Width="1.5" PointX="6.8210193378948691" PointY="21.809808279299087" />
+        <EntityTypeShape EntityType="Sadik.Models.FutureCustomer" Width="1.5" PointX="9.7283989627512177" PointY="28.247760815661291" />
+        <EntityTypeShape EntityType="Sadik.Models.ItemUsageDetail" Width="1.5" PointX="9.8665364598233882" PointY="17.260386549523279" />
+        <AssociationConnector Association="Sadik.Models.FK_ItemUsageDetails_Inventory" />
+        <AssociationConnector Association="Sadik.Models.FK_ItemUsageDetails_Kids" />
+        <AssociationConnector Association="Sadik.Models.FK_ItemUsageDetails_Users" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
