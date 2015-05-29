@@ -1,0 +1,120 @@
+﻿ .ActivityListItemContainer {
+        padding:5px 0;
+    }
+    .ActivityListItemContainer_DateObserved {
+        float:left;
+        width:200px;
+    }
+    .ActivityListItemContainer_InventoryItem {
+        float:left;
+        width:150px;
+    }
+    .ActivityListItemContainer_ChoseHimSelf {
+        float:left;
+        text-align:left;
+        width:20px;
+    }
+    .ActivityListItemContainer_Polarization {
+        float:left;
+        text-align:right;
+        width:10px;
+    }
+    .ActivityListItemContainer_Duration {
+        min-height:1px;
+        float:left;
+        width:60px;
+    }
+    .ActivityListItemContainer_TeacherName {
+        float:left;
+        width:120px;
+    }
+    .ActivityListItemContainer_DeleteButton {
+        float:left;
+        width:100px;
+    }
+    .ActivityListItemContainer_EditButton {
+        float:left;
+        width:100px;
+    }
+    .ActivityListItemContainer_Comment {
+        margin:5px 0 0 0;
+        width:600px;
+    }
+    .CameInClassListItemContainer {
+        padding:5px 0;
+    }
+    .CameInClassListItemContainer_DateObserved {
+        float:left;
+        width:200px;
+    }
+    .CameInClassListItemContainer_Dummy {
+        float:left;
+        width:270px;
+    }
+    .CameInClassListItemContainer_TeacherName {
+        float:left;
+        width:120px;
+    }
+    .CameInClassListItemContainer_DeleteButton {
+        float:left;
+        width:100px;
+    }
+    .CameInClassListItemContainer_EditButton {
+        float:left;
+        width:100px;
+    }
+    .CameInClassListItemContainer_Comment {
+        margin:5px 0 0 0;
+        width:600px;
+    }
+    .EmotionListItemContainer {
+        padding:5px 0;
+    }
+    .EmotionListItemContainer_DateObserved {
+        float:left;
+        width:200px;
+    }
+    .EmotionListItemContainer_EmotionType {
+        float:left;
+        width:100px;
+    }
+    .EmotionListItemContainer_Dummy {
+        float:left;
+        width:160px;
+    }
+    .EmotionListItemContainer_TeacherName {
+        float:left;
+        width:120px;
+    }
+    .EmotionListItemContainer_DeleteButton {
+        float:left;
+        width:100px;
+    }
+    .EmotionListItemContainer_EditButton {
+        float:left;
+        width:100px;
+    }
+    .EmotionListItemContainer_Comment {
+        margin:5px 0 0 0;
+        width:600px;
+    }
+    .observationCell {
+        padding:0 3px;
+        margin:0 2px;
+    }
+    .clearFloatBoth {
+        clear:both;
+    }
+    .nbsp {
+        min-height:1px;
+        padding:0 1px 0 0;
+    }
+    .filterLink {
+        margin: 20px 10px 5px 10px;
+        display:block;
+        float:left;
+    }
+    .commentText {
+        font-style:italic;
+        font-weight:bolder;
+    }

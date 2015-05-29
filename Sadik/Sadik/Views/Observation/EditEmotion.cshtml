@@ -7,7 +7,7 @@
     <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
 }
 <h2>Редактировать запись</h2>
-@Html.Partial("LogEmotionForm", new LogEmotionModel() {
+@*@Html.Partial("LogEmotionForm", new LogEmotionModel() {
     Id = Model.Id, 
     KidId = Model.KidId, 
     Comment = Model.Comment,
@@ -16,7 +16,9 @@
     Minutes = Model.DateObserved.Minute,
     Emotion = Model.Emotion,
     UniqueId = Model.UniqueId
-})
+})*@
+
+@Html.Partial("LogEmotionFormTemplate")
 
 @Html.ActionLink("Отменить","View","Kids",new {Id = Model.KidId, KindergartenId = ViewBag.KindergartenId}, null)
 <script type="text/javascript">
@@ -26,6 +28,16 @@
 
     var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
     var kidId = '@Model.KidId';
+    var observationModel = @Html.Raw(Json.Encode(new LogEmotionModel() {
+        Id = Model.Id, 
+        KidId = Model.KidId, 
+        Comment = Model.Comment,
+        Emotion = Model.Emotion,
+        DateObserved = Model.DateObserved.Date,
+        Hours = Model.DateObserved.Hour,
+        Minutes = Model.DateObserved.Minute,
+        UniqueId = Model.UniqueId
+    }));
 
     $(function () {
         var observationLoggerModule = new ObservationLoggerModule({
@@ -37,5 +49,6 @@
         });
         observationLoggerModule.SetKidsSource(kidsSource);
         observationLoggerModule.SelectKid(kidId);
+        observationLoggerModule.editObservation(observationModel,'Emotion');
     });
 </script>

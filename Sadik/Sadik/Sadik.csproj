@@ -193,6 +193,9 @@
     </Compile>
     <Compile Include="Models\Notifications\NotificationTemplate.cs" />
     <Compile Include="Models\Notifications\PasswordResetNotification.cs" />
+    <Compile Include="Models\Observations\ActivityCustom.cs" />
+    <Compile Include="Models\Observations\CameInClassCustom.cs" />
+    <Compile Include="Models\Observations\EmotionObservationCustom.cs" />
     <Compile Include="Models\Password.cs" />
     <Compile Include="Models\Presentation.cs">
       <DependentUpon>SadikEntities.tt</DependentUpon>
@@ -289,6 +292,7 @@
     <Content Include="Content\jquery-ui.structure.min.css" />
     <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\Modifiers.css" />
+    <Content Include="Content\ObservationList.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -386,6 +390,7 @@
     <Content Include="Scripts\orm\itemUsageDetails.js" />
     <Content Include="Scripts\Sadik\klass.js" />
     <Content Include="Scripts\orm\model.js" />
+    <Content Include="Scripts\Sadik\ObservationListFilter.js" />
     <Content Include="Scripts\Sadik\pubsub.js" />
     <Content Include="Scripts\Sadik\Collapsible.js" />
     <Content Include="Scripts\Sadik\Collections.js" />
@@ -464,9 +469,14 @@
     <Content Include="Views\Kindergarten\Index.cshtml" />
     <Content Include="Views\Kindergarten\Create.cshtml" />
     <Content Include="Views\Research\Index.cshtml" />
+    <Content Include="Views\Observation\IndexAngular.cshtml" />
+    <Content Include="Views\Observation\LogCameInClassFormTemplate.cshtml" />
+    <Content Include="Views\Observation\LogEmotionFormTemplate.cshtml" />
+    <Content Include="Views\Observation\LogActivityFormTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Controllers\Observtions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -155,6 +155,16 @@
         }
     }
 
+    this.editObservation = function (observation, type) {
+        if (type == 'Activity') {
+            activityLogger.editObservation(observation);
+        } else if (type == 'CameInClass') {
+            cameInClassLogger.editObservation(observation);
+        } else if (type == 'Emotion') {
+            emotionLogger.editObservation(observation);
+        }
+    }
+
     if (self._kidsSelectorBlock && self._kidsSource) {
         renderKidsSelector();
     }

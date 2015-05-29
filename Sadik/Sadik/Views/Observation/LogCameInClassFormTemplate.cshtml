@@ -1,0 +1,71 @@
+﻿@{
+    Layout = null;
+}
+<div class="js_logObservationBlock_cameInClass">
+<form action="" method="post" novalidate="novalidate">
+    <input class="js_ObservationId" data-val="true" data-val-number="Значением поля Id должно быть число." id="Id" name="Id" type="hidden" value=""/>
+    <input class="js_UniqueId" data-val="true" data-val-required="Уникальный идентификатор наблюдения отсутствует." id="UniqueId" name="UniqueId" type="hidden" value="00000000-0000-0000-0000-000000000000"/>
+
+    <div class="js_useCurrentTimeBlock">
+        <input type="checkbox" name="useCurrentTime" class="js_useCurrentTime"/> <span>Использовать текущее время</span>
+    </div>
+    <div class="js_inputTimeBlock">
+        <label for="DateObserved">Дата наблюдения</label>
+        <input class="js_datetimebox js_DateObserved" id="DateObservedCameInClass" name="DateObserved" type="text"/>
+        <span class="field-validation-valid" data-valmsg-for="DateObserved" data-valmsg-replace="true"></span>
+
+        <br />
+        <span>Время </span>
+        <select name="Hours" class="js_HoursObserved" data-val-required="Пожалуйста, укажите время (час)" data-val="true">
+            <option value=""></option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+        </select>
+        <span> : </span>
+        <input name="Minutes" class="js_MinutesObserved timebox_minutes" 
+            data-val-required="Пожалуйста, укажите время (минуты)" 
+            data-val-number="Пожалуйста, введите число в поле Минуты." 
+            data-val-range="Пожалуйста, Введите число меньше 60-ти" 
+            data-val-range-min="0" 
+            data-val-range-max="59"
+            data-val="true" value=""/>
+        <br/>
+        <div><span class="field-validation-valid" data-valmsg-for="Hours" data-valmsg-replace="true"></span></div>
+        <div><span class="field-validation-valid" data-valmsg-for="Minutes" data-valmsg-replace="true"></span></div>
+    </div>
+    <div class="js_KidSelectorContainer">
+        <label for="KidId">Ребенок</label>
+        <input class="js_KidIdSelect" name="KidIdSelect"/>
+        <input class="js_KidId" data-val="true" data-val-number="Значением поля KidId должно быть число." data-val-required="Пожалуйста, выберите ребенка" id="KidId" name="KidId" type="hidden" value=""/>
+    </div>
+    <div><span class="field-validation-valid" data-valmsg-for="KidId" data-valmsg-replace="true"></span></div>
+    <br />   
+	<a href="javascript:void(0)" class="js_addCommentLink">Комментарии (не обязательно)</a>
+    <br />
+	<textarea class="js_commentTextArea" cols="30" id="Comment" name="Comment" rows="4"></textarea>
+    <br />
+    <span class="field-validation-valid" data-valmsg-for="Comment" data-valmsg-replace="true"></span>
+
+    <br />
+	    
+	<div id="errorMessage" class="errorMessage"></div>
+    <br />
+	<input class="js_submitButton" type="submit" value="Сохранить"/>
+    <div id="resultMessageCameInClass" class="resultMessage js_resultMessage"><span></span></div> 
+    <div id="counterCameInClass" class="resultMessage js_counter">
+        <img src="/Content/images/spinner.gif" width="15" height="15" alt="wait"/>
+        <span></span>
+    </div> 
+</form>
+
+</div>

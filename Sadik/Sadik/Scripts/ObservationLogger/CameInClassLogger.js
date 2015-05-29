@@ -51,6 +51,14 @@
         //jQuery.ajaxSettings.traditional = settingDummy;
     }
 
+    self.editObservation = function (observation) {
+        self._observationId.val(observation.Id);
+        self._uniqueId.val(observation.UniqueId);
+        self._kidIdField.val(observation.KidId);
+        self._commentField.val(observation.Comment);
+        self.setDateTime(observation.DateObserved, observation.Hours, observation.Minutes);
+    }
+
     self.OnSuccessSubmitObservation = function (data, status, xhr) {
         if (data.UniqueId) {
             var cameInClass = CameInClass.exists(data.UniqueId.toUpperCase());

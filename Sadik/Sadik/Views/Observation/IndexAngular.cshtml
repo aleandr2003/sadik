@@ -1,0 +1,208 @@
+﻿@model IEnumerable<ObservationModel>
+@{
+    Layout = null;
+}
+<link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/ObservationList.css")"/>
+<script type="text/javascript" src="@Url.Content("https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery-ui-1.11.2.custom/jquery.js")" type="text/javascript"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Sadik/ObservationListFilter.js")"></script>
+<script type="text/javascript">
+    var ObservationsApp = angular.module("ObservationsApp", []);
+    ObservationsApp.controller("ObservationsCtrl", function ($scope) {
+        $scope.observations = @RenderObservationsJson(Model.ToList());
+        $scope.canEdit = @(ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher ? "true" :"false");
+        $scope.canDelete = @(ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher ? "true" :"false");
+        $scope.edit = function (id) {
+
+        }
+        $scope.delete = function (id) {
+
+        }
+    });
+    ObservationsApp.filter("textLimit", function () {
+        return function (value, limit) {
+            if (angular.isString(value)) {
+                if (value.length < limit)
+                {
+                    return value;
+                }
+                else
+                {
+                    return value.substring(0, limit + 1) + "...";
+                }
+            } else {
+                return value;
+            }
+        };
+    });
+</script>
+<div ng-app="ObservationsApp">
+    <div ng-controller="ObservationsCtrl">
+        <div ng-if="observations.length > 0">
+            <a href="javascript:void(0)" class="js_filterObservationsAll filterLink">Все</a>
+            <a href="javascript:void(0)" class="js_filterObservationsActivities filterLink">Работа с материалами</a>
+            <a href="javascript:void(0)" class="js_filterObservationsCameInClass filterLink">Вход в класс</a>
+            <a href="javascript:void(0)" class="js_filterObservationsEmotion filterLink">Настроение</a>
+            <a href="javascript:void(0)" class="js_filterObservationsComments filterLink">Комментарии</a>
+            <div class="clearFloatBoth"></div>
+    
+            <ul>
+                <li ng-repeat="observation in observations" ng-switch="observation.type">
+                    <div ng-switch-when="Activity" class="ActivityListItemContainer js_ObservationItem js_ObservationItemActivity">
+                        <div class="ActivityListItemContainer_DateObserved observationCell">
+                            {{observation.DateObserved | date:'dd MMMM yyyy HH:mm'}}
+                        </div>
+                        <div class="ActivityListItemContainer_InventoryItem observationCell">
+                            {{observation.Inventory.Name}}
+                        </div>
+                        <div class="ActivityListItemContainer_ChoseHimSelf observationCell" ng-switch="observation.ChoseHimSelf">
+                            <span ng-switch-when="true">Сам</span>
+                            <div ng-switch-default class="nbsp"></div>
+                        </div>
+                        <div class="ActivityListItemContainer_Polarization observationCell" ng-switch="observation.Polarization">
+                            <span ng-switch-when="true">*</span>
+                            <div ng-switch-default class="nbsp"></div>
+                        </div>
+                        <div class="ActivityListItemContainer_Duration observationCell">
+                            {{observation.Duration}}
+                        </div>
+                        <div class="ActivityListItemContainer_TeacherName observationCell">
+                            {{observation.TeacherName}}
+                        </div>
+                        <div class="ActivityListItemContainer_DeleteButton observationCell">
+                            <button ng-click="delete(observation.Id)" ng-if="canDelete">Удалить</button>
+                        </div>
+                        <div class="ActivityListItemContainer_EditButton observationCell">             
+                            <button ng-click="edit(observation.Id)" ng-if="canEdit">Редактировать</button>
+                        </div>
+                        <div class="clearFloatBoth"></div>
+                        <div class="ActivityListItemContainer_Comment js_comment_container" ng-if="observation.Comment">
+                            <span class="commentText">
+                                {{observation.Comment | textLimit:140}}
+                            </span>
+                        </div>
+                    </div>
+                    <div ng-switch-when="CameInClass" class="CameInClassListItemContainer js_ObservationItem js_ObservationItemCameInClass">
+                        <div class="CameInClassListItemContainer_DateObserved observationCell">
+                            {{observation.DateObserved | date:'dd MMMM yyyy HH:mm'}}
+                        </div>
+                        <div class="CameInClassListItemContainer_Dummy observationCell">
+                            Пришел в класс<div class="nbsp"></div>
+                        </div>
+                        <div class="CameInClassListItemContainer_TeacherName observationCell">
+                            {{observation.TeacherName}}
+                        </div>
+                        <div class="CameInClassListItemContainer_DeleteButton observationCell">             
+                            <button ng-click="delete(observation.Id)" ng-if="canDelete">Удалить</button>
+                        </div>
+                        <div class="CameInClassListItemContainer_EditButton observationCell">             
+                            <button ng-click="edit(observation.Id)" ng-if="canEdit">Редактировать</button>
+                        </div>
+                        <div class="clearFloatBoth"></div>
+                        <div class="CameInClassListItemContainer_Comment js_comment_container" ng-if="observation.Comment">
+                            <span class="commentText">
+                                {{observation.Comment | textLimit:140}}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div ng-switch-when="Emotion" class="EmotionListItemContainer js_ObservationItem js_ObservationItemEmotion">
+                        <div class="EmotionListItemContainer_DateObserved observationCell">
+                            {{observation.DateObserved | date:'dd MMMM yyyy HH:mm'}}
+                        </div>
+                        <div class="EmotionListItemContainer_EmotionType observationCell">
+                            {{observation.Emotion.DisplayName}}
+                        </div>
+                        <div class="EmotionListItemContainer_Dummy observationCell">
+                            <div class="nbsp"></div>
+                        </div>
+                        <div class="EmotionListItemContainer_TeacherName observationCell">
+                            {{observation.TeacherName}}
+                        </div>
+                        <div class="EmotionListItemContainer_DeleteButton observationCell">             
+                            <button ng-click="delete(observation.Id)" ng-if="canDelete">Удалить</button>
+                        </div>
+                        <div class="EmotionListItemContainer_EditButton observationCell">             
+                            <button ng-click="edit(observation.Id)" ng-if="canEdit">Редактировать</button>
+                        </div>
+                        <div class="clearFloatBoth"></div>
+                        <div class="EmotionListItemContainer_Comment js_comment_container" ng-if="observation.Comment">
+                            <span class="commentText">
+                                {{observation.Comment | textLimit:140}}
+                            </span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <span ng-if="observations.length == 0">Наблюдений ещё не было</span>
+    </div>
+</div>
+@helper RenderObservationsJson(List<ObservationModel> model)
+{
+    @Html.Raw("[");
+    for (int i = 0, l = model.Count; i < l; i++)
+    {
+        var observationModel = model[i];
+        if (observationModel is ObservationActivityModel)
+        {
+            @RenderActivityJson((observationModel as ObservationActivityModel).observation);
+        }
+        else if (observationModel is ObservationCameInClassModel)
+        {
+            @RenderCameInClassJson((observationModel as ObservationCameInClassModel).observation);
+        }
+        else if (observationModel is ObservationEmotionModel)
+        {
+            @RenderEmotionJson((observationModel as ObservationEmotionModel).observation);
+        }
+        if(i < l - 1){
+            @Html.Raw(",");
+        }
+    }
+    @Html.Raw("]");
+}
+@helper RenderActivityJson(Activity observation)
+{
+    @Html.Raw(Json.Encode(new
+{
+    Id = observation.Id,
+    UniqueId = observation.UniqueId,
+    DateObserved = observation.DateObservedMilliseconds,
+    Inventory = new { Id = observation.Inventory.Id, Name = observation.Inventory.Name },
+    ChoseHimSelf = observation.ChoseHimSelf,
+    Polarization = observation.Polarization,
+    Duration = observation.Duration.DisplayName(),
+    TeacherName = observation.User.FirstName,
+    Comment = observation.Comment,
+    type = "Activity"
+}));
+}
+
+@helper RenderCameInClassJson(CameInClass observation)
+{
+    @Html.Raw(Json.Encode(new
+{
+    Id = observation.Id,
+    UniqueId = observation.UniqueId,
+    DateObserved = observation.DateObservedMilliseconds,
+    TeacherName = observation.User.FirstName,
+    Comment = observation.Comment,
+    type = "CameInClass"
+}));
+}
+
+
+@helper RenderEmotionJson(EmotionObservation observation)
+{
+    @Html.Raw(Json.Encode(new
+{
+    Id = observation.Id,
+    UniqueId = observation.UniqueId,
+    DateObserved = observation.DateObservedMilliseconds,
+    Emotion = new { Id = (int)observation.Emotion, DisplayName = observation.Emotion.DisplayName() },
+    TeacherName = observation.User.FirstName,
+    Comment = observation.Comment,
+    type = "Emotion"
+}));
+}

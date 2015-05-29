@@ -296,6 +296,23 @@
         //jQuery.ajaxSettings.traditional = settingDummy;
     }
 
+    self.editObservation = function (observation) {
+        self._observationId.val(observation.Id);
+        self._uniqueId.val(observation.UniqueId);
+        self._kidIdField.val(observation.KidId);
+        self._commentField.val(observation.Comment);
+
+        self._itemIdField.val(observation.ItemId); +
+
+        self._durationField.val(observation.Duration);
+        self._polarizationField.prop('checked', observation.Polarization);
+        self._choseHimselfField.prop('checked', observation.ChoseHimSelf);
+
+        self.setDateTime(observation.DateObserved, observation.Hours, observation.Minutes);
+        self.loadPresSkillBlock();
+    }
+
+
     this.reset = function () {
         self._commentField.val('');
         self._hoursField.val('');

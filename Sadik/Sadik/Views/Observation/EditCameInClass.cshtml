@@ -17,7 +17,7 @@
     <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
 }
 <h2>Редактировать запись</h2>
-@Html.Partial("LogCameInClassForm", new LogCameInClassModel() {
+@*@Html.Partial("LogCameInClassForm", new LogCameInClassModel() {
     Id = Model.Id, 
     KidId = Model.KidId, 
     Comment = Model.Comment,
@@ -25,7 +25,8 @@
     Hours = Model.DateTimeCameInClass.Hour,
     Minutes = Model.DateTimeCameInClass.Minute,
     UniqueId = Model.UniqueId
-})
+})*@
+@Html.Partial("LogCameInClassFormTemplate")
 
 @Html.ActionLink("Отменить","View","Kids",new {Id = Model.KidId, KindergartenId = ViewBag.KindergartenId}, null)
 <script type="text/javascript">
@@ -34,6 +35,16 @@
     var cameInClassUrl = '@Url.Action("CameInClass", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
     var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
     var kidId = '@Model.KidId';
+    var observationModel = @Html.Raw(Json.Encode(new LogCameInClassModel() {
+        Id = Model.Id, 
+        KidId = Model.KidId, 
+        Comment = Model.Comment,
+        DateObserved = Model.DateTimeCameInClass.Date,
+        Hours = Model.DateTimeCameInClass.Hour,
+        Minutes = Model.DateTimeCameInClass.Minute,
+        UniqueId = Model.UniqueId
+    }));
+
 
     $(function () {
         var observationLoggerModule = new ObservationLoggerModule({
@@ -45,5 +56,6 @@
         });
         observationLoggerModule.SetKidsSource(kidsSource);
         observationLoggerModule.SelectKid(kidId);
+        observationLoggerModule.editObservation(observationModel,'CameInClass');
     });
 </script>

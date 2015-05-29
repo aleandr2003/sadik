@@ -61,6 +61,16 @@
         //jQuery.ajaxSettings.traditional = settingDummy;
     }
 
+    self.editObservation = function (observation) {
+        self._observationId.val(observation.Id);
+        self._uniqueId.val(observation.UniqueId);
+        self._kidIdField.val(observation.KidId);
+        self._commentField.val(observation.Comment);
+        self._emotionRadio.prop('checked', false);
+        self._block.find('.js_emotion_radio[value="' + observation.Emotion+ '"]').prop('checked', true);
+        self.setDateTime(observation.DateObserved, observation.Hours, observation.Minutes);
+    }
+
     self.OnSuccessSubmitObservation = function (data, status, xhr) {
         if (data.UniqueId) {
             var emotion = Emotion.exists(data.UniqueId.toUpperCase());

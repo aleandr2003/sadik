@@ -18,7 +18,7 @@
     <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
 }
 <h2>Редактировать запись</h2>
-@Html.Partial("LogActivityForm", new LogActivityModel() {
+@*@Html.Partial("LogActivityForm", new LogActivityModel() {
     Id = Model.Id, 
     KidId = Model.KidId, 
     ItemId = Model.ItemId,
@@ -30,8 +30,8 @@
     Hours = Model.DateObserved.Hour,
     Minutes = Model.DateObserved.Minute,
     UniqueId = Model.UniqueId
-})
-
+})*@
+@Html.Partial("LogActivityFormTemplate")
 @Html.ActionLink("Отменить","View","Kids",new {Id = Model.KidId, KindergartenId = ViewBag.KindergartenId}, null)
 <script type="text/javascript">
     $.validator.setDefaults({ ignore: "" });
@@ -50,6 +50,19 @@
 
     var kidId = '@Model.KidId';
     var itemId = '@Model.ItemId';
+    var observationModel = @Html.Raw(Json.Encode(new LogActivityModel() {
+        Id = Model.Id, 
+        KidId = Model.KidId, 
+        ItemId = Model.ItemId,
+        Comment = Model.Comment,
+        DateObserved = Model.DateObserved,
+        Duration = Model.Duration,
+        Polarization = Model.Polarization,
+        ChoseHimSelf = Model.ChoseHimSelf,
+        Hours = Model.DateObserved.Hour,
+        Minutes = Model.DateObserved.Minute,
+        UniqueId = Model.UniqueId
+    }));
 
     $(function () {
         var observationLoggerModule = new ObservationLoggerModule({
@@ -69,5 +82,6 @@
         observationLoggerModule.SetItemsSource(itemsSource);
         observationLoggerModule.SelectKid(kidId);
         observationLoggerModule.SelectItem(itemId);
+        observationLoggerModule.editObservation(observationModel,'Activity');
     });
 </script>

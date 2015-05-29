@@ -234,6 +234,25 @@
         var month = (dt.getMonth() + 1); month = month < 10 ? '0' + month : month;
         return day + '-' + month + '-' + dt.getFullYear();
     }
+
+    this.setDateTime = function (date, hour, minute) {
+        self._hoursField.val(hour);
+        self._minutesField.val(minute);
+
+        var dt = new Date(parseInt(/-?\d+/.exec(date)[0]));
+        self._dateField.val(printDate(dt));
+    }
+    function printDate(dt) {
+        var dateStr = padStr(dt.getDate()) + '-' +
+                      padStr(1 + dt.getMonth()) + '-' +
+                      padStr(dt.getFullYear())
+        return dateStr;
+    }
+
+    function padStr(i) {
+        return (i < 10) ? "0" + i : "" + i;
+    }
+
 }
 
 class_extend(BaseObservationLogger, PubSub);

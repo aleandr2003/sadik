@@ -26,7 +26,7 @@ namespace Sadik.Controllers
                 observations.AddRange(cameInClass.Select(c => new ObservationCameInClassModel(c)));
                 observations.AddRange(emotions.Select(e => new ObservationEmotionModel(e)));
 
-                return View(observations.OrderByDescending(o => o.DateObserved));
+                return View("Index", observations.OrderByDescending(o => o.DateObserved));
             }
         }
 
