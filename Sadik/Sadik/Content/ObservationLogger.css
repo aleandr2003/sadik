@@ -1,0 +1,7 @@
+﻿    .LogObservationArea {
+        border: solid 1px black;
+        padding: 10px;
+    }
+    .LogObservationAreaHeader {
+        margin: 0 0 5px 0;
+    }

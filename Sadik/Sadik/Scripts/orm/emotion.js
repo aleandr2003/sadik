@@ -2,12 +2,12 @@
 
 Emotion.include({
     Emotion:null,
-
+    Type: 'Emotion',
     validate: function () {
         if (this.KidId == null) return "Пожалуйста, выберите ребенка";
         if (this.DateObserved == null) return "Пожалуйста, выберите дату";
-        if (this.Hours == null) return "Пожалуйста, укажите время или выберите текущее время";
-        if (this.Minutes == null) return "Пожалуйста, укажите время или выберите текущее время";
+        //if (this.Hours == null) return "Пожалуйста, укажите время или выберите текущее время";
+        //if (this.Minutes == null) return "Пожалуйста, укажите время или выберите текущее время";
         if (this.Emotion == null) return "Пожалуйста, выберите эмоцию";
 
         return true;

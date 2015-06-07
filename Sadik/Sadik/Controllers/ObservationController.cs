@@ -29,16 +29,43 @@ namespace Sadik.Controllers
                 return View("Index", observations.OrderByDescending(o => o.DateObserved));
             }
         }
-
-        [HttpPost]
-        public ActionResult DeleteActivity(int Id)
+        //a temporary method to test observation list with angular
+        public ActionResult IndexAngular(int Id)
         {
             using (var context = new SadikEntities())
             {
-                var activity = context.Activities.Include("Kid").FirstOrDefault(a => a.Id == Id);
+                var activities = context.Activities.Include("Inventory").Include("User").Where(a => a.KidId == Id).ToList();
+                var cameInClass = context.CameInClasses.Include("User").Where(a => a.KidId == Id).ToList();
+                var emotions = context.EmotionObservations.Include("User").Where(e => e.KidId == Id).ToList();
+                var observations = new List<ObservationModel>();
+                observations.AddRange(activities.Select(a => new ObservationActivityModel(a)));
+                observations.AddRange(cameInClass.Select(c => new ObservationCameInClassModel(c)));
+                observations.AddRange(emotions.Select(e => new ObservationEmotionModel(e)));
+                var ordered = observations.OrderByDescending(o => o.DateObserved).ToList();
+                return View("IndexAngular", ordered);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult DeleteActivity(Guid UniqueId)
+        {
+            return DeleteActivityMethod(UniqueId);
+        }
+
+        [HttpDelete]
+        public ActionResult Activity(Guid UniqueId)
+        {
+            return DeleteActivityMethod(UniqueId);
+        }
+
+        public ActionResult DeleteActivityMethod(Guid UniqueId)
+        {
+            using (var context = new SadikEntities())
+            {
+                var activity = context.Activities.Include("Kid").FirstOrDefault(a => a.UniqueId == UniqueId);
                 if (activity == null)
                 {
-                    TempData["ErrorMessage"] = String.Format("Запись с номером {0} отсутствует. Возможно она уже удалена.", Id);
+                    TempData["ErrorMessage"] = String.Format("Запись с номером {0} отсутствует. Возможно она уже удалена.", UniqueId);
                     return RedirectToAction("Index", "Error");
                 }
 
@@ -47,7 +74,14 @@ namespace Sadik.Controllers
                     throw new UnauthorizedAccessException("Удалять записи могут только воспитатели");
                 context.Activities.Remove(activity);
                 context.SaveChanges();
-                return RedirectToAction("View","Kids", new {Id = kidId, KindergartenId = KindergartenId });
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(new { message = "Наблюдение удалено", UniqueId = activity.UniqueId });
+                }
+                else
+                {
+                    return RedirectToAction("View", "Kids", new { Id = kidId, KindergartenId = KindergartenId });
+                }
             }
         }
 
@@ -83,7 +117,6 @@ namespace Sadik.Controllers
                 if (model.KidId == null) throw new ArgumentException("Ребенок не выбран");
                 if (model.ItemId == null) throw new ArgumentException("Материал не выбран");
                 if (!userSession.IsAuthenticated) return RedirectToAction("Index", "Login");
-                DateTime DateObserved = model.GetObservationDate();
 
                 using (var context = new SadikEntities())
                 {
@@ -99,7 +132,7 @@ namespace Sadik.Controllers
                             KidId = model.KidId ?? 0,
                             ItemId = model.ItemId,
                             Duration = model.Duration,
-                            DateObserved = DateObserved,
+                            DateObserved = model.DateObserved,
                             Comment = model.Comment,
                             TeacherId = userSession.CurrentUser.Id,
                             Polarization = model.Polarization,
@@ -177,13 +210,6 @@ namespace Sadik.Controllers
                 if (model.ItemId == null) throw new ArgumentException("Материал не выбран");
                 if (!userSession.IsAuthenticated) return RedirectToAction("Index", "Login");
                 
-                DateTime DateObserved = DateTime.Now;
-                if (model.DateObserved.HasValue)
-                {
-                    DateObserved = model.DateObserved.Value;
-                    if (model.Hours.HasValue) DateObserved = DateObserved.AddHours(model.Hours.Value);
-                    if (model.Minutes.HasValue) DateObserved = DateObserved.AddMinutes(model.Minutes.Value);
-                }
                 using (var context = new SadikEntities())
                 {
                     var activity = context.Activities.FirstOrDefault(a => a.Id == id);
@@ -198,7 +224,7 @@ namespace Sadik.Controllers
                     activity.KidId = model.KidId ?? 0;
                     activity.ItemId = model.ItemId;
                     activity.Duration = model.Duration;
-                    activity.DateObserved = DateObserved;
+                    activity.DateObserved = model.DateObserved;
                     activity.Comment = model.Comment;
                     activity.TeacherId = userSession.CurrentUser.Id;
                     activity.Polarization = model.Polarization;
@@ -251,8 +277,6 @@ namespace Sadik.Controllers
                 if (model.KidId == null) throw new ArgumentException("Ребенок не выбран");
                 if (!userSession.IsAuthenticated) return RedirectToAction("Index", "Login");
 
-                DateTime DateObserved = model.GetObservationDate();
-
                 using (var context = new SadikEntities())
                 {
                     var kid = context.Kids.FirstOrDefault(k => k.Id == model.KidId && !k.IsDismissed);
@@ -265,7 +289,7 @@ namespace Sadik.Controllers
                         var observation = new CameInClass
                         {
                             KidId = model.KidId ?? 0,
-                            DateTimeCameInClass = DateObserved,
+                            DateTimeCameInClass = model.DateObserved,
                             Comment = model.Comment,
                             TeacherId = userSession.CurrentUser.Id,
                             UniqueId = model.UniqueId
@@ -337,7 +361,6 @@ namespace Sadik.Controllers
                 if (model.KidId == null) throw new ArgumentException("Ребенок не выбран");
                 if (!userSession.IsAuthenticated) return RedirectToAction("Index", "Login");
                 
-                DateTime DateObserved = model.GetObservationDate();
                 using (var context = new SadikEntities())
                 {
                     var observation = context.CameInClasses.FirstOrDefault(o => o.Id == id);
@@ -349,7 +372,7 @@ namespace Sadik.Controllers
                     if (!authz.Authorize(Operation.ManageObservationNotes, observation.Kid))
                         throw new UnauthorizedAccessException("Редактировать записи могут только воспитатели");
                     observation.KidId = model.KidId ?? 0;
-                    observation.DateTimeCameInClass = DateObserved;
+                    observation.DateTimeCameInClass = model.DateObserved;
                     observation.Comment = model.Comment;
                     observation.TeacherId = userSession.CurrentUser.Id;
 
@@ -380,14 +403,25 @@ namespace Sadik.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteCameInClass(int Id)
+        public ActionResult DeleteCameInClass(Guid UniqueId)
+        {
+            return DeleteCameInClassMethod(UniqueId);
+        }
+
+        [HttpDelete]
+        public ActionResult CameInClass(Guid UniqueId)
+        {
+            return DeleteCameInClassMethod(UniqueId);
+        }
+
+        public ActionResult DeleteCameInClassMethod(Guid UniqueId)
         {
             using (var context = new SadikEntities())
             {
-                var observation = context.CameInClasses.Include("Kid").FirstOrDefault(o => o.Id == Id);
+                var observation = context.CameInClasses.Include("Kid").FirstOrDefault(o => o.UniqueId == UniqueId);
                 if (observation == null)
                 {
-                    TempData["ErrorMessage"] = String.Format("Запись с номером {0} отсутствует. Возможно она уже удалена.", Id);
+                    TempData["ErrorMessage"] = String.Format("Запись с номером {0} отсутствует. Возможно она уже удалена.", UniqueId);
                     return RedirectToAction("Index", "Error");
                 }
 
@@ -396,7 +430,14 @@ namespace Sadik.Controllers
                     throw new UnauthorizedAccessException("Удалять записи могут только воспитатели");
                 context.CameInClasses.Remove(observation);
                 context.SaveChanges();
-                return RedirectToAction("View", "Kids", new { Id = kidId, KindergartenId = KindergartenId });
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(new { message = "Наблюдение удалено", UniqueId = observation.UniqueId });
+                }
+                else
+                {
+                    return RedirectToAction("View", "Kids", new { Id = kidId, KindergartenId = KindergartenId });
+                }
             }
         }
 
@@ -421,8 +462,6 @@ namespace Sadik.Controllers
                 if (model.KidId == null) throw new ArgumentException("Ребенок не выбран");
                 if (!userSession.IsAuthenticated) return RedirectToAction("Index", "Login");
 
-                DateTime DateObserved = model.GetObservationDate();
-
                 using (var context = new SadikEntities())
                 {
                     var kid = context.Kids.FirstOrDefault(k => k.Id == model.KidId && !k.IsDismissed);
@@ -434,7 +473,7 @@ namespace Sadik.Controllers
                         var observation = new EmotionObservation
                         {
                             KidId = model.KidId ?? 0,
-                            DateObserved = DateObserved,
+                            DateObserved = model.DateObserved,
                             Comment = model.Comment,
                             TeacherId = userSession.CurrentUser.Id,
                             Emotion = model.Emotion,
@@ -509,7 +548,6 @@ namespace Sadik.Controllers
                 if (model.KidId == null) throw new ArgumentException("Ребенок не выбран");
                 if (!userSession.IsAuthenticated) return RedirectToAction("Index", "Login");
                 
-                DateTime DateObserved = model.GetObservationDate();
                 using (var context = new SadikEntities())
                 {
                     var observation = context.EmotionObservations.FirstOrDefault(o => o.Id == id);
@@ -521,7 +559,7 @@ namespace Sadik.Controllers
                     if (!authz.Authorize(Operation.ManageObservationNotes, observation.Kid))
                         throw new UnauthorizedAccessException("Редактировать записи могут только воспитатели");
                     observation.KidId = model.KidId ?? 0;
-                    observation.DateObserved = DateObserved;
+                    observation.DateObserved = model.DateObserved;
                     observation.Comment = model.Comment;
                     observation.TeacherId = userSession.CurrentUser.Id;
                     observation.Emotion = model.Emotion;
@@ -553,14 +591,25 @@ namespace Sadik.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteEmotion(int Id)
+        public ActionResult DeleteEmotion(Guid UniqueId)
+        {
+            return DeleteEmotionMethod(UniqueId);
+        }
+
+        [HttpDelete]
+        public ActionResult Emotion(Guid UniqueId)
+        {
+            return DeleteEmotionMethod(UniqueId);
+        }
+
+        public ActionResult DeleteEmotionMethod(Guid UniqueId)
         {
             using (var context = new SadikEntities())
             {
-                var observation = context.EmotionObservations.Include("Kid").FirstOrDefault(o => o.Id == Id);
+                var observation = context.EmotionObservations.Include("Kid").FirstOrDefault(o => o.UniqueId == UniqueId);
                 if (observation == null)
                 {
-                    TempData["ErrorMessage"] = String.Format("Запись с номером {0} отсутствует. Возможно она уже удалена.", Id);
+                    TempData["ErrorMessage"] = String.Format("Запись с номером {0} отсутствует. Возможно она уже удалена.", UniqueId);
                     return RedirectToAction("Index", "Error");
                 }
 
@@ -569,7 +618,15 @@ namespace Sadik.Controllers
                     throw new UnauthorizedAccessException("Удалять записи могут только воспитатели");
                 context.EmotionObservations.Remove(observation);
                 context.SaveChanges();
-                return RedirectToAction("View", "Kids", new { Id = kidId, KindergartenId = KindergartenId });
+
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(new { message = "Наблюдение удалено", UniqueId = observation.UniqueId });
+                }
+                else
+                {
+                    return RedirectToAction("View", "Kids", new { Id = kidId, KindergartenId = KindergartenId });
+                }
             }
         }
 
@@ -752,8 +809,6 @@ namespace Sadik.Controllers
                 return Json(observations);
             }
         }
-
-        
 
         public ObservationController(IUserSession userSession, IAuthorizationService authz)
             : base(userSession)

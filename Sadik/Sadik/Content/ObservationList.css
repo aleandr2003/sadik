@@ -1,6 +1,13 @@
-﻿ .ActivityListItemContainer {
+﻿.observationList {
+    list-style-type: none;
+} 
+.ActivityListItemContainer {
         padding:5px 0;
     }
+.ActivityListItemContainer_WaitUpload {
+           float:left;
+           width:20px;
+}
     .ActivityListItemContainer_DateObserved {
         float:left;
         width:200px;
@@ -43,6 +50,10 @@
     .CameInClassListItemContainer {
         padding:5px 0;
     }
+    .CameInClassListItemContainer_WaitUpload {
+           float:left;
+           width:20px;
+}
     .CameInClassListItemContainer_DateObserved {
         float:left;
         width:200px;
@@ -70,6 +81,10 @@
     .EmotionListItemContainer {
         padding:5px 0;
     }
+    .EmotionListItemContainer_WaitUpload {
+           float:left;
+           width:20px;
+}
     .EmotionListItemContainer_DateObserved {
         float:left;
         width:200px;

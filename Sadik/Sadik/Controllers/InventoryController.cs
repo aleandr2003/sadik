@@ -32,12 +32,14 @@ namespace Sadik.Controllers
             using (var context = new SadikEntities())
             {
                 var items = context.Inventory.Where(i => !i.IsDeleted && i.KindergartenId == KindergartenId).ToList()
+                    .OrderBy(i => i.Id)
                     .Select(i =>
                     {
                         var itemTitle = i.ZonePath.Count > 0 ? i.Name + "|" + String.Join("|", i.ZonePath.Select(z => z.Name).Reverse().ToArray()) : i.Name;
                         return new 
                         {
                             FullTitle = itemTitle,
+                            Title = i.Name,
                             Id = i.Id.ToString()
                         };
                     }).ToList();

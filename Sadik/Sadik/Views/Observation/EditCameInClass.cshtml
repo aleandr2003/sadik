@@ -34,6 +34,12 @@
 
     var cameInClassUrl = '@Url.Action("CameInClass", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
     var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
+
+    Activity.loadLocal('Activities');
+    ItemUsageDetails.loadLocal('ItemUsageDetails');
+    CameInClass.loadLocal('CameInClasses');
+    Emotion.loadLocal('Emotions');
+
     var kidId = '@Model.KidId';
     var observationModel = @Html.Raw(Json.Encode(new LogCameInClassModel() {
         Id = Model.Id, 

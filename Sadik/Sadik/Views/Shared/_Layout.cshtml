@@ -9,8 +9,8 @@
     <link href="@Url.Content("~/Content/jquery-ui.min.css")" rel="stylesheet" type="text/css" />*@
     <link href="@BundleTable.Bundles.ResolveBundleUrl("~/Content/css")" rel="stylesheet" type="text/css"/>
 
-    @*<script src="@Url.Content("~/Scripts/jquery-ui-1.11.2.custom/jquery.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery-ui-1.11.2.custom/jquery-ui.min.js")" type="text/javascript"></script>
+    @*<script src="@Url.Content("~/Scripts/jquery-ui/jquery.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui/jquery-ui.min.js")" type="text/javascript"></script>
         
     <script src="@Url.Content("~/Scripts/jquery.ui.datepicker-ru.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
@@ -49,6 +49,18 @@
             //		alert('Убрать крутилку');
             $('input[type=submit]').removeAttr('disabled');
         }
+        SadikGlobalSettings = 
+            @if(ViewBag.currentUser != null && ViewBag.currentUser is User)
+            {
+                var currentUser = ViewBag.currentUser as User;
+                @Html.Raw(Json.Encode(new {
+                CurrentUser = new
+                {
+                    Id = currentUser.Id,
+                    FirstName = currentUser.FirstName,
+                    LastName = currentUser.LastName
+                }}));
+            };
     </script>
     @RenderSection("HEAD", false)
 </head>

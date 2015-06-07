@@ -10,7 +10,7 @@ namespace Sadik.Models
         public long DateObservedMilliseconds{
             get
             {
-                return (long)(DateObserved - new DateTime(1970, 1, 1)).TotalMilliseconds;
+                return (long)(DateObserved.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
             }
         }
     }

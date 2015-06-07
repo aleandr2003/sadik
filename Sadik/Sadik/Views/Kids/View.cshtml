@@ -3,29 +3,16 @@
 @{
     ViewBag.Title = Model.FirstName + " " + Model.LastName;
 }
-@section HEAD{
+@section HEAD{<a href="View.cshtml">View.cshtml</a>
     <link href="@Url.Content("~/Content/jqPlot/jquery.jqplot.min.css")" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
     <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_jqPlot")"></script>
 }
 <style>
-    #LogObservationContainer {
-        width:300px;
-    }
-
     .LogObservationArea {
-        border: solid 1px black;
-        margin:5px 0;
-        padding: 10px;
+        margin:5px 20px 5px 0;
         float:left;
-        margin-right: 1em;
-    }
-    .clearFloatBoth {
-        clear:both;
-    }
-    .LogObservationAreaHeader {
-        margin: 0 0 5px 0;
     }
     .chartContainer {
         width: 600px;
@@ -88,12 +75,15 @@
                     var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
                     
                     var kidId = '@Model.Id';
+                    Activity.loadLocal('Activities');
+                    ItemUsageDetails.loadLocal('ItemUsageDetails');
+                    CameInClass.loadLocal('CameInClasses');
+                    Emotion.loadLocal('Emotions');
 
                     $(function () {
-                        $('.js_KidSelectorContainer').hide();
                         var observationLoggerModule = new ObservationLoggerModule({
                             activityLogger: {
-                                block: $('.js_logObservationBlock_activity'),
+                                block: $('#tabs-addObservation .js_logObservationBlock_activity'),
                                 saveObservationUrl: activityUrl,
                                 getPresentationUrl: getPresentationUrl,
                                 updatePresentationUrl: updatePresentationUrl,
@@ -103,14 +93,15 @@
                                 updateItemUsageDetailsUrl:updateItemUsageDetailsUrl
                             },
                             cameInClassLogger: {
-                                block: $('.js_logObservationBlock_cameInClass'),
+                                block: $('#tabs-addObservation .js_logObservationBlock_cameInClass'),
                                 saveObservationUrl: cameInClassUrl
                             },
                             emotionLogger: {
-                                block: $('.js_logObservationBlock_emotion'),
+                                block: $('#tabs-addObservation .js_logObservationBlock_emotion'),
                                 saveObservationUrl: emotionUrl
                             },
-                            useCurrentTime: false
+                            useCurrentTime: false,
+                            showKidsSelectorInLoggers:false
                         });
                         observationLoggerModule.SetKidsSource(kidsSource);
                         observationLoggerModule.SetItemsSource(itemsSource);

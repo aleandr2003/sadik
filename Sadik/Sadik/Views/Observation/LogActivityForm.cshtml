@@ -123,7 +123,7 @@
 	@Html.SubmitButton(null, "Сохранить", new { @class = "js_submitButton" })
     <div id="resultMessageActivity" class="resultMessage js_resultMessage"><span></span></div> 
     <div id="counterActivity" class="resultMessage js_counter">
-        <img src="/Content/images/spinner.gif" width="15" height="15" alt="wait"/>
+        <img src="@Url.Content("~/Content/images/spinner.gif")" width="15" height="15" alt="wait"/>
         <span></span>
     </div> 
 }

@@ -5,12 +5,12 @@ Activity.include({
     Duration: null,
     Polarization: null,
     ChoseHimSelf: null,
-
+    Type: 'Activity',
     validate: function () {
         if (this.KidId == null) return "Пожалуйста, выберите ребенка";
         if (this.DateObserved == null) return "Пожалуйста, выберите дату";
-        if (this.Hours == null) return "Пожалуйста, укажите время или выберите текущее время";
-        if (this.Minutes == null) return "Пожалуйста, укажите время или выберите текущее время";
+        //if (this.Hours == null) return "Пожалуйста, укажите время или выберите текущее время";
+        //if (this.Minutes == null) return "Пожалуйста, укажите время или выберите текущее время";
         if (this.ItemId == null) return "Пожалуйста, выберите материал";
         if (this.Duration == null) return "Пожалуйста, выберите продолжительность";
         if (this.Polarization == null) return "Не установлено поле Поляризация";

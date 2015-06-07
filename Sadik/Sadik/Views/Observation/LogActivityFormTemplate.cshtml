@@ -11,8 +11,10 @@
     </div>
     <div class="js_inputTimeBlock">
         <label for="DateObserved">Дата наблюдения</label>
-        <input class="js_datetimebox js_DateObserved" id="DateObservedActivity" name="DateObserved" type="text"/>
-        <span class="field-validation-valid" data-valmsg-for="DateObserved" data-valmsg-replace="true"></span>
+        <input class="js_datetimebox js_DateObserved" id="DateObservedActivity" name="DateObserved" type="text"
+            data-val-regex-pattern="^(0?[1-9]|[12][0-9]|3[01])[-](0?[1-9]|1[012])[-](19|20)?\d\d$"
+            data-val-regex="Дата должна быть в формате (ДД-ММ-ГГГГ)" data-val="true"/>
+        <div><span class="field-validation-valid" data-valmsg-for="DateObserved" data-valmsg-replace="true"></span></div>
         <br />
         <span>Время </span>
         <select name="Hours" class="js_HoursObserved" data-val-required="Пожалуйста, укажите время (час)" data-val="true">
@@ -113,10 +115,10 @@
     
 	    <div id="errorMessage" class="errorMessage"></div>
     <br />
-	<input class="js_submitButton" type="submit" value="Сохранить">
+	<input class="js_submitButton" type="submit" value="Сохранить" autofocus>
     <div id="resultMessageActivity" class="resultMessage js_resultMessage"><span></span></div> 
     <div id="counterActivity" class="resultMessage js_counter">
-        <img src="/Content/images/spinner.gif" width="15" height="15" alt="wait"/>
+        <img src="@Url.Content("~/Content/images/spinner.gif")" width="15" height="15" alt="wait"/>
         <span></span>
     </div> 
 </form>

@@ -50,6 +50,18 @@ Model.extend({
    }
  },
  
+ merge: function (values) {
+     if (!this.records) this.records = {};
+     for (var i = 0, il = values.length; i < il; i++) {
+         var record = this.records[values[i].UniqueId];
+         if (!record || !record.isDirty) {
+             var record = this.inst(values[i]);
+             record.newRecord = false;
+             this.records[record.UniqueId] = record;
+         }
+     }
+ },
+
  select: function(callback){
    var result = [];
    
@@ -96,7 +108,14 @@ Model.extend({
  count: function(){
    return this.recordsValues().length;
  },
+ countDirty: function () {
+     var counter = 0;
+     for (var key in this.records)
+         if (this.records[key].isDirty)
+             counter++;
 
+     return counter;
+ },
  deleteAll: function(){
    for (var key in this.records)
      delete this.records[key];
@@ -143,6 +162,14 @@ Model.extend({
          result.push(this.records[i])
      localStorage[name] = JSON.stringify(result);
  },
+ saveLocalDirtyOnly:function(name){
+     var result = [];
+     for (var i in this.records){
+         if(this.records[i].isDirty)
+             result.push(this.records[i]);
+     }
+     localStorage[name] = JSON.stringify(result);
+ },
  loadLocal: function (name) {
      var result = JSON.parse(localStorage[name]);
      this.populate(result);
@@ -151,6 +178,7 @@ Model.extend({
  
 Model.include({
   newRecord: true,
+  isDirty: false,
 
   init: function(atts){
     if (atts) this.load(atts);
@@ -220,6 +248,7 @@ Model.include({
   update: function(){
     this.publish("beforeUpdate");
     this.parent.records[this.UniqueId] = this.dup();
+    this.isDirty = true;
     this.publish("afterUpdate");
     this.publish("update");
   },
@@ -233,6 +262,7 @@ Model.include({
     if (!this.UniqueId) this.UniqueId = this.generateID();
     this.newRecord = false;
     this.parent.records[this.UniqueId] = this.dup();
+    this.isDirty = true;
     this.publish("afterCreate");
     this.publish("create");
   },
@@ -242,22 +272,62 @@ Model.include({
   },
 
   createRemote: function (url, callback) {
+      var self = this;
+      this.publish("beforeCreateRemote");
+      this.publish("beforeSaveRemote");
       $.ajax({
           url: url,
           data: this.attributes(),
-          success: callback,
+          success: function () {
+              self.isDirty = false;
+              self.publish("afterCreateRemote");
+              self.publish("afterSaveRemote");
+              if (callback && typeof callback == 'function') {
+                  callback.apply(self, arguments);
+              }
+          },
           dataType: 'json',
           type: "POST"
       });
   },
 
   updateRemote: function (url, callback) {
+      var self = this;
+      this.publish("beforeUpdateRemote");
+      this.publish("beforeSaveRemote");
       $.ajax({
           url: url,
           data: this.attributes(),
-          success: callback,
+          success: function () {
+              self.isDirty = false;
+              self.publish("afterUpdateRemote");
+              self.publish("afterSaveRemote");
+              if (callback && typeof callback == 'function') {
+                  callback.apply(self, arguments);
+              }
+          },
           dataType: 'json',
           type: "PUT"
+      });
+  },
+  destroyRemote: function (url, callback) {
+      var self = this;
+      this.publish("beforeDestroyRemote");
+      this.publish("beforeSaveRemote");
+      console.log(self.UniqueId);
+      $.ajax({
+          url: url,
+          data: { UniqueId: self.UniqueId },
+          success: function () {
+              self.isDirty = false;
+              self.publish("afterDestroyRemote");
+              self.publish("afterSaveRemote");
+              if (callback && typeof callback == 'function') {
+                  callback.apply(self, arguments);
+              }
+          },
+          dataType: 'json',
+          type: "DELETE"
       });
   }
 });

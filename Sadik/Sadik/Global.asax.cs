@@ -80,8 +80,8 @@ namespace Sadik
         {
             Bundle bundle = new Bundle("~/Scripts/js", new JsMinify());
 
-            bundle.AddFile("~/Scripts/jquery-ui-1.11.2.custom/jquery.js");
-            bundle.AddFile("~/Scripts/jquery-ui-1.11.2.custom/jquery-ui.min.js");
+            bundle.AddFile("~/Scripts/jquery-ui/jquery.js");
+            bundle.AddFile("~/Scripts/jquery-ui/jquery-ui.min.js");
             bundle.AddFile("~/Scripts/jquery.ui.datepicker-ru.js");
             bundle.AddFile("~/Scripts/jquery.validate.min.js");
             bundle.AddFile("~/Scripts/jquery.validate.unobtrusive.min.js");
@@ -91,7 +91,7 @@ namespace Sadik
             bundle.AddFile("~/Scripts/Sadik/Collapsible.js");
             bundle.AddFile("~/Scripts/Sadik/klass.js");
             bundle.AddFile("~/Scripts/Sadik/pubsub.js");
-
+            bundle.AddFile("~/Scripts/Sadik/DateCustom.js");
             return bundle;
         }
 
@@ -128,8 +128,11 @@ namespace Sadik
             Bundle bundle = new Bundle("~/Content/css");
 
             bundle.AddFile("~/Content/Site.css");
+            bundle.AddFile("~/Content/ObservationLogger.css");
             bundle.AddFile("~/Content/Modifiers.css");
             bundle.AddFile("~/Content/jquery-ui.min.css");
+            bundle.AddFile("~/Content/jquery-ui.structure.min.css");
+            bundle.AddFile("~/Content/jquery-ui.theme.min.css");
 
             return bundle;
         }

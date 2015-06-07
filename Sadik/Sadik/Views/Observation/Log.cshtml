@@ -27,17 +27,9 @@
         float:left;
         margin:0 10px;
     }
-    .clearFloatBoth {
-        clear:both;
-    }
     .LogObservationArea {
-        border: solid 1px black;
         margin:5px 0 0 5px;
-        padding: 10px;
         float:left;
-    }
-    .LogObservationAreaHeader {
-        margin: 0 0 5px 0;
     }
 </style>
 <div id="KidSelectorContainer">
@@ -83,29 +75,33 @@
 
     var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
     var itemsSource = @Html.Action("IndexShortJsonSerialized", "Inventory", new { KindergartenId = ViewBag.KindergartenId });
+    Activity.loadLocal('Activities');
+    ItemUsageDetails.loadLocal('ItemUsageDetails');
+    CameInClass.loadLocal('CameInClasses');
+    Emotion.loadLocal('Emotions');
     $(function () {
-        $('.js_KidSelectorContainer').hide();
         var observationLoggerModule = new ObservationLoggerModule({
             activityLogger: {
-                block:$('.js_logObservationBlock_activity'),
+                block:$('#LogObservationContainer .js_logObservationBlock_activity'),
                 saveObservationUrl:activityUrl,
                 getPresentationUrl:getPresentationUrl,
                 updatePresentationUrl:updatePresentationUrl,
                 getSkillUrl:getSkillUrl,
                 updateSkillUrl: updateSkillUrl,
                 getItemUsageDetailsUrl: getItemUsageDetailsUrl,
-                updateItemUsageDetailsUrl:updateItemUsageDetailsUrl
+                updateItemUsageDetailsUrl:updateItemUsageDetailsUrl,
             },
             cameInClassLogger: {
-                block:$('.js_logObservationBlock_cameInClass'),
-                saveObservationUrl: cameInClassUrl
+                block:$('#LogObservationContainer .js_logObservationBlock_cameInClass'),
+                saveObservationUrl: cameInClassUrl,
             },
             emotionLogger: {
-                block:$('.js_logObservationBlock_emotion'),
-                saveObservationUrl: emotionUrl
+                block:$('#LogObservationContainer .js_logObservationBlock_emotion'),
+                saveObservationUrl: emotionUrl,
             },
             kidsSelectorBlock: $('.js_KidIdCommonSelector'),
-            useCurrentTime: true
+            useCurrentTime: true,
+            showKidsSelectorInLoggers:false
         });
         observationLoggerModule.SetKidsSource(kidsSource);
         observationLoggerModule.SetItemsSource(itemsSource);

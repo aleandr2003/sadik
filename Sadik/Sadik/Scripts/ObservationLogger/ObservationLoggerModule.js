@@ -1,4 +1,6 @@
 ﻿function ObservationLoggerModule(options) {
+    ObservationLoggerModule.superclass.constructor.call(this);
+
     var self = this;
 
     var activityLogger;
@@ -62,27 +64,21 @@
     }
 
     if (options.useCurrentTime !== undefined) {
-        if (activityLogger) {
-            activityLogger.SetUseCurrentTime(options.useCurrentTime);
-        }
-        if (cameInClassLogger) {
-            cameInClassLogger.SetUseCurrentTime(options.useCurrentTime);
-        }
-        if (emotionLogger) {
-            emotionLogger.SetUseCurrentTime(options.useCurrentTime);
-        }
+        activityLogger && activityLogger.SetUseCurrentTime(options.useCurrentTime);
+        cameInClassLogger && cameInClassLogger.SetUseCurrentTime(options.useCurrentTime);
+        emotionLogger && emotionLogger.SetUseCurrentTime(options.useCurrentTime);
     }
 
     if (options.hideUseCurrentTime) {
-        if (activityLogger) {
-            activityLogger.HideUseCurrentTimeBlock();
-        }
-        if (cameInClassLogger) {
-            cameInClassLogger.HideUseCurrentTimeBlock();
-        }
-        if (emotionLogger) {
-            emotionLogger.HideUseCurrentTimeBlock();
-        }
+        activityLogger && activityLogger.HideUseCurrentTimeBlock();
+        cameInClassLogger && cameInClassLogger.HideUseCurrentTimeBlock();
+        emotionLogger && emotionLogger.HideUseCurrentTimeBlock();
+    }
+
+    if (!options.showKidsSelectorInLoggers) {
+        activityLogger && activityLogger.HideKidsSelector();
+        cameInClassLogger && cameInClassLogger.HideKidsSelector();
+        emotionLogger && emotionLogger.HideKidsSelector();
     }
 
     var renderKidsSelector = function () {
@@ -156,16 +152,35 @@
     }
 
     this.editObservation = function (observation, type) {
-        if (type == 'Activity') {
+        self.currentObservation = observation;
+        activityLogger && activityLogger.hide();
+        cameInClassLogger && cameInClassLogger.hide();
+        emotionLogger && emotionLogger.hide();
+        if (activityLogger && type == 'Activity') {
             activityLogger.editObservation(observation);
-        } else if (type == 'CameInClass') {
+            activityLogger.show();
+        } else if (cameInClassLogger && type == 'CameInClass') {
             cameInClassLogger.editObservation(observation);
-        } else if (type == 'Emotion') {
+            cameInClassLogger.show();
+        } else if (emotionLogger && type == 'Emotion') {
             emotionLogger.editObservation(observation);
+            emotionLogger.show();
         }
     }
 
     if (self._kidsSelectorBlock && self._kidsSource) {
         renderKidsSelector();
     }
+
+    self.OnObservationSubmittedComplete = function (UniqueId) {
+        if (self.currentObservation && UniqueId && self.currentObservation.UniqueId == UniqueId) {
+            self.currentObservation = null;
+        }
+        self.publish("observationSubmittedComplete", UniqueId);
+    };
+
+    activityLogger.subscribe("observationSubmittedComplete", self.OnObservationSubmittedComplete);
+    cameInClassLogger.subscribe("observationSubmittedComplete", self.OnObservationSubmittedComplete);
+    emotionLogger.subscribe("observationSubmittedComplete", self.OnObservationSubmittedComplete);
 }
+class_extend(ObservationLoggerModule, PubSubBase);

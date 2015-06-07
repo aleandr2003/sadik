@@ -293,6 +293,7 @@
     <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\Modifiers.css" />
     <Content Include="Content\ObservationList.css" />
+    <Content Include="Content\ObservationLogger.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -374,8 +375,8 @@
     <Content Include="Scripts\jqPlot\jquery.jqplot.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-1.8.0.intellisense.js" />
-    <Content Include="Scripts\jquery-ui-1.11.2.custom\jquery-ui.min.js" />
-    <Content Include="Scripts\jquery-ui-1.11.2.custom\jquery.js" />
+    <Content Include="Scripts\jquery-ui\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.js" />
     <Content Include="Scripts\jquery.ui.datepicker-ru.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -388,6 +389,7 @@
     <Content Include="Scripts\orm\emotion.js" />
     <Content Include="Scripts\orm\observation.js" />
     <Content Include="Scripts\orm\itemUsageDetails.js" />
+    <Content Include="Scripts\Sadik\DateCustom.js" />
     <Content Include="Scripts\Sadik\klass.js" />
     <Content Include="Scripts\orm\model.js" />
     <Content Include="Scripts\Sadik\ObservationListFilter.js" />

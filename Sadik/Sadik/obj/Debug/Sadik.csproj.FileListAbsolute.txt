@@ -5,8 +5,10 @@ C:\rabota\sadik\Sadik\Sadik\bin\Castle.Windsor.dll
 C:\rabota\sadik\Sadik\Sadik\bin\Elmah.dll
 C:\rabota\sadik\Sadik\Sadik\bin\EntityFramework.dll
 C:\rabota\sadik\Sadik\Sadik\bin\Microsoft.Web.Infrastructure.dll
+C:\rabota\sadik\Sadik\Sadik\bin\Microsoft.Web.Mvc.dll
 C:\rabota\sadik\Sadik\Sadik\bin\System.Web.Helpers.dll
 C:\rabota\sadik\Sadik\Sadik\bin\System.Web.Mvc.dll
+C:\rabota\sadik\Sadik\Sadik\bin\System.Web.Optimization.dll
 C:\rabota\sadik\Sadik\Sadik\bin\System.Web.Providers.dll
 C:\rabota\sadik\Sadik\Sadik\bin\System.Web.Razor.dll
 C:\rabota\sadik\Sadik\Sadik\bin\System.Web.WebPages.Deployment.dll
@@ -33,6 +35,3 @@ C:\rabota\sadik\Sadik\Sadik\bin\ru\EntityFramework.resources.dll
 C:\rabota\sadik\Sadik\Sadik\bin\ru\System.Web.Providers.resources.dll
 C:\rabota\sadik\Sadik\Sadik\obj\Debug\Sadik.dll
 C:\rabota\sadik\Sadik\Sadik\obj\Debug\Sadik.pdb
-C:\rabota\sadik\Sadik\Sadik\bin\Microsoft.Web.Mvc.dll
-C:\rabota\sadik\Sadik\Sadik\bin\System.Web.Optimization.dll
-C:\rabota\sadik\Sadik\Sadik\obj\Debug\Sadik.csprojResolveAssemblyReference.cache
