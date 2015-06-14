@@ -3,14 +3,15 @@
 @{
     ViewBag.Title = Model.FirstName + " " + Model.LastName;
 }
-@section HEAD{<a href="View.cshtml">View.cshtml</a>
+@section HEAD{
     <link href="@Url.Content("~/Content/jqPlot/jquery.jqplot.min.css")" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
     <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_jqPlot")"></script>
+    
 }
 <style>
-    .LogObservationArea {
+    #tabs-addObservation .LogObservationArea {
         margin:5px 20px 5px 0;
         float:left;
     }
@@ -23,7 +24,72 @@
         display:none;
     }
 </style>
+<style>
+    #EditObservationContainer .LogObservationArea {
+        margin:5px 0 0 5px;
+        float:left;
+    }
+</style>
+<script type="text/javascript">
+    
+    $.validator.setDefaults({ ignore: "" });
+    
+    Activity.loadLocal('Activities');
+    ItemUsageDetails.loadLocal('ItemUsageDetails');
+    CameInClass.loadLocal('CameInClasses');
+    Emotion.loadLocal('Emotions');
+    var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
+    var itemsSource = @Html.Action("IndexShortJsonSerialized", "Inventory", new { KindergartenId = ViewBag.KindergartenId });
+    var kidId = '@Model.Id';
+    var ObservationsCtrlScope;
 
+    $(function(){
+        $('#editingDialog').dialog({
+            autoOpen: false,
+            closeOnEscape: true,
+            hide:100,
+            modal:true
+        });
+
+
+        var newObservationLogger = new ObservationLoggerModule({
+            block: $('#tabs-addObservation'),
+            useCurrentTime: false,
+            showKidsSelectorInLoggers:false
+        });
+        newObservationLogger.SetKidsSource(kidsSource);
+        newObservationLogger.SetItemsSource(itemsSource);
+        newObservationLogger.SelectKid(kidId);
+
+
+        var observationLoggerModule = new ObservationLoggerModule({
+            block:$('#EditObservationContainer'),
+            useCurrentTime: false,
+            hideUseCurrentTime:true,
+            showKidsSelectorInLoggers:false
+        });
+        observationLoggerModule.SetKidsSource(kidsSource);
+        observationLoggerModule.SetItemsSource(itemsSource);
+        
+        var ObservationsCtrlElement = document.querySelector('[ng-controller=ObservationsCtrl]');
+        ObservationsCtrlScope = angular.element(ObservationsCtrlElement).scope();
+        ObservationsCtrlScope.canEdit = @(ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher ? "true" : "false");
+        ObservationsCtrlScope.canDelete = @(ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher ? "true" : "false");
+        ObservationsCtrlScope.itemsSource = itemsSource;
+        ObservationsCtrlScope.activities = Activity.records;
+        ObservationsCtrlScope.cameInClasses = CameInClass.records;
+        ObservationsCtrlScope.emotions = Emotion.records;
+        ObservationsCtrlScope.observationLoggerModule = observationLoggerModule;
+        //ObservationsCtrlScope.loadObservationsList(kidId);
+        observationLoggerModule.subscribe("observationSubmittedComplete", function (UniqueId) {
+            if(ObservationsCtrlScope.currentUniqueId == UniqueId){
+                $('#editingDialog').dialog("close");
+                ObservationsCtrlScope.currentUniqueId = null;
+            }
+        });
+        ObservationsCtrlScope.$digest();
+    });
+</script>
 <h3>@Model.LastName @Model.FirstName @Model.Patronymic (@Model.GetFormattedAge())</h3>
 
 <div id="tabs">
@@ -37,7 +103,8 @@
         <li><a href="#tabs-indexADR">Список ДТР</a></li>
         <li><a href="#tabs-statistics">Статистика</a></li>
         <li><a href="#tabs-charts">Графики</a></li>
-        <li><a href="@Url.Action("Index", "Observation", new { Id = Model.Id, KindergartenId = Model.KindergartenId })">Наблюдения</a></li>
+        @*<li><a href="@Url.Action("Index", "Observation", new { Id = Model.Id, KindergartenId = Model.KindergartenId })">Наблюдения</a></li>*@
+        <li><a href="#tabs-observationList">Наблюдения</a></li>
     </ul>
     @if (ViewBag.CurrentUser != null && ((User)ViewBag.CurrentUser).RoleId == UserRole.Teacher)
     {
@@ -57,57 +124,6 @@
                     @Html.Action("LogEmotion", "Observation", new { returnUrl = returnUrl, KindergartenId = Model.KindergartenId })
                 </div>
                 <div class="clearFloatBoth"></div>
-                <script type="text/javascript">
-                    $.validator.setDefaults({ ignore: "" });
-                    
-                    var getPresentationUrl = '@Url.Action("GetPresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-                    var updatePresentationUrl = '@Url.Action("UpdatePresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-                    var getSkillUrl = '@Url.Action("GetSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-                    var updateSkillUrl = '@Url.Action("UpdateSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-                    var getItemUsageDetailsUrl = '@Url.Action("GetItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-                    var updateItemUsageDetailsUrl = '@Url.Action("UpdateItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-
-                    var activityUrl = '@Url.Action("Activity", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-                    var cameInClassUrl = '@Url.Action("CameInClass", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-                    var emotionUrl = '@Url.Action("Emotion", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-
-                    var itemsSource = @Html.Action("IndexShortJsonSerialized", "Inventory", new { KindergartenId = ViewBag.KindergartenId });
-                    var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
-                    
-                    var kidId = '@Model.Id';
-                    Activity.loadLocal('Activities');
-                    ItemUsageDetails.loadLocal('ItemUsageDetails');
-                    CameInClass.loadLocal('CameInClasses');
-                    Emotion.loadLocal('Emotions');
-
-                    $(function () {
-                        var observationLoggerModule = new ObservationLoggerModule({
-                            activityLogger: {
-                                block: $('#tabs-addObservation .js_logObservationBlock_activity'),
-                                saveObservationUrl: activityUrl,
-                                getPresentationUrl: getPresentationUrl,
-                                updatePresentationUrl: updatePresentationUrl,
-                                getSkillUrl: getSkillUrl,
-                                updateSkillUrl: updateSkillUrl,
-                                getItemUsageDetailsUrl: getItemUsageDetailsUrl,
-                                updateItemUsageDetailsUrl:updateItemUsageDetailsUrl
-                            },
-                            cameInClassLogger: {
-                                block: $('#tabs-addObservation .js_logObservationBlock_cameInClass'),
-                                saveObservationUrl: cameInClassUrl
-                            },
-                            emotionLogger: {
-                                block: $('#tabs-addObservation .js_logObservationBlock_emotion'),
-                                saveObservationUrl: emotionUrl
-                            },
-                            useCurrentTime: false,
-                            showKidsSelectorInLoggers:false
-                        });
-                        observationLoggerModule.SetKidsSource(kidsSource);
-                        observationLoggerModule.SetItemsSource(itemsSource);
-                        observationLoggerModule.SelectKid(kidId);
-                    });
-                </script>
             </div>
         }
         <div id="tabs-editKid">
@@ -155,6 +171,27 @@
             <div id="cameInClass-charts-container" class="chartContainer"></div>
             <div class="clearFloatBoth"></div>
         </div>
+        <div id="tabs-observationList">
+            <div ng-app="ObservationsApp">
+                <div id="editingDialog">
+                    @{
+                        int KindergartenId = ViewBag.KindergartenId;
+                        <div id="EditObservationContainer">
+                            @Html.Action("LogActivity", "Observation", new { KindergartenId = KindergartenId })
+                            @Html.Action("LogCameInClass", "Observation", new { KindergartenId = KindergartenId })
+                            @Html.Action("LogEmotion", "Observation", new { KindergartenId = KindergartenId })
+                        </div>
+                    }
+                </div>
+                <div ng-controller="ObservationsCtrl">
+                    <div ng-if="observations.length > 0">
+                        <ng-include src="'/ViewsAngular/Observation/ObservationListFilter.html'"></ng-include>
+                        <ng-include src="'/ViewsAngular/Observation/ObservationList.html'"></ng-include>
+                    </div>
+                    <span ng-if="observations.length == 0">Наблюдений ещё не было</span>
+                </div>
+            </div>
+        </div>
     }
     
 </div>
@@ -175,6 +212,11 @@
                 else if (tabUrl == '#tabs-charts') {
                     $('.js_updateActivityChartButton').click();
                     $('.js_updateCameInClassChartButton').click();
+                }
+                else if (tabUrl == '#tabs-observationList') {
+                    if(ObservationsCtrlScope){
+                        ObservationsCtrlScope.loadObservationsList(kidId);
+                    }
                 }
             }
         });

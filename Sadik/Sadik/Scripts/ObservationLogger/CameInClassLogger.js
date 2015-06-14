@@ -1,5 +1,5 @@
 ﻿function CameInClassLogger(options) {
-    CameInClassLogger.superclass.constructor.call(this, options.block, options.saveObservationUrl);
+    CameInClassLogger.superclass.constructor.call(this, options.block);
     var self = this;
 
     this.submitObservation = function () {
@@ -38,17 +38,7 @@
             return;
         }
         self.saved();
-        //$.ajax({
-        //    'url': self._submitObservationUrl,
-        //    'type': 'POST',
-        //    'data': obs.toJSON(),
-        //    'dataType': 'json',
-        //    'success': self.OnSuccessSubmitObservation,
-        //    'error': function () { },
-        //    'beforeSubmit': self.OnBeginSubmitObservation,
-        //    'complete': self.OnCompleteSubmitObservation
-        //});
-        //jQuery.ajaxSettings.traditional = settingDummy;
+        
     }
 
     self.editObservation = function (observation) {
@@ -59,22 +49,22 @@
         self.setDateTime(observation.DateObserved);
     }
 
-    self.OnSuccessSubmitObservation = function (data, status, xhr) {
-        self.publish("observationSubmittedComplete", data.UniqueId);
-        if (data.UniqueId) {
+    self.OnSuccessSubmitObservation = function (observation) {
+        self.publish("observationSubmittedComplete", observation.UniqueId);
+        if (observation.UniqueId) {
             self.publish("observationSubmittedSuccess");
         } else {
             self.publish("observationSubmittedError");
         }
     }
 
-    CameInClass.subscribe("create", function (observation) {
+    CameInClass.subscribe("afterCreateRemote", function (observation) {
         self.publish("observationSubmitted");
-        observation.createRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
+        self.OnSuccessSubmitObservation(observation);
     });
-    CameInClass.subscribe("update", function (observation) {
+    CameInClass.subscribe("afterUpdateRemote", function (observation) {
         self.publish("observationSubmitted");
-        observation.updateRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
+        self.OnSuccessSubmitObservation(observation);
     });
 
     CameInClass.subscribe("create", function () {
@@ -90,25 +80,25 @@
         self.UpdateCounter(CameInClass.countDirty());
     });
 
-    $(window).unload(function () {
-        CameInClass.saveLocalDirtyOnly('CameInClasses');
-    });
+    //$(window).unload(function () {
+    //    CameInClass.saveLocalDirtyOnly('CameInClasses');
+    //});
     
     self.UpdateCounter(CameInClass.countDirty());
 
-    self.ResubmitObservations = function () {
-        CameInClass.each(function (observation) {
-            if (observation.isDirty) {
-                if (observation.Id == '') {
-                    observation.createRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
-                } else {
-                    observation.updateRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
-                }
-            }
-        });
-    }
-    setInterval(self.ResubmitObservations, self._resubmitIntervalTime);
-    self.ResubmitObservations();
+    //self.ResubmitObservations = function () {
+    //    CameInClass.each(function (observation) {
+    //        if (observation.isDirty) {
+    //            if (observation.Id == '') {
+    //                observation.createRemote(self.OnSuccessSubmitObservation);
+    //            } else {
+    //                observation.updateRemote(self.OnSuccessSubmitObservation);
+    //            }
+    //        }
+    //    });
+    //}
+    //setInterval(self.ResubmitObservations, self._resubmitIntervalTime);
+    //self.ResubmitObservations();
 }
 
 class_extend(CameInClassLogger, BaseObservationLogger);

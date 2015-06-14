@@ -355,6 +355,7 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>SadikEntities.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <Content Include="Gruntfile.js" />
     <Content Include="Models\SadikEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>SadikEntities.edmx</DependentUpon>
@@ -368,8 +369,11 @@
       <DependentUpon>SadikEntities.edmx</DependentUpon>
       <LastGenOutput>SadikEntities.cs</LastGenOutput>
     </Content>
+    <Content Include="package.json" />
     <None Include="Properties\PublishProfiles\localFolder.pubxml" />
     <Content Include="sadiksearch.html" />
+    <Content Include="Scripts\angularjs\angular-locale_ru-ru.js" />
+    <Content Include="Scripts\angularjs\angular.min.js" />
     <Content Include="Scripts\jqPlot\excanvas.min.js" />
     <Content Include="Scripts\jqPlot\jqplot.dateAxisRenderer.min.js" />
     <Content Include="Scripts\jqPlot\jquery.jqplot.min.js" />
@@ -392,13 +396,20 @@
     <Content Include="Scripts\Sadik\DateCustom.js" />
     <Content Include="Scripts\Sadik\klass.js" />
     <Content Include="Scripts\orm\model.js" />
-    <Content Include="Scripts\Sadik\ObservationListFilter.js" />
+    <Content Include="Scripts\Sadik\ObservationListModule.js" />
     <Content Include="Scripts\Sadik\pubsub.js" />
     <Content Include="Scripts\Sadik\Collapsible.js" />
     <Content Include="Scripts\Sadik\Collections.js" />
     <Content Include="Scripts\Sadik\Misc.js" />
     <Content Include="Scripts\ObservationLogger\ActivityLogger.js" />
     <Content Include="Scripts\ObservationLogger\CameInClassLogger.js" />
+    <Content Include="Scripts\Sadik\templates.js" />
+    <Content Include="Scripts\templates.js" />
+    <Content Include="ViewsAngular\Observation\ActivityListItem.html" />
+    <Content Include="ViewsAngular\Observation\CameInClassListItem.html" />
+    <Content Include="ViewsAngular\Observation\EmotionListItem.html" />
+    <Content Include="ViewsAngular\Observation\ObservationList.html" />
+    <Content Include="ViewsAngular\Observation\ObservationListFilter.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

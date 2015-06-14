@@ -1,5 +1,8 @@
 ﻿var Activity = Observation.setup('Activity', Observation.attributes.concat(['ItemId', 'Duration', 'Polarization', 'ChoseHimSelf']));
-
+Activity.extend({
+    remoteUrl: SadikGlobalSettings.activityUrl,
+    autoSaveRemote: true
+});
 Activity.include({
     ItemId: null,
     Duration: null,
@@ -19,3 +22,13 @@ Activity.include({
         return true;
     }
 });
+
+$(window).unload(function () {
+    Activity.saveLocalDirtyOnly('Activities');
+});
+
+$(window).load(function () {
+    setInterval(Activity.resubmit, Activity.resubmitIntervalTime);
+    Activity.resubmit();
+});
+

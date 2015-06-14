@@ -17,14 +17,12 @@
     Emotion = Model.Emotion,
     UniqueId = Model.UniqueId
 })*@
-
-@Html.Partial("LogEmotionFormTemplate")
-
+<div id="EditObservationContainer">
+    @Html.Partial("LogEmotionFormTemplate")
+</div>
 @Html.ActionLink("Отменить","View","Kids",new {Id = Model.KidId, KindergartenId = ViewBag.KindergartenId}, null)
 <script type="text/javascript">
     $.validator.setDefaults({ ignore: "" });
-
-    var emotionUrl = '@Url.Action("Emotion", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
 
     var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
 
@@ -34,23 +32,22 @@
     Emotion.loadLocal('Emotions');
 
     var kidId = '@Model.KidId';
-    var observationModel = @Html.Raw(Json.Encode(new LogEmotionModel() {
-        Id = Model.Id, 
-        KidId = Model.KidId, 
-        Comment = Model.Comment,
-        Emotion = Model.Emotion,
-        DateObserved = Model.DateObserved.Date,
-        Hours = Model.DateObserved.Hour,
-        Minutes = Model.DateObserved.Minute,
-        UniqueId = Model.UniqueId
-    }));
+    var observationModel = @Html.Raw(Json.Encode(new
+{
+    Id = Model.Id,
+    KidId = Model.KidId,
+    UniqueId = Model.UniqueId,
+    DateObserved = Model.DateObservedMilliseconds,
+    Emotion = (int)Model.Emotion,
+    TeacherId = Model.User.Id,
+    TeacherName = Model.User.FirstName,
+    Comment = Model.Comment,
+    Type = "Emotion"
+}));
 
     $(function () {
         var observationLoggerModule = new ObservationLoggerModule({
-            emotionLogger: {
-                block:$('.js_logObservationBlock_emotion'),
-                saveObservationUrl: emotionUrl
-            },
+            block:$('#EditObservationContainer'),
             hideUseCurrentTime:true
         });
         observationLoggerModule.SetKidsSource(kidsSource);

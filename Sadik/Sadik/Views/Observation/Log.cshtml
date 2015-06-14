@@ -62,17 +62,6 @@
 <script type="text/javascript">
     $.validator.setDefaults({ ignore: "" });
 
-    var getPresentationUrl = '@Url.Action("GetPresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var updatePresentationUrl = '@Url.Action("UpdatePresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var getSkillUrl = '@Url.Action("GetSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var updateSkillUrl = '@Url.Action("UpdateSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var getItemUsageDetailsUrl = '@Url.Action("GetItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var updateItemUsageDetailsUrl = '@Url.Action("UpdateItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-
-    var activityUrl = '@Url.Action("Activity", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var cameInClassUrl = '@Url.Action("CameInClass", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var emotionUrl = '@Url.Action("Emotion", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-
     var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
     var itemsSource = @Html.Action("IndexShortJsonSerialized", "Inventory", new { KindergartenId = ViewBag.KindergartenId });
     Activity.loadLocal('Activities');
@@ -81,24 +70,7 @@
     Emotion.loadLocal('Emotions');
     $(function () {
         var observationLoggerModule = new ObservationLoggerModule({
-            activityLogger: {
-                block:$('#LogObservationContainer .js_logObservationBlock_activity'),
-                saveObservationUrl:activityUrl,
-                getPresentationUrl:getPresentationUrl,
-                updatePresentationUrl:updatePresentationUrl,
-                getSkillUrl:getSkillUrl,
-                updateSkillUrl: updateSkillUrl,
-                getItemUsageDetailsUrl: getItemUsageDetailsUrl,
-                updateItemUsageDetailsUrl:updateItemUsageDetailsUrl,
-            },
-            cameInClassLogger: {
-                block:$('#LogObservationContainer .js_logObservationBlock_cameInClass'),
-                saveObservationUrl: cameInClassUrl,
-            },
-            emotionLogger: {
-                block:$('#LogObservationContainer .js_logObservationBlock_emotion'),
-                saveObservationUrl: emotionUrl,
-            },
+            block:$('#LogObservationContainer'),
             kidsSelectorBlock: $('.js_KidIdCommonSelector'),
             useCurrentTime: true,
             showKidsSelectorInLoggers:false

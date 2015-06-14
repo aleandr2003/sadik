@@ -1,5 +1,6 @@
 ﻿.observationList {
     list-style-type: none;
+    padding:0px;
 } 
 .ActivityListItemContainer {
         padding:5px 0;

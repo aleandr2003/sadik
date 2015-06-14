@@ -1,0 +1,36 @@
+﻿<div class="ActivityListItemContainer_WaitUpload observationCell">
+    <img src="/Content/images/spinner.gif" ng-show="observation.isDirty" width="15" height="15" alt="wait"/>
+    <div class="dummy20">&nbsp;</div>
+</div>
+<div class="ActivityListItemContainer_DateObserved observationCell">
+    {{observation.DateObserved | date:'dd MMMM yyyy HH:mm'}}
+</div>
+<div class="ActivityListItemContainer_InventoryItem observationCell">
+    {{observation.ItemId | InventoryName:itemsSource}}
+</div>
+<div class="ActivityListItemContainer_ChoseHimSelf observationCell" ng-switch="observation.ChoseHimSelf">
+    <span ng-switch-when="true">Сам</span>
+    <div ng-switch-default class="nbsp"></div>
+</div>
+<div class="ActivityListItemContainer_Polarization observationCell" ng-switch="observation.Polarization">
+    <span ng-switch-when="true">*</span>
+    <div ng-switch-default class="nbsp"></div>
+</div>
+<div class="ActivityListItemContainer_Duration observationCell">
+    {{observation.Duration | ActivityDuration}}
+</div>
+<div class="ActivityListItemContainer_TeacherName observationCell">
+    {{observation.TeacherName}}
+</div>
+<div class="ActivityListItemContainer_DeleteButton observationCell">
+    <button ng-click="delete(observation.Id)" ng-if="canDelete">Удалить</button>
+</div>
+<div class="ActivityListItemContainer_EditButton observationCell">             
+    <button ng-click="edit(observation.Id)" ng-if="canEdit">Редактировать</button>
+</div>
+<div class="clearFloatBoth"></div>
+<div class="ActivityListItemContainer_Comment js_comment_container" ng-if="observation.Comment">
+    <span class="commentText">
+        {{observation.Comment | textLimit:140}}
+    </span>
+</div>

@@ -1,13 +1,10 @@
 ﻿function ActivityLogger(options) {
-    ActivityLogger.superclass.constructor.call(this, options.block, options.saveObservationUrl);
+    ActivityLogger.superclass.constructor.call(this, options.block);
 
     var self = this;
-    var _getPresentationUrl = options.getPresentationUrl;
-    var _updatePresentationUrl = options.updatePresentationUrl;
-    var _getSkillUrl = options.getSkillUrl;
-    var _updateSkillUrl = options.updateSkillUrl;
-    var _getItemUsageDetailsUrl = options.getItemUsageDetailsUrl;
-    this._updateItemUsageDetailsUrl = options.updateItemUsageDetailsUrl;
+    var _presentationUrl = SadikGlobalSettings.presentationUrl;
+    var _skillUrl = SadikGlobalSettings.skillUrl;
+    this._itemUsageDetailsUrl = SadikGlobalSettings.itemUsageDetailsUrl;
 
     this._itemsSource;
     this._block = options.block;
@@ -79,9 +76,9 @@
 
     this.loadPresSkillBlock = function () {
         if (self.GetKidId() != '' && self.GetItemId() != '') {
-            //self.getPresentation(_getPresentationUrl);
-            //self.getSkill(_getSkillUrl);
-            self.getItemUsageDetails(_getItemUsageDetailsUrl);
+            //self.getPresentation(_presentationUrl);
+            //self.getSkill(_skillUrl);
+            self.getItemUsageDetails();
         } else {
             self.hidePresSkillBlock();
         }
@@ -96,7 +93,7 @@
         self._skillDegreeField.val('0');
     }
 
-    this.getItemUsageDetails = function (url) {
+    this.getItemUsageDetails = function () {
         var kidId = self.GetKidId();
         var itemId = self.GetItemId();
 
@@ -113,9 +110,10 @@
         }; //сохраняем предыдущий запрос
         data = { KidId: kidId, ItemId: itemId }
         if (data.KidId != '' && data.ItemId != '') {
+            var url = self._itemUsageDetailsUrl;
             $.ajax({
                 'url': url,
-                'type': 'POST',
+                'type': 'GET',
                 'dataType': 'json',
                 'data': data,
                 'success': function (result) {
@@ -145,7 +143,7 @@
         if (data.KidId != '' && data.ItemId != '') {
             $.ajax({
                 'url': url,
-                'type': 'POST',
+                'type': 'GET',
                 'dataType': 'json',
                 'data': data,
                 'success': function (result) {
@@ -188,7 +186,7 @@
         if (data.KidId != '' && data.ItemId != '') {
             $.ajax({
                 'url': url,
-                'type': 'POST',
+                'type': 'GET',
                 'dataType': 'json',
                 'data': data,
                 'success': function (result) {
@@ -276,25 +274,14 @@
             }
             else {
                 if (self._presentationBlock.is(':visible')) {
-                    self.updatePresentation(_updatePresentationUrl);
+                    self.updatePresentation(_presentationUrl);
                 }
                 if (self._skillBlock.is(':visible')) {
-                    self.updateSkill(_updateSkillUrl);
+                    self.updateSkill(_skillUrl);
                 }
             }
         }
         self.saved();
-        //$.ajax({
-        //    'url': self._submitObservationUrl,
-        //    'type': 'POST',
-        //    'data': obs.toJSON(),
-        //    'dataType': 'json',
-        //    'success': self.OnSuccessSubmitObservation,
-        //    'error': function () { },
-        //    'beforeSubmit': self.OnBeginSubmitObservation,
-        //    'complete': self.OnCompleteSubmitObservation
-        //});
-        //jQuery.ajaxSettings.traditional = settingDummy;
     }
 
     self.editObservation = function (observation) {
@@ -308,7 +295,6 @@
         self._durationField.val(observation.Duration);
         self._polarizationField.prop('checked', observation.Polarization);
         self._choseHimselfField.prop('checked', observation.ChoseHimSelf);
-        console.log(observation.DateObserved);
         self.setDateTime(observation.DateObserved);
         self.loadPresSkillBlock();
     }
@@ -380,22 +366,22 @@
        // change: function (event, ui) { self.itemAutocompleteOnChange.call(this, event, ui) }
     });
 
-    self.OnSuccessSubmitObservation = function (data, status, xhr) {
-        self.publish("observationSubmittedComplete", data.UniqueId);
-        if (data.UniqueId) {
+    self.OnSuccessSubmitObservation = function (observation) {
+        self.publish("observationSubmittedComplete", observation.UniqueId);
+        if (observation.UniqueId) {
             self.publish("observationSubmittedSuccess");
         } else {
             self.publish("observationSubmittedError");
         }
     }
 
-    Activity.subscribe("create", function (observation) {
+    Activity.subscribe("afterCreateRemote", function (observation) {
         self.publish("observationSubmitted");
-        observation.createRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
+        self.OnSuccessSubmitObservation(observation);
     });
-    Activity.subscribe("update", function (observation) {
+    Activity.subscribe("afterUpdateRemote", function (observation) {
         self.publish("observationSubmitted");
-        observation.updateRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
+        self.OnSuccessSubmitObservation(observation);
     });
 
     Activity.subscribe("create", function () {
@@ -412,39 +398,39 @@
     });
 
 
-    ItemUsageDetails.subscribe("create", function (details) {
-        details.createRemote(self._updateItemUsageDetailsUrl);
-    });
+    //ItemUsageDetails.subscribe("create", function (details) {
+    //    details.createRemote();
+    //});
 
-    $(window).unload(function () {
-        Activity.saveLocalDirtyOnly('Activities');
-        ItemUsageDetails.saveLocalDirtyOnly('ItemUsageDetails');
-    });
+    //$(window).unload(function () {
+    //    Activity.saveLocalDirtyOnly('Activities');
+    //    ItemUsageDetails.saveLocalDirtyOnly('ItemUsageDetails');
+    //});
 
     self.UpdateCounter(Activity.countDirty());
 
-    self.ResubmitObservations = function () {
-        Activity.each(function (observation) {
-            if(observation.isDirty){
-                if (observation.Id == '') {
-                    observation.createRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
-                } else {
-                    observation.updateRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
-                }
-            }
-        });
-        ItemUsageDetails.each(function (observation) {
-            if (observation.isDirty) {
-                observation.createRemote(self._updateItemUsageDetailsUrl, function (data, status, xhr) {
-                    var itemUsageDetails = ItemUsageDetails.exists(data.UniqueId.toUpperCase());
-                    if (itemUsageDetails) itemUsageDetails.destroy();
-                });
-            }
-        });
-    }
+    //self.ResubmitObservations = function () {
+    //    Activity.each(function (observation) {
+    //        if(observation.isDirty){
+    //            if (observation.Id == '') {
+    //                observation.createRemote(self.OnSuccessSubmitObservation);
+    //            } else {
+    //                observation.updateRemote(self.OnSuccessSubmitObservation);
+    //            }
+    //        }
+    //    });
+    //    ItemUsageDetails.each(function (observation) {
+    //        if (observation.isDirty) {
+    //            observation.createRemote(function (data, status, xhr) {
+    //                var itemUsageDetails = ItemUsageDetails.exists(data.UniqueId.toUpperCase());
+    //                if (itemUsageDetails) itemUsageDetails.destroy();
+    //            });
+    //        }
+    //    });
+    //}
 
-    setInterval(self.ResubmitObservations, self._resubmitIntervalTime);
-    self.ResubmitObservations();
+    //setInterval(self.ResubmitObservations, self._resubmitIntervalTime);
+    //self.ResubmitObservations();
     
 }
 class_extend(ActivityLogger, BaseObservationLogger);

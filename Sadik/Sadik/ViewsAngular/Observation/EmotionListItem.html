@@ -1,0 +1,28 @@
+﻿<div class="EmotionListItemContainer_WaitUpload observationCell">
+    <img src="/Content/images/spinner.gif" ng-show="observation.isDirty" width="15" height="15" alt="wait"/>
+    <div class="dummy20">&nbsp;</div>
+</div>
+<div class="EmotionListItemContainer_DateObserved observationCell">
+    {{observation.DateObserved | date:'dd MMMM yyyy HH:mm'}}
+</div>
+<div class="EmotionListItemContainer_EmotionType observationCell">
+    {{observation.Emotion | EmotionName}}
+</div>
+<div class="EmotionListItemContainer_Dummy observationCell">
+    <div class="nbsp"></div>
+</div>
+<div class="EmotionListItemContainer_TeacherName observationCell">
+    {{observation.TeacherName}}
+</div>
+<div class="EmotionListItemContainer_DeleteButton observationCell">             
+    <button ng-click="delete(observation.Id)" ng-if="canDelete">Удалить</button>
+</div>
+<div class="EmotionListItemContainer_EditButton observationCell">             
+    <button ng-click="edit(observation.Id)" ng-if="canEdit">Редактировать</button>
+</div>
+<div class="clearFloatBoth"></div>
+<div class="EmotionListItemContainer_Comment js_comment_container" ng-if="observation.Comment">
+    <span class="commentText">
+        {{observation.Comment | textLimit:140}}
+    </span>
+</div>

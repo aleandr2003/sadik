@@ -1,7 +1,6 @@
 ﻿@using System.Web.Optimization
-@model IEnumerable<ObservationModel>
-<link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/ObservationList.css")"/>
-<script type="text/javascript" src="@Url.Content("https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js")"></script>
+@*@model IEnumerable<ObservationModel>*@
+@*<script type="text/javascript" src="@Url.Content("https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("https://code.angularjs.org/1.3.15/i18n/angular-locale_ru-ru.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/orm/model.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/orm/observation.js")"></script>
@@ -14,305 +13,21 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/CameInClassLogger.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/EmotionLogger.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/ObservationLoggerModule.js")"></script>
-@*<script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>*@
-@*<script type="text/javascript" src="@Url.Content("~/Scripts/Sadik/ObservationListFilter.js")"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Sadik/ObservationListModule.js")"></script>
+*@
+
+<script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
+
 
 <script type="text/javascript">
     
     $.validator.setDefaults({ ignore: "" });
-
-    var getPresentationUrl = '@Url.Action("GetPresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var updatePresentationUrl = '@Url.Action("UpdatePresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var getSkillUrl = '@Url.Action("GetSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var updateSkillUrl = '@Url.Action("UpdateSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var getItemUsageDetailsUrl = '@Url.Action("GetItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var updateItemUsageDetailsUrl = '@Url.Action("UpdateItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-
-    var activityUrl = '@Url.Action("Activity", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var cameInClassUrl = '@Url.Action("CameInClass", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var emotionUrl = '@Url.Action("Emotion", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-
-    var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
-    var itemsSource = @Html.Action("IndexShortJsonSerialized", "Inventory", new { KindergartenId = ViewBag.KindergartenId });
-    var observationLoggerModule;
     
     Activity.loadLocal('Activities');
     ItemUsageDetails.loadLocal('ItemUsageDetails');
     CameInClass.loadLocal('CameInClasses');
     Emotion.loadLocal('Emotions');
-
-    function ObservationListFixDates(observations){
-        for(var i in observations){
-            var observation = observations[i];
-            observation.DateObserved = new Date(observation.DateObserved);
-        }
-    }
-
-    var activities = @RenderActivityArrayJson(Model.Where(o => o is ObservationActivityModel).ToList());
-    var cameInClasses = @RenderCameInClassArrayJson(Model.Where(o => o is ObservationCameInClassModel).ToList());
-    var emotions = @RenderEmotionArrayJson(Model.Where(o => o is ObservationEmotionModel).ToList());
-
-    ObservationListFixDates(activities);
-    ObservationListFixDates(cameInClasses);
-    ObservationListFixDates(emotions);
-
-    Activity.merge(activities);
-    CameInClass.merge(cameInClasses);
-    Emotion.merge(emotions);
-
-    var ObservationsApp = angular.module("ObservationsApp", []);
-    ObservationsApp.controller("ObservationsCtrl", function ($scope) {
-        $scope.activities = Activity.records;
-        $scope.cameInClasses = CameInClass.records;
-        $scope.emotions = Emotion.records;
-        $scope.itemsSource = itemsSource;
-        $scope.fillObservationsList = function(){
-            $scope.observations = [].concat(Activity.recordsValues(), CameInClass.recordsValues(), Emotion.recordsValues());
-        }
-        $scope.$watchCollection("activities", function() { $scope.fillObservationsList(); });
-        $scope.$watchCollection("cameInClasses", function() {  $scope.fillObservationsList(); });
-        $scope.$watchCollection("emotions", function() {  $scope.fillObservationsList(); });
-        $scope.fillObservationsList();
-
-        $scope.canEdit = @(ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher ? "true" :"false");
-        $scope.canDelete = @(ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher ? "true" :"false");
-        $scope.edit = function (id) {
-            $scope.currentUniqueId = null;
-            if(observationLoggerModule){ 
-                var observation = SearchDictionary($scope.observations, function(item){ return item.Id == id; });
-                if(observation){
-                    $scope.currentUniqueId = observation.UniqueId;
-                    observationLoggerModule.editObservation(observation, observation.Type);
-                    $('#editingDialog').dialog("open");
-                }
-            }
-        }
-        $scope.delete = function (id) {
-            var observation = SearchDictionary($scope.observations, function(item){ return item.Id == id; });
-            if(observation){
-                var url = '';
-                switch(observation.Type){
-                    case 'Activity':
-                        url = activityUrl;
-                        break;
-                    case 'CameInClass':
-                        url = cameInClassUrl;
-                        break;
-                    case 'Emotion':
-                        url = emotionUrl;
-                        break;
-                }
-                if(url){
-                    observation.destroyRemote(url, function(){
-                        this.destroy();
-                    });
-                }
-            }
-        }
-        $scope.filterType = '';
-        $scope.setFilterType = function(type){
-            $scope.filterType = type;
-        };
-        $scope.filteredObservations = function(observation){
-            if(!$scope.filterType) return true;
-            switch($scope.filterType){
-                case 'Activity':
-                    return observation.Type == 'Activity';
-                    break;
-                case 'CameInClass':
-                    return observation.Type == 'CameInClass';
-                    break;
-                case 'Emotion':
-                    return observation.Type == 'Emotion';
-                    break;
-                case 'WithComments':
-                    return observation.Comment && observation.Comment.length > 0;
-                    break;
-            }
-        };
-        Activity.subscribe("create", function () {
-            $scope.$digest();
-        });
-        Activity.subscribe("update", function () {
-            $scope.$digest();
-        });
-        Activity.subscribe("destroy", function () {
-            $scope.$digest();
-        });
-        CameInClass.subscribe("create", function () {
-            $scope.$digest();
-        });
-        CameInClass.subscribe("update", function () {
-            $scope.$digest();
-        });
-        CameInClass.subscribe("destroy", function () {
-            $scope.$digest();
-        });
-        Emotion.subscribe("create", function () {
-            $scope.$digest();
-        });
-        Emotion.subscribe("update", function () {
-            $scope.$digest();
-        });
-        Emotion.subscribe("destroy", function () {
-            $scope.$digest();
-        });
-
-        //чтобы обновлять крутилки в списке (крутилки будут привязаны к isDirty, чтобы видеть, какие изменения еще не сохранены);
-        Activity.subscribe("afterSaveRemote", function () {
-            $scope.$digest();
-        });
-        CameInClass.subscribe("afterSaveRemote", function () {
-            $scope.$digest();
-        });
-        Emotion.subscribe("afterSaveRemote", function () {
-            $scope.$digest();
-        });
-
-    });
-    ObservationsApp.filter("textLimit", function () {
-        return function (value, limit) {
-            if (angular.isString(value)) {
-                if (value.length < limit)
-                {
-                    return value;
-                }
-                else
-                {
-                    return value.substring(0, limit + 1) + "...";
-                }
-            } else {
-                return value;
-            }
-        };
-    }).filter('padZeros', function () {
-        return function (n, len) {
-            var num = parseInt(n, 10);
-            len = parseInt(len, 10);
-            if (isNaN(num) || isNaN(len)) {
-                return n;
-            }
-            num = ''+num;
-            while (num.length < len) {
-                num = '0'+num;
-            }
-            return num;
-        };
-    }).filter('dateWithoutShift', function ($filter) {
-        var standardDateFilterFn = $filter('date');
-        return function (input) {
-            var toUTCDate = function(date){
-                var _utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),  date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-                return _utc;
-            };
-
-            var utcDate = toUTCDate(new Date(input));
-            var newArgs = [];
-            for (var i = 1; i < arguments.length; i++) {
-                newArgs.push(arguments[i]);
-            }
-            return standardDateFilterFn(utcDate, newArgs);
-        };
-    }).filter('ActivityDuration', function () {
-        return function (input) {
-            var duration = input;
-            if (typeof duration =='string'){
-                duration = parseInt(duration);
-                if(isNaN(duration)){
-                    return input;
-                }
-            }
-            if (typeof duration =='number'){
-                switch(duration){
-                    case @((int)ActivityDuration.Brief):
-                        return '@Html.Raw(ActivityDuration.Brief.DisplayName())';
-                    case @((int)ActivityDuration.Short):
-                        return '@Html.Raw(ActivityDuration.Short.DisplayName())';
-                    case @((int)ActivityDuration.Long):
-                        return '@Html.Raw(ActivityDuration.Long.DisplayName())';
-                    default:
-                        return duration;
-                }
-            }else{
-                return duration;
-            }
-        };
-    }).filter('EmotionName', function () {
-        return function (input) {
-            var duration = input;
-            if (typeof duration =='string'){
-                duration = parseInt(duration);
-                if(isNaN(duration)){
-                    return input;
-                }
-            }
-            if (typeof duration =='number'){
-                switch(duration){
-                    case @((int)EmotionType.Agressive):
-                        return '@Html.Raw(EmotionType.Agressive.DisplayName())';
-                    case @((int)EmotionType.Cheery):
-                        return '@Html.Raw(EmotionType.Cheery.DisplayName())';
-                    case @((int)EmotionType.Crying):
-                        return '@Html.Raw(EmotionType.Crying.DisplayName())';
-                    case @((int)EmotionType.Fighting):
-                        return '@Html.Raw(EmotionType.Fighting.DisplayName())';
-                    case @((int)EmotionType.Grumpy):
-                        return '@Html.Raw(EmotionType.Grumpy.DisplayName())';
-                    case @((int)EmotionType.Happy):
-                        return '@Html.Raw(EmotionType.Happy.DisplayName())';
-                    case @((int)EmotionType.Histerical):
-                        return '@Html.Raw(EmotionType.Histerical.DisplayName())';
-                    case @((int)EmotionType.Neutral):
-                        return '@Html.Raw(EmotionType.Neutral.DisplayName())';
-                    case @((int)EmotionType.Sad):
-                        return '@Html.Raw(EmotionType.Sad.DisplayName())';
-                    case @((int)EmotionType.Smiley):
-                        return '@Html.Raw(EmotionType.Smiley.DisplayName())';
-                    default:
-                        return duration;
-                }
-            }else{
-                return duration;
-            }
-        };
-    }).filter('InventoryName', function () {
-        return function (input, source) {
-            var id = input;
-            if (typeof id =='string'){
-                id = parseInt(id);
-                if(isNaN(id)){
-                    return input;
-                }
-            }
-            if (typeof id =='number' && source && source.constructor === Array){
-                //binary search algorithm. on 300+ items and 1000+ observations makes a serious impact.
-                //the array is sorted on the server;
-                var minIndex = 0;
-                var maxIndex = source.length - 1;
-                var currentIndex;
-                var currentElement;
- 
-                while (minIndex <= maxIndex) {
-                    currentIndex = (minIndex + maxIndex) / 2 | 0;
-                    currentElement = source[currentIndex];
- 
-                    if (currentElement.Id < id) {
-                        minIndex = currentIndex + 1;
-                    }
-                    else if (currentElement.Id > id) {
-                        maxIndex = currentIndex - 1;
-                    }
-                    else {
-                        return currentElement.Title;
-                    }
-                }
- 
-                return '';
-            }else{
-                return input;
-            }
-        };
-    });
+    
     $(function(){
         $('#editingDialog').dialog({
             autoOpen: false,
@@ -320,50 +35,35 @@
             hide:100,
             modal:true
         });
-        observationLoggerModule = new ObservationLoggerModule({
-            activityLogger: {
-                block:$('#EditObservationContainer .js_logObservationBlock_activity'),
-                saveObservationUrl:activityUrl,
-                getPresentationUrl:getPresentationUrl,
-                updatePresentationUrl:updatePresentationUrl,
-                getSkillUrl:getSkillUrl,
-                updateSkillUrl: updateSkillUrl,
-                getItemUsageDetailsUrl: getItemUsageDetailsUrl,
-                updateItemUsageDetailsUrl:updateItemUsageDetailsUrl
-            },
-            cameInClassLogger: {
-                block:$('#EditObservationContainer .js_logObservationBlock_cameInClass'),
-                saveObservationUrl: cameInClassUrl
-            },
-            emotionLogger: {
-                block:$('#EditObservationContainer .js_logObservationBlock_emotion'),
-                saveObservationUrl: emotionUrl
-            },
-            kidsSelectorBlock: $('.js_KidIdCommonSelector'),
+        var observationLoggerModule = new ObservationLoggerModule({
+            block:$('#EditObservationContainer'),
             useCurrentTime: false,
             hideUseCurrentTime:true,
             showKidsSelectorInLoggers:false
         });
+
+        var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
+        var itemsSource = @Html.Action("IndexShortJsonSerialized", "Inventory", new { KindergartenId = ViewBag.KindergartenId });
         observationLoggerModule.SetKidsSource(kidsSource);
         observationLoggerModule.SetItemsSource(itemsSource);
-        $('.js_submitButton').click(function (event) {
-            if ($('.js_KidIdCommonSelector').val() == '') {
-                event.preventDefault();
-                alert("Пожалуйста, выберите ребенка");
-            }
-        });
+        
         var ObservationsCtrlElement = document.querySelector('[ng-controller=ObservationsCtrl]');
         var ObservationsCtrlScope = angular.element(ObservationsCtrlElement).scope();
-
+        ObservationsCtrlScope.canEdit = @(ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher ? "true" : "false");
+        ObservationsCtrlScope.canDelete = @(ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher ? "true" : "false");
+        ObservationsCtrlScope.itemsSource = itemsSource;
+        ObservationsCtrlScope.activities = Activity.records;
+        ObservationsCtrlScope.cameInClasses = CameInClass.records;
+        ObservationsCtrlScope.emotions = Emotion.records;
+        ObservationsCtrlScope.observationLoggerModule = observationLoggerModule;
+        ObservationsCtrlScope.loadObservationsList(@ViewBag.KidId);
         observationLoggerModule.subscribe("observationSubmittedComplete", function (UniqueId) {
             if(ObservationsCtrlScope.currentUniqueId == UniqueId){
                 $('#editingDialog').dialog("close");
                 ObservationsCtrlScope.currentUniqueId = null;
             }
         });
-        
-        
-        
+        ObservationsCtrlScope.$digest();
     });
 </script>
 <style>
@@ -377,245 +77,17 @@
         @{
             int KindergartenId = ViewBag.KindergartenId;
             <div id="EditObservationContainer">
-                @Html.Action("LogActivity", "Observation", new { KindergartenId = KindergartenId})
-                @Html.Action("LogCameInClass", "Observation", new { KindergartenId = KindergartenId})
-                @Html.Action("LogEmotion", "Observation", new { KindergartenId = KindergartenId})
+                @Html.Action("LogActivity", "Observation", new { KindergartenId = KindergartenId })
+                @Html.Action("LogCameInClass", "Observation", new { KindergartenId = KindergartenId })
+                @Html.Action("LogEmotion", "Observation", new { KindergartenId = KindergartenId })
             </div>
         }
     </div>
     <div ng-controller="ObservationsCtrl">
         <div ng-if="observations.length > 0">
-            <a href="javascript:void(0)" class="js_filterObservationsAll filterLink" ng-click="setFilterType('')">Все</a>
-            <a href="javascript:void(0)" class="js_filterObservationsActivities filterLink" ng-click="setFilterType('Activity')">Работа с материалами</a>
-            <a href="javascript:void(0)" class="js_filterObservationsCameInClass filterLink" ng-click="setFilterType('CameInClass')">Вход в класс</a>
-            <a href="javascript:void(0)" class="js_filterObservationsEmotion filterLink" ng-click="setFilterType('Emotion')">Настроение</a>
-            <a href="javascript:void(0)" class="js_filterObservationsComments filterLink" ng-click="setFilterType('WithComments')">Комментарии</a>
-            <div class="clearFloatBoth"></div>
-    
-            <ul class="observationList">
-                <li ng-repeat="observation in observations | orderBy:'-DateObserved' | filter:filteredObservations" ng-switch="observation.Type">
-                    <div ng-switch-when="Activity" class="ActivityListItemContainer js_ObservationItem js_ObservationItemActivity">
-                        <div class="ActivityListItemContainer_WaitUpload observationCell">
-                            <img src="@Url.Content("~/Content/images/spinner.gif")" ng-show="observation.isDirty" width="15" height="15" alt="wait"/>
-                            <div class="dummy20">&nbsp;</div>
-                        </div>
-                        <div class="ActivityListItemContainer_DateObserved observationCell">
-                            {{observation.DateObserved | date:'dd MMMM yyyy HH:mm'}}
-                        </div>
-                        <div class="ActivityListItemContainer_InventoryItem observationCell">
-                            {{observation.ItemId | InventoryName:itemsSource}}
-                        </div>
-                        <div class="ActivityListItemContainer_ChoseHimSelf observationCell" ng-switch="observation.ChoseHimSelf">
-                            <span ng-switch-when="true">Сам</span>
-                            <div ng-switch-default class="nbsp"></div>
-                        </div>
-                        <div class="ActivityListItemContainer_Polarization observationCell" ng-switch="observation.Polarization">
-                            <span ng-switch-when="true">*</span>
-                            <div ng-switch-default class="nbsp"></div>
-                        </div>
-                        <div class="ActivityListItemContainer_Duration observationCell">
-                            {{observation.Duration | ActivityDuration}}
-                        </div>
-                        <div class="ActivityListItemContainer_TeacherName observationCell">
-                            {{observation.TeacherName}}
-                        </div>
-                        <div class="ActivityListItemContainer_DeleteButton observationCell">
-                            <button ng-click="delete(observation.Id)" ng-if="canDelete">Удалить</button>
-                        </div>
-                        <div class="ActivityListItemContainer_EditButton observationCell">             
-                            <button ng-click="edit(observation.Id)" ng-if="canEdit">Редактировать</button>
-                        </div>
-                        <div class="clearFloatBoth"></div>
-                        <div class="ActivityListItemContainer_Comment js_comment_container" ng-if="observation.Comment">
-                            <span class="commentText">
-                                {{observation.Comment | textLimit:140}}
-                            </span>
-                        </div>
-                    </div>
-                    <div ng-switch-when="CameInClass" class="CameInClassListItemContainer js_ObservationItem js_ObservationItemCameInClass">
-                        <div class="CameInClassListItemContainer_WaitUpload observationCell">
-                            <img src="@Url.Content("~/Content/images/spinner.gif")" ng-show="observation.isDirty" width="15" height="15" alt="wait"/>
-                            <div class="dummy20">&nbsp;</div>
-                        </div>
-                        <div class="CameInClassListItemContainer_DateObserved observationCell">
-                            {{observation.DateObserved | date:'dd MMMM yyyy HH:mm'}}
-                        </div>
-                        <div class="CameInClassListItemContainer_Dummy observationCell">
-                            Пришел в класс<div class="nbsp"></div>
-                        </div>
-                        <div class="CameInClassListItemContainer_TeacherName observationCell">
-                            {{observation.TeacherName}}
-                        </div>
-                        <div class="CameInClassListItemContainer_DeleteButton observationCell">             
-                            <button ng-click="delete(observation.Id)" ng-if="canDelete">Удалить</button>
-                        </div>
-                        <div class="CameInClassListItemContainer_EditButton observationCell">             
-                            <button ng-click="edit(observation.Id)" ng-if="canEdit">Редактировать</button>
-                        </div>
-                        <div class="clearFloatBoth"></div>
-                        <div class="CameInClassListItemContainer_Comment js_comment_container" ng-if="observation.Comment">
-                            <span class="commentText">
-                                {{observation.Comment | textLimit:140}}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div ng-switch-when="Emotion" class="EmotionListItemContainer js_ObservationItem js_ObservationItemEmotion">
-                        <div class="EmotionListItemContainer_WaitUpload observationCell">
-                            <img src="@Url.Content("~/Content/images/spinner.gif")" ng-show="observation.isDirty" width="15" height="15" alt="wait"/>
-                            <div class="dummy20">&nbsp;</div>
-                        </div>
-                        <div class="EmotionListItemContainer_DateObserved observationCell">
-                            {{observation.DateObserved | date:'dd MMMM yyyy HH:mm'}}
-                        </div>
-                        <div class="EmotionListItemContainer_EmotionType observationCell">
-                            {{observation.Emotion | EmotionName}}
-                        </div>
-                        <div class="EmotionListItemContainer_Dummy observationCell">
-                            <div class="nbsp"></div>
-                        </div>
-                        <div class="EmotionListItemContainer_TeacherName observationCell">
-                            {{observation.TeacherName}}
-                        </div>
-                        <div class="EmotionListItemContainer_DeleteButton observationCell">             
-                            <button ng-click="delete(observation.Id)" ng-if="canDelete">Удалить</button>
-                        </div>
-                        <div class="EmotionListItemContainer_EditButton observationCell">             
-                            <button ng-click="edit(observation.Id)" ng-if="canEdit">Редактировать</button>
-                        </div>
-                        <div class="clearFloatBoth"></div>
-                        <div class="EmotionListItemContainer_Comment js_comment_container" ng-if="observation.Comment">
-                            <span class="commentText">
-                                {{observation.Comment | textLimit:140}}
-                            </span>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+            <ng-include src="'/ViewsAngular/Observation/ObservationListFilter.html'"></ng-include>
+            <ng-include src="'/ViewsAngular/Observation/ObservationList.html'"></ng-include>
         </div>
         <span ng-if="observations.length == 0">Наблюдений ещё не было</span>
     </div>
 </div>
-
-@helper RenderActivityArrayJson(List<ObservationModel> model)
-{
-    @Html.Raw("[");
-    var filtered = model.Where(o => o is ObservationActivityModel).ToList();
-    for (int i = 0, l = filtered.Count; i < l; i++)
-    {
-        var observationModel = model[i];
-        @RenderActivityJson((observationModel as ObservationActivityModel).observation);
-        
-        if(i < l - 1){
-            @Html.Raw(",");
-        }
-    }
-    @Html.Raw("]");
-}
-
-@helper RenderCameInClassArrayJson(List<ObservationModel> model)
-{
-    @Html.Raw("[");
-    var filtered = model.Where(o => o is ObservationCameInClassModel).ToList();
-    for (int i = 0, l = filtered.Count; i < l; i++)
-    {
-        var observationModel = model[i];
-        @RenderCameInClassJson((observationModel as ObservationCameInClassModel).observation);
-        
-        if(i < l - 1){
-            @Html.Raw(",");
-        }
-    }
-    @Html.Raw("]");
-}
-
-@helper RenderEmotionArrayJson(List<ObservationModel> model)
-{
-    @Html.Raw("[");
-    var filtered = model.Where(o => o is ObservationEmotionModel).ToList();
-    for (int i = 0, l = filtered.Count; i < l; i++)
-    {
-        var observationModel = model[i];
-        @RenderEmotionJson((observationModel as ObservationEmotionModel).observation);
-        
-        if(i < l - 1){
-            @Html.Raw(",");
-        }
-    }
-    @Html.Raw("]");
-}
-
-@helper RenderObservationsJson(List<ObservationModel> model)
-{
-    @Html.Raw("[");
-    for (int i = 0, l = model.Count; i < l; i++)
-    {
-        var observationModel = model[i];
-        if (observationModel is ObservationActivityModel)
-        {
-            @RenderActivityJson((observationModel as ObservationActivityModel).observation);
-        }
-        else if (observationModel is ObservationCameInClassModel)
-        {
-            @RenderCameInClassJson((observationModel as ObservationCameInClassModel).observation);
-        }
-        else if (observationModel is ObservationEmotionModel)
-        {
-            @RenderEmotionJson((observationModel as ObservationEmotionModel).observation);
-        }
-        if(i < l - 1){
-            @Html.Raw(",");
-        }
-    }
-    @Html.Raw("]");
-}
-@helper RenderActivityJson(Activity observation)
-{
-    @Html.Raw(Json.Encode(new
-{
-    Id = observation.Id,
-    KidId = observation.KidId,
-    ItemId = observation.ItemId,
-    Comment = observation.Comment,
-    DateObserved = observation.DateObservedMilliseconds,
-    Duration = observation.Duration,
-    Polarization = observation.Polarization,
-    ChoseHimSelf = observation.ChoseHimSelf,
-    TeacherId = observation.User.Id, 
-    TeacherName = observation.User.FirstName,
-    UniqueId = observation.UniqueId,
-    Type = "Activity"
-}));
-}
-
-@helper RenderCameInClassJson(CameInClass observation)
-{
-    @Html.Raw(Json.Encode(new
-{
-    Id = observation.Id,
-    KidId = observation.KidId,
-    UniqueId = observation.UniqueId,
-    DateObserved = observation.DateObservedMilliseconds,
-    TeacherId = observation.User.Id, 
-    TeacherName = observation.User.FirstName,
-    Comment = observation.Comment,
-    Type = "CameInClass"
-}));
-}
-
-
-@helper RenderEmotionJson(EmotionObservation observation)
-{
-    @Html.Raw(Json.Encode(new
-{
-    Id = observation.Id,
-    KidId = observation.KidId, 
-    UniqueId = observation.UniqueId,
-    DateObserved = observation.DateObservedMilliseconds,
-    Emotion = (int)observation.Emotion,
-    TeacherId = observation.User.Id, 
-    TeacherName = observation.User.FirstName,
-    Comment = observation.Comment,
-    Type = "Emotion"
-}));
-}

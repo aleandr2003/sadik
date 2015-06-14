@@ -1,5 +1,8 @@
 ﻿var Emotion = Observation.setup('Emotion', Observation.attributes.concat(['Emotion']));
-
+Emotion.extend({
+    remoteUrl: SadikGlobalSettings.emotionUrl,
+    autoSaveRemote: true
+});
 Emotion.include({
     Emotion:null,
     Type: 'Emotion',
@@ -12,4 +15,12 @@ Emotion.include({
 
         return true;
     }
+});
+
+$(window).unload(function () {
+    Emotion.saveLocalDirtyOnly('Emotions');
+});
+$(window).load(function () {
+    setInterval(Emotion.resubmit, Emotion.resubmitIntervalTime);
+    Emotion.resubmit();
 });

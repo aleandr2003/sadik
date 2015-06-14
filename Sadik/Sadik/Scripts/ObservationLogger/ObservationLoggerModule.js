@@ -10,11 +10,14 @@
     self._itemId;
     self._kidsSelectorBlock = options.kidsSelectorBlock;
     self._kidsSource = options.kidsSource;
-    self._itemsSource = options.activityLogger ? options.activityLogger.itemsSource : null;
+    self._block = options.block;
+    //$ обозначает jquery объекты. Нужно найти и пометить так все переменные с JQuery объектами. Пока что этого не сделано.
+    self.$_activityLoggerBlock = self._block.find('.js_logObservationBlock_activity');
+    self.$_cameInClassLoggerBlock = self._block.find('.js_logObservationBlock_cameInClass');
+    self.$_emotionLoggerBlock = self._block.find('.js_logObservationBlock_emotion');
 
-    if (options.activityLogger) {
-        activityLogger = new ActivityLogger(options.activityLogger);
-        self._itemId = options.activityLogger.itemId;
+    if (self.$_activityLoggerBlock.length > 0) {
+        activityLogger = new ActivityLogger({ block: self.$_activityLoggerBlock });
         if (self._kidsSource) {
             activityLogger.SetKidsSource(self._kidsSource);
         }
@@ -29,8 +32,8 @@
         }
     }
 
-    if (options.cameInClassLogger) {
-        cameInClassLogger = new CameInClassLogger(options.cameInClassLogger);
+    if (self.$_cameInClassLoggerBlock.length > 0) {
+        cameInClassLogger = new CameInClassLogger({ block: self.$_cameInClassLoggerBlock });
         if (self._kidsSource) {
             cameInClassLogger.SetKidsSource(self._kidsSource);
         }
@@ -39,8 +42,8 @@
         }
     }
 
-    if (options.emotionLogger) {
-        emotionLogger = new EmotionLogger(options.emotionLogger);
+    if (self.$_emotionLoggerBlock.length > 0) {
+        emotionLogger = new EmotionLogger({ block: self.$_emotionLoggerBlock });
         if (self._kidsSource) {
             emotionLogger.SetKidsSource(self._kidsSource);
         }

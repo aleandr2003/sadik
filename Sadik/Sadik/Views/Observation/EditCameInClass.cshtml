@@ -26,13 +26,13 @@
     Minutes = Model.DateTimeCameInClass.Minute,
     UniqueId = Model.UniqueId
 })*@
-@Html.Partial("LogCameInClassFormTemplate")
-
+<div id="EditObservationContainer">
+    @Html.Partial("LogCameInClassFormTemplate")
+</div>
 @Html.ActionLink("Отменить","View","Kids",new {Id = Model.KidId, KindergartenId = ViewBag.KindergartenId}, null)
 <script type="text/javascript">
     $.validator.setDefaults({ ignore: "" });
 
-    var cameInClassUrl = '@Url.Action("CameInClass", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
     var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
 
     Activity.loadLocal('Activities');
@@ -41,23 +41,22 @@
     Emotion.loadLocal('Emotions');
 
     var kidId = '@Model.KidId';
-    var observationModel = @Html.Raw(Json.Encode(new LogCameInClassModel() {
-        Id = Model.Id, 
-        KidId = Model.KidId, 
-        Comment = Model.Comment,
-        DateObserved = Model.DateTimeCameInClass.Date,
-        Hours = Model.DateTimeCameInClass.Hour,
-        Minutes = Model.DateTimeCameInClass.Minute,
-        UniqueId = Model.UniqueId
-    }));
+    var observationModel = @Html.Raw(Json.Encode(new
+{
+    Id = Model.Id,
+    KidId = Model.KidId,
+    UniqueId = Model.UniqueId,
+    DateObserved = Model.DateObservedMilliseconds,
+    TeacherId = Model.User.Id,
+    TeacherName = Model.User.FirstName,
+    Comment = Model.Comment,
+    Type = "CameInClass"
+}));
 
 
     $(function () {
         var observationLoggerModule = new ObservationLoggerModule({
-            cameInClassLogger: {
-                block:$('.js_logObservationBlock_cameInClass'),
-                saveObservationUrl: cameInClassUrl
-            },
+            block:$('#EditObservationContainer'),
             hideUseCurrentTime:true
         });
         observationLoggerModule.SetKidsSource(kidsSource);

@@ -1,4 +1,4 @@
-﻿function BaseObservationLogger(block, submitObservationUrl) {
+﻿function BaseObservationLogger(block) {
     BaseObservationLogger.superclass.constructor.call(this);
     var self = this;
 
@@ -26,7 +26,6 @@
 
     this._counter = this._block.find('.js_counter');
 
-    this._submitObservationUrl = submitObservationUrl;
     this._resubmitIntervalTime = 10 * 60 * 1000; //10 minutes
 
     this.GetKidId = function () {
@@ -157,17 +156,6 @@
             return;
         }
         self.saved();
-        //$.ajax({
-        //    'url': self._submitObservationUrl,
-        //    'type': 'POST',
-        //    'data': obs.toJSON(),
-        //    'dataType': 'json',
-        //    'success': self.OnSuccessSubmitObservation,
-        //    'error': function () { },
-        //    'beforeSubmit': self.OnBeginSubmitObservation,
-        //    'complete': self.OnCompleteSubmitObservation
-        //});
-        //jQuery.ajaxSettings.traditional = settingDummy;
     }
 
     this._submitButton.click(function (event) { self.submitButtonOnClick.call(this, event) });

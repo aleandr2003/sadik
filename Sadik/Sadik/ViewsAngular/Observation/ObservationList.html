@@ -1,0 +1,13 @@
+﻿<ul class="observationList">
+    <li ng-repeat="observation in observations | orderBy:'-DateObserved' | filter:filteredObservations" ng-switch="observation.Type">
+        <div ng-switch-when="Activity" class="ActivityListItemContainer js_ObservationItem js_ObservationItemActivity">
+            <ng-include src="'/ViewsAngular/Observation/ActivityListItem.html'"></ng-include>
+        </div>
+        <div ng-switch-when="CameInClass" class="CameInClassListItemContainer js_ObservationItem js_ObservationItemCameInClass">
+            <ng-include src="'/ViewsAngular/Observation/CameInClassListItem.html'"></ng-include>
+        </div>
+        <div ng-switch-when="Emotion" class="EmotionListItemContainer js_ObservationItem js_ObservationItemEmotion">
+            <ng-include src="'/ViewsAngular/Observation/EmotionListItem.html'"></ng-include>
+        </div>
+    </li>
+</ul>

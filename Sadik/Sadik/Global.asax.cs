@@ -110,6 +110,11 @@ namespace Sadik
             bundle.AddFile("~/Scripts/ObservationLogger/CameInClassLogger.js");
             bundle.AddFile("~/Scripts/ObservationLogger/EmotionLogger.js");
             bundle.AddFile("~/Scripts/ObservationLogger/ObservationLoggerModule.js");
+            bundle.AddFile("~/Scripts/angularjs/angular.min.js");
+            bundle.AddFile("~/Scripts/angularjs/angular-locale_ru-ru.js");
+            bundle.AddFile("~/Scripts/Sadik/ObservationListModule.js");
+            bundle.AddFile("~/Scripts/templates.js");
+
             return bundle;
         }
 
@@ -128,6 +133,7 @@ namespace Sadik
             Bundle bundle = new Bundle("~/Content/css");
 
             bundle.AddFile("~/Content/Site.css");
+            bundle.AddFile("~/Content/ObservationList.css");
             bundle.AddFile("~/Content/ObservationLogger.css");
             bundle.AddFile("~/Content/Modifiers.css");
             bundle.AddFile("~/Content/jquery-ui.min.css");

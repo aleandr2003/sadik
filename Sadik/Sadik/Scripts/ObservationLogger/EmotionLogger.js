@@ -1,5 +1,5 @@
 ﻿function EmotionLogger(options) {
-    EmotionLogger.superclass.constructor.call(this, options.block, options.saveObservationUrl);
+    EmotionLogger.superclass.constructor.call(this, options.block);
     var self = this;
     this._block = options.block;
     this._emotionRadio = this._block.find('.js_emotion_radio');
@@ -48,17 +48,7 @@
             return;
         }
         self.saved();
-        //$.ajax({
-        //    'url': self._submitObservationUrl,
-        //    'type': 'POST',
-        //    'data': obs.toJSON(),
-        //    'dataType': 'json',
-        //    'success': self.OnSuccessSubmitObservation,
-        //    'error': function () { },
-        //    'beforeSubmit': self.OnBeginSubmitObservation,
-        //    'complete': self.OnCompleteSubmitObservation
-        //});
-        //jQuery.ajaxSettings.traditional = settingDummy;
+       
     }
 
     self.editObservation = function (observation) {
@@ -71,22 +61,22 @@
         self.setDateTime(observation.DateObserved);
     }
 
-    self.OnSuccessSubmitObservation = function (data, status, xhr) {
-        self.publish("observationSubmittedComplete", data.UniqueId);
-        if (data.UniqueId) {
+    self.OnSuccessSubmitObservation = function (observation) {
+        self.publish("observationSubmittedComplete", observation.UniqueId);
+        if (observation.UniqueId) {
             self.publish("observationSubmittedSuccess");
         } else {
             self.publish("observationSubmittedError");
         }
     }
 
-    Emotion.subscribe("create", function (observation) {
+    Emotion.subscribe("afterCreateRemote", function (observation) {
         self.publish("observationSubmitted");
-        observation.createRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
+        self.OnSuccessSubmitObservation(observation);
     });
-    Emotion.subscribe("update", function (observation) {
+    Emotion.subscribe("afterUpdateRemote", function (observation) {
         self.publish("observationSubmitted");
-        observation.updateRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
+        self.OnSuccessSubmitObservation(observation);
     });
 
     Emotion.subscribe("create", function () {
@@ -102,23 +92,23 @@
         self.UpdateCounter(Emotion.countDirty());
     });
 
-    $(window).unload(function () {
-        Emotion.saveLocalDirtyOnly('Emotions');
-    });
+    //$(window).unload(function () {
+    //    Emotion.saveLocalDirtyOnly('Emotions');
+    //});
     
     self.UpdateCounter(Emotion.countDirty());
-    self.ResubmitObservations = function () {
-        Emotion.each(function (observation) {
-            if (observation.isDirty) {
-                if (observation.Id == '') {
-                    observation.createRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
-                } else {
-                    observation.updateRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
-                }
-            }
-        });
-    }
-    setInterval(self.ResubmitObservations, self._resubmitIntervalTime);
-    self.ResubmitObservations();
+    //self.ResubmitObservations = function () {
+    //    Emotion.each(function (observation) {
+    //        if (observation.isDirty) {
+    //            if (observation.Id == '') {
+    //                observation.createRemote(self.OnSuccessSubmitObservation);
+    //            } else {
+    //                observation.updateRemote(self.OnSuccessSubmitObservation);
+    //            }
+    //        }
+    //    });
+    //}
+    //setInterval(self.ResubmitObservations, self._resubmitIntervalTime);
+    //self.ResubmitObservations();
 }
 class_extend(EmotionLogger, BaseObservationLogger);

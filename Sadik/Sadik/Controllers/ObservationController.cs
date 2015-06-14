@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.Mvc;
 using Sadik.Extensions;
 using Sadik.ViewModels.Observations;
+using System.Text;
+using System.Web.Optimization;
 
 namespace Sadik.Controllers
 {
@@ -21,12 +23,77 @@ namespace Sadik.Controllers
                 var activities = context.Activities.Include("Inventory").Include("User").Where(a => a.KidId == Id).ToList();
                 var cameInClass = context.CameInClasses.Include("User").Where(a => a.KidId == Id).ToList();
                 var emotions = context.EmotionObservations.Include("User").Where(e => e.KidId == Id).ToList();
-                var observations = new List<ObservationModel>();
-                observations.AddRange(activities.Select(a => new ObservationActivityModel(a)));
-                observations.AddRange(cameInClass.Select(c => new ObservationCameInClassModel(c)));
-                observations.AddRange(emotions.Select(e => new ObservationEmotionModel(e)));
-
-                return View("Index", observations.OrderByDescending(o => o.DateObserved));
+                
+                if (Request.IsAjaxRequest())
+                {
+                    System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    StringBuilder sb = new StringBuilder(32768);
+                    sb.Append("[");
+                    for (int i = 0, l = activities.Count; i < l; i++)
+                    {
+                        var observation = activities[i];
+                        sb.Append(serializer.Serialize(new
+                        {
+                            Id = observation.Id,
+                            KidId = observation.KidId,
+                            ItemId = observation.ItemId,
+                            Comment = observation.Comment,
+                            DateObserved = observation.DateObservedMilliseconds,
+                            Duration = observation.Duration,
+                            Polarization = observation.Polarization,
+                            ChoseHimSelf = observation.ChoseHimSelf,
+                            TeacherId = observation.User.Id,
+                            TeacherName = observation.User.FirstName,
+                            UniqueId = observation.UniqueId,
+                            Type = "Activity"
+                        }));
+                        sb.Append(",");
+                    }
+                    for (int i = 0, l = cameInClass.Count; i < l; i++)
+                    {
+                        var observation = cameInClass[i];
+                        sb.Append(serializer.Serialize(new
+                        {
+                            Id = observation.Id,
+                            KidId = observation.KidId,
+                            UniqueId = observation.UniqueId,
+                            DateObserved = observation.DateObservedMilliseconds,
+                            TeacherId = observation.User.Id,
+                            TeacherName = observation.User.FirstName,
+                            Comment = observation.Comment,
+                            Type = "CameInClass"
+                        }));
+                        sb.Append(",");
+                    }
+                    for (int i = 0, l = emotions.Count; i < l; i++)
+                    {
+                        var observation = emotions[i];
+                        sb.Append(serializer.Serialize(new
+                        {
+                            Id = observation.Id,
+                            KidId = observation.KidId,
+                            UniqueId = observation.UniqueId,
+                            DateObserved = observation.DateObservedMilliseconds,
+                            Emotion = (int)observation.Emotion,
+                            TeacherId = observation.User.Id,
+                            TeacherName = observation.User.FirstName,
+                            Comment = observation.Comment,
+                            Type = "Emotion"
+                        }));
+                        sb.Append(",");
+                    }
+                    if (activities.Any() || cameInClass.Any() || emotions.Any()) { sb.Remove(sb.Length - 1, 1); }// если есть хоть один элемент, удаляем последнюю запятую.
+                    sb.Append("]");
+                    return Content(sb.ToString());
+                }
+                else
+                {
+                    var observations = new List<ObservationModel>();
+                    observations.AddRange(activities.Select(a => new ObservationActivityModel(a)));
+                    observations.AddRange(cameInClass.Select(c => new ObservationCameInClassModel(c)));
+                    observations.AddRange(emotions.Select(e => new ObservationEmotionModel(e)));
+                    return View("Index", observations.OrderByDescending(o => o.DateObserved));
+                }
             }
         }
         //a temporary method to test observation list with angular
@@ -34,15 +101,17 @@ namespace Sadik.Controllers
         {
             using (var context = new SadikEntities())
             {
-                var activities = context.Activities.Include("Inventory").Include("User").Where(a => a.KidId == Id).ToList();
-                var cameInClass = context.CameInClasses.Include("User").Where(a => a.KidId == Id).ToList();
-                var emotions = context.EmotionObservations.Include("User").Where(e => e.KidId == Id).ToList();
-                var observations = new List<ObservationModel>();
-                observations.AddRange(activities.Select(a => new ObservationActivityModel(a)));
-                observations.AddRange(cameInClass.Select(c => new ObservationCameInClassModel(c)));
-                observations.AddRange(emotions.Select(e => new ObservationEmotionModel(e)));
-                var ordered = observations.OrderByDescending(o => o.DateObserved).ToList();
-                return View("IndexAngular", ordered);
+                //var activities = context.Activities.Include("Inventory").Include("User").Where(a => a.KidId == Id).ToList();
+                //var cameInClass = context.CameInClasses.Include("User").Where(a => a.KidId == Id).ToList();
+                //var emotions = context.EmotionObservations.Include("User").Where(e => e.KidId == Id).ToList();
+                //var observations = new List<ObservationModel>();
+                //observations.AddRange(activities.Select(a => new ObservationActivityModel(a)));
+                //observations.AddRange(cameInClass.Select(c => new ObservationCameInClassModel(c)));
+                //observations.AddRange(emotions.Select(e => new ObservationEmotionModel(e)));
+                //var ordered = observations.OrderByDescending(o => o.DateObserved).ToList();
+                ViewBag.KidId = Id;
+                //return View("IndexAngular", ordered);
+                return View("IndexAngular");
             }
         }
 
@@ -630,7 +699,8 @@ namespace Sadik.Controllers
             }
         }
 
-        public JsonResult GetSkill(int KidId, int ItemId)
+        [HttpGet]
+        public JsonResult Skill(int KidId, int ItemId)
         {
             using (var context = new SadikEntities())
             {
@@ -638,12 +708,12 @@ namespace Sadik.Controllers
                 if (kid == null) throw new ArgumentException("Ребенок не найден. Возможно его профиль был удален");
 
                 var skill = kid.GetSkill(ItemId);
-                return Json(new { skill = (int)skill });
+                return Json(new { skill = (int)skill }, JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpPost]
-        public JsonResult UpdateSkill(int KidId, int ItemId, int skillDegree)
+        public JsonResult Skill(int KidId, int ItemId, int skillDegree)
         {
             try
             {
@@ -664,7 +734,8 @@ namespace Sadik.Controllers
             }
         }
 
-        public JsonResult GetPresentation(int KidId, int ItemId)
+        [HttpGet]
+        public JsonResult Presentation(int KidId, int ItemId)
         {
             using (var context = new SadikEntities())
             {
@@ -673,17 +744,17 @@ namespace Sadik.Controllers
                 var presentation = kid.GetPresentation(ItemId);
                 if (presentation != null)
                 {
-                    return Json(new { presentation = true, date = presentation.DatePerformed.ToString("dd-MM-yyyy") });
+                    return Json(new { presentation = true, date = presentation.DatePerformed.ToString("dd-MM-yyyy") }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    return Json(new { presentation = false, date = "" });
+                    return Json(new { presentation = false, date = "" }, JsonRequestBehavior.AllowGet);
                 }
             }
         }
 
         [HttpPost]
-        public JsonResult UpdatePresentation(int KidId, int ItemId, bool presPerformed, DateTime? datePerformed)
+        public JsonResult Presentation(int KidId, int ItemId, bool presPerformed, DateTime? datePerformed)
         {
             try
             {
@@ -704,7 +775,8 @@ namespace Sadik.Controllers
             }
         }
 
-        public JsonResult GetItemUsageDetails(int KidId, int ItemId)
+        [HttpGet]
+        public JsonResult ItemUsageDetails(int KidId, int ItemId)
         {
             using (var context = new SadikEntities())
             {
@@ -718,13 +790,13 @@ namespace Sadik.Controllers
                     date = presentation != null ? presentation.DatePerformed.ToString("dd-MM-yyyy") : "",
                     KidId = KidId,
                     ItemId = ItemId
-                });
+                }, JsonRequestBehavior.AllowGet);
 
             }
         }
 
         [HttpPost]
-        public JsonResult UpdateItemUsageDetails(LogItemUsageDetailsModel model)
+        public JsonResult ItemUsageDetails(LogItemUsageDetailsModel model)
         {
             try
             {
