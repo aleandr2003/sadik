@@ -18,7 +18,7 @@
     <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
 }
 <h2>Редактировать запись</h2>
-@Html.Partial("LogActivityForm", new LogActivityModel() {
+@*@Html.Partial("LogActivityForm", new LogActivityModel() {
     Id = Model.Id, 
     KidId = Model.KidId, 
     ItemId = Model.ItemId,
@@ -30,44 +30,49 @@
     Hours = Model.DateObserved.Hour,
     Minutes = Model.DateObserved.Minute,
     UniqueId = Model.UniqueId
-})
-
+})*@
+<div id="EditObservationContainer">
+    @Html.Partial("LogActivityFormTemplate")
+</div>
 @Html.ActionLink("Отменить","View","Kids",new {Id = Model.KidId, KindergartenId = ViewBag.KindergartenId}, null)
 <script type="text/javascript">
     $.validator.setDefaults({ ignore: "" });
 
-    var getPresentationUrl = '@Url.Action("GetPresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var updatePresentationUrl = '@Url.Action("UpdatePresentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var getSkillUrl = '@Url.Action("GetSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var updateSkillUrl = '@Url.Action("UpdateSkill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var getItemUsageDetailsUrl = '@Url.Action("GetItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-    var updateItemUsageDetailsUrl = '@Url.Action("UpdateItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-
-    var activityUrl = '@Url.Action("Activity", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-
     var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
     var itemsSource = @Html.Action("IndexShortJsonSerialized", "Inventory", new { KindergartenId = ViewBag.KindergartenId });
 
+    Activity.loadLocal('Activities');
+    ItemUsageDetails.loadLocal('ItemUsageDetails');
+    CameInClass.loadLocal('CameInClasses');
+    Emotion.loadLocal('Emotions');
+
     var kidId = '@Model.KidId';
     var itemId = '@Model.ItemId';
+    var observationModel = @Html.Raw(Json.Encode(new
+{
+    Id = Model.Id,
+    KidId = Model.KidId,
+    ItemId = Model.ItemId,
+    Comment = Model.Comment,
+    DateObserved = Model.DateObservedMilliseconds,
+    Duration = Model.Duration,
+    Polarization = Model.Polarization,
+    ChoseHimSelf = Model.ChoseHimSelf,
+    TeacherId = Model.User.Id,
+    TeacherName = Model.User.FirstName,
+    UniqueId = Model.UniqueId,
+    Type = "Activity"
+}));
 
     $(function () {
         var observationLoggerModule = new ObservationLoggerModule({
-            activityLogger: {
-                block:$('.js_logObservationBlock_activity'),
-                saveObservationUrl:activityUrl,
-                getPresentationUrl:getPresentationUrl,
-                updatePresentationUrl:updatePresentationUrl,
-                getSkillUrl:getSkillUrl,
-                updateSkillUrl: updateSkillUrl,
-                getItemUsageDetailsUrl: getItemUsageDetailsUrl,
-                updateItemUsageDetailsUrl:updateItemUsageDetailsUrl
-            },
+            block:$('#EditObservationContainer'),
             hideUseCurrentTime:true
         });
         observationLoggerModule.SetKidsSource(kidsSource);
         observationLoggerModule.SetItemsSource(itemsSource);
         observationLoggerModule.SelectKid(kidId);
         observationLoggerModule.SelectItem(itemId);
+        observationLoggerModule.editObservation(observationModel,'Activity');
     });
 </script>

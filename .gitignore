@@ -46,6 +46,7 @@ Temporary Items
 Deployment
 backup
 Sadik/Sadik/bin
+Sadik/Sadik/obj
 Sadik/Sadik/node_modules
 Lib/dist/docs
 Lib/dist/examples

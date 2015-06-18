@@ -233,7 +233,7 @@ Model.include({
   destroy: function(){
     this.publish("beforeDestroy");
     delete this.parent.records[this.UniqueId];
-    if (this.autoSaveRemote) {
+    if (this.parent.autoSaveRemote) {
         this.destroyRemote();
     }
     this.publish("afterDestroy");
@@ -256,7 +256,7 @@ Model.include({
     this.publish("beforeUpdate");
     this.parent.records[this.UniqueId] = this.dup();
     this.isDirty = true;
-    if (this.autoSaveRemote) {
+    if (this.parent.autoSaveRemote) {
         this.updateRemote();
     }
     this.publish("afterUpdate");

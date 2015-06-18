@@ -1,4 +1,5 @@
-﻿function BaseObservationLogger(block, submitObservationUrl) {
+﻿function BaseObservationLogger(block) {
+    BaseObservationLogger.superclass.constructor.call(this);
     var self = this;
 
     this._kidsSource;
@@ -25,7 +26,6 @@
 
     this._counter = this._block.find('.js_counter');
 
-    this._submitObservationUrl = submitObservationUrl;
     this._resubmitIntervalTime = 10 * 60 * 1000; //10 minutes
 
     this.GetKidId = function () {
@@ -124,24 +124,23 @@
         //var settingDummy = jQuery.ajaxSettings.traditional;
         //jQuery.ajaxSettings.traditional = true;
 
-        var hours = self._hoursField.val();
-        var minutes = self._minutesField.val();
-        var date = self._dateField.val();
+        //var hours = self._hoursField.val();
+        //var minutes = self._minutesField.val();
+        var date = self.getSelectedDate();
         if (self._useCurrentTimeCheckBox.is(':visible') && self._useCurrentTimeCheckBox.prop('checked')) {
-            var dt = new Date();
-            hours = dt.getHours();
-            minutes = dt.getMinutes();
-            date = self.getCurrentDate();
-            self._dateField.val(date);
+            date = new Date();
+            self._dateField.val(self.getCurrentDate());
         }
         var uniqueId = self._uniqueId.val().toUpperCase();
         var attributes = {
             Id: self._observationId.val(),
             KidId: self._kidIdField.val(),
             DateObserved: date,
-            Hours: hours,
-            Minutes: minutes,
-            Comment: self._commentField.val()
+            //Hours: hours,
+            //Minutes: minutes,
+            Comment: self._commentField.val(),
+            TeacherId: SadikGlobalSettings.CurrentUser.Id,
+            TeacherName: SadikGlobalSettings.CurrentUser.FirstName
         };
         var observation;
         if (uniqueId != '') {
@@ -157,17 +156,6 @@
             return;
         }
         self.saved();
-        //$.ajax({
-        //    'url': self._submitObservationUrl,
-        //    'type': 'POST',
-        //    'data': obs.toJSON(),
-        //    'dataType': 'json',
-        //    'success': self.OnSuccessSubmitObservation,
-        //    'error': function () { },
-        //    'beforeSubmit': self.OnBeginSubmitObservation,
-        //    'complete': self.OnCompleteSubmitObservation
-        //});
-        //jQuery.ajaxSettings.traditional = settingDummy;
     }
 
     this._submitButton.click(function (event) { self.submitButtonOnClick.call(this, event) });
@@ -218,7 +206,9 @@
     this.HideUseCurrentTimeBlock = function () {
         self._block.find('.js_useCurrentTimeBlock').hide();
     }
-
+    this.HideKidsSelector = function () {
+        self._block.find('.js_KidSelectorContainer').hide();
+    }
     this.UpdateCounter = function (count) {
         self._counter.find('span').text('' + count + ' наблюдений не отправлено');
         if (count == 0) {
@@ -234,6 +224,39 @@
         var month = (dt.getMonth() + 1); month = month < 10 ? '0' + month : month;
         return day + '-' + month + '-' + dt.getFullYear();
     }
-}
 
-class_extend(BaseObservationLogger, PubSub);
+    this.setDateTime = function (date) {
+        if(!date) return;
+        var dt;
+        if(date.constructor === Date){
+            dt = date;
+        }else if (typeof date == 'number'){
+            dt = new Date(date);
+        } else if (typeof date == 'string') {
+            date = new Date(parseInt(/-?\d+/.exec(date)[0]));
+        } else {
+            return;
+        }
+        self._dateField.val(DateCustom.printDate(dt));
+        self._hoursField.val(dt.getHours());
+        self._minutesField.val(dt.getMinutes());
+    }
+    this.getSelectedDate = function () {
+        var dateStr = self._dateField.val();
+        var dateParts = dateStr.split('-');
+        var years = parseInt(dateParts[2]);
+        var months = parseInt(dateParts[1]);
+        var days = parseInt(dateParts[0]);
+        var hours = parseInt(self._hoursField.val());
+        var minutes = parseInt(self._minutesField.val());
+        return new Date(years, months - 1, days, hours, minutes, 0);
+    }
+
+    this.show = function() {
+        self._block.show();
+    }
+    this.hide = function () {
+        self._block.hide();
+    }
+}
+class_extend(BaseObservationLogger, PubSubBase);

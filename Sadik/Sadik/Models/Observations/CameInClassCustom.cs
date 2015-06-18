@@ -11,7 +11,9 @@ namespace Sadik.Models
         {
             get
             {
-                return (long)(DateTimeCameInClass.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+                //отнимаем 2 часа потому что сервер в Москве, а все клиенты в Ебурге. 
+                //TODO придумать правильное решение ASAP!
+                return (long)(DateTimeCameInClass.AddHours(-2).ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
             }
         }
     }

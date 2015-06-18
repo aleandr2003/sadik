@@ -7,6 +7,10 @@ ObservationsApp.controller("ObservationsCtrl", function ($scope, $http) {
     $scope.cameInClasses = [];
     $scope.emotions = [];
     $scope.itemsSource = [];
+    $scope.config = {
+        itemsDisplayedInList: 15
+    };
+
     $scope.fillObservationsList = function () {
         $scope.observations = [].concat(Activity.recordsValues(), CameInClass.recordsValues(), Emotion.recordsValues());
     }
@@ -76,7 +80,11 @@ ObservationsApp.controller("ObservationsCtrl", function ($scope, $http) {
         Emotion.merge(emotions);
     }
 
-
+    $scope.addMoreItems = function () {
+        if ($scope.config.itemsDisplayedInList < $scope.observations.length) {
+            $scope.config.itemsDisplayedInList = $scope.config.itemsDisplayedInList + 20;
+        }
+    };
     Activity.subscribe("create", function () {
         $scope.$digest();
     });
@@ -116,6 +124,93 @@ ObservationsApp.controller("ObservationsCtrl", function ($scope, $http) {
         $scope.$digest();
     });
 });
+
+ObservationsApp.directive('infiniteScroll', [
+  '$rootScope', '$window', '$timeout', function ($rootScope, $window, $timeout) {
+      return {
+          link: function (scope, elem, attrs) {
+              var checkWhenEnabled, handler, scrollDistance, scrollEnabled;
+              $window = angular.element($window);
+              elem.css('overflow-y', 'scroll');
+              elem.css('overflow-x', 'hidden');
+              elem.css('height', 'inherit');
+              scrollDistance = 0;
+              if (attrs.infiniteScrollDistance != null) {
+                  scope.$watch(attrs.infiniteScrollDistance, function (value) {
+                      return scrollDistance = parseInt(value, 10);
+                  });
+              }
+              scrollEnabled = true;
+              checkWhenEnabled = false;
+              if (attrs.infiniteScrollDisabled != null) {
+                  scope.$watch(attrs.infiniteScrollDisabled, function (value) {
+                      scrollEnabled = !value;
+                      if (scrollEnabled && checkWhenEnabled) {
+                          checkWhenEnabled = false;
+                          return handler();
+                      }
+                  });
+              }
+              $rootScope.$on('refreshStart', function (event, parameters) {
+                  elem.animate({ scrollTop: "0" });
+              });
+              handler = function () {
+                  var container, elementBottom, remaining, shouldScroll, containerBottom;
+                  
+                  container = $(elem.children()[0]);
+                  elementBottom = elem.offset().top + elem.height();
+                  containerBottom = container.offset().top + container.height();
+                  remaining = containerBottom - elementBottom;
+                  shouldScroll = remaining <= elem.height() * scrollDistance;
+                  if (shouldScroll && scrollEnabled) {
+                      if ($rootScope.$$phase) {
+                          return scope.$eval(attrs.infiniteScroll);
+                      } else {
+                          return scope.$apply(attrs.infiniteScroll);
+                      }
+                  } else if (shouldScroll) {
+                      return checkWhenEnabled = true;
+                  }
+              };
+              elem.on('scroll', handler);
+              scope.$on('$destroy', function () {
+                  return $window.off('scroll', handler);
+              });
+              return $timeout((function () {
+                  if (attrs.infiniteScrollImmediateCheck) {
+                      if (scope.$eval(attrs.infiniteScrollImmediateCheck)) {
+                          return handler();
+                      }
+                  } else {
+                      return handler();
+                  }
+              }), 0);
+          }
+      };
+  }
+]);
+
+ObservationsApp.directive('extendHeight', [
+  '$rootScope', '$window', '$timeout', function ($rootScope, $window, $timeout) {
+      return {
+          link: function (scope, elem, attrs) {
+              $window = angular.element($window);
+              var fitheight = function () {
+                  elem.css('height', '' + ($window.height() - elem.offset().top) + 'px');
+              };
+              $window.on('resize', fitheight);
+              scope.$on('$destroy', function () {
+                  return $window.off('resize', fitheight);
+              });
+              fitheight();
+              return $timeout((function () {
+                    fitheight();
+              }), 0);
+          }
+      };
+  }
+]);
+
 ObservationsApp.filter("textLimit", function () {
     return function (value, limit) {
         if (angular.isString(value)) {
@@ -169,22 +264,7 @@ ObservationsApp.filter("textLimit", function () {
     };
 }).filter('IdToDisplayName', function () {
     return function (input, source) {
-        var id = input;
-        if (typeof id == 'string') {
-            id = parseInt(id);
-            if (isNaN(id)) {
-                return input;
-            }
-        }
-        if (typeof id == 'number' && source && source.constructor === Array) {
-            for (var i in source) {
-                var item = source[i];
-                if (item.Id == id) return item.DisplayName;
-            }
-            return id;
-        } else {
-            return id;
-        }
+        return source[input].DisplayName;
     };
 }).filter('InventoryName', function () {
     return function (input, source) {

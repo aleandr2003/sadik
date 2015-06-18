@@ -77,3 +77,11 @@ textarea
 {
     width: 40px;
 }
+
+.clearFloatBoth {
+    clear:both;
+}
+.dummy20 {
+    width:20px;
+    height:1px;
+}

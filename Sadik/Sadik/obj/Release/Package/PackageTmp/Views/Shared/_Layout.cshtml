@@ -8,8 +8,9 @@
     <link href="@Url.Content("~/Content/Modifiers.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/jquery-ui.min.css")" rel="stylesheet" type="text/css" />*@
     <link href="@BundleTable.Bundles.ResolveBundleUrl("~/Content/css")" rel="stylesheet" type="text/css"/>
-    @*<script src="@Url.Content("~/Scripts/jquery-ui-1.11.2.custom/jquery.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery-ui-1.11.2.custom/jquery-ui.min.js")" type="text/javascript"></script>
+
+    @*<script src="@Url.Content("~/Scripts/jquery-ui/jquery.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui/jquery-ui.min.js")" type="text/javascript"></script>
         
     <script src="@Url.Content("~/Scripts/jquery.ui.datepicker-ru.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
@@ -17,10 +18,11 @@
     <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
 
     <script src="@Url.Content("~/Scripts/Sadik/Misc.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/Sadik/pubsub.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/Sadik/Collections.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/Sadik/Collapsible.js")" type="text/javascript"></script>*@
-
+    <script src="@Url.Content("~/Scripts/Sadik/Collapsible.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Sadik/klass.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Sadik/pubsub.js")" type="text/javascript"></script>*@
+    
     <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js")"></script>
 
     <script type="text/javascript">
@@ -47,6 +49,43 @@
             //		alert('Убрать крутилку');
             $('input[type=submit]').removeAttr('disabled');
         }
+        SadikGlobalSettings = 
+            @if(ViewBag.currentUser != null && ViewBag.currentUser is User)
+            {
+                var currentUser = ViewBag.currentUser as User;
+                @Html.Raw(Json.Encode(new {
+                CurrentUser = new
+                {
+                    Id = currentUser.Id,
+                    FirstName = currentUser.FirstName,
+                    LastName = currentUser.LastName
+                }}));
+            };
+
+        SadikGlobalSettings.EmotionTypes = {};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Agressive)] = {Id:@((int)EmotionType.Agressive), DisplayName:'@Html.Raw(EmotionType.Agressive.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Cheery)] =     {Id:@((int)EmotionType.Cheery), DisplayName:'@Html.Raw(EmotionType.Cheery.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Crying)] =     {Id:@((int)EmotionType.Crying), DisplayName:'@Html.Raw(EmotionType.Crying.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Fighting)] =     {Id:@((int)EmotionType.Fighting), DisplayName:'@Html.Raw(EmotionType.Fighting.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Grumpy)] =     {Id:@((int)EmotionType.Grumpy), DisplayName:'@Html.Raw(EmotionType.Grumpy.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Happy)] =     {Id:@((int)EmotionType.Happy), DisplayName:'@Html.Raw(EmotionType.Happy.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Histerical)] =     {Id:@((int)EmotionType.Histerical), DisplayName:'@Html.Raw(EmotionType.Histerical.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Neutral)] =     {Id:@((int)EmotionType.Neutral), DisplayName:'@Html.Raw(EmotionType.Neutral.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Sad)] =     {Id:@((int)EmotionType.Sad), DisplayName:'@Html.Raw(EmotionType.Sad.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Smiley)] =     {Id:@((int)EmotionType.Smiley), DisplayName:'@Html.Raw(EmotionType.Smiley.DisplayName())'};
+        
+        SadikGlobalSettings.ActivityDurations = {};
+        SadikGlobalSettings.ActivityDurations[@((int)ActivityDuration.Brief)]=    {Id:@((int)ActivityDuration.Brief), DisplayName:'@Html.Raw(ActivityDuration.Brief.DisplayName())'};
+        SadikGlobalSettings.ActivityDurations[@((int)ActivityDuration.Short)]=    {Id:@((int)ActivityDuration.Short), DisplayName:'@Html.Raw(ActivityDuration.Short.DisplayName())'};
+        SadikGlobalSettings.ActivityDurations[@((int)ActivityDuration.Long)]= {Id:@((int)ActivityDuration.Long), DisplayName:'@Html.Raw(ActivityDuration.Long.DisplayName())'};
+        
+        SadikGlobalSettings.presentationUrl = '@Url.Action("Presentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+        SadikGlobalSettings.skillUrl = '@Url.Action("Skill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+        SadikGlobalSettings.itemUsageDetailsUrl = '@Url.Action("ItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+        SadikGlobalSettings.activityUrl = '@Url.Action("Activity", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+        SadikGlobalSettings.cameInClassUrl = '@Url.Action("CameInClass", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+        SadikGlobalSettings.emotionUrl = '@Url.Action("Emotion", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
+        SadikGlobalSettings.observationListUrl = '@Url.Action("Index", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
     </script>
     @RenderSection("HEAD", false)
 </head>

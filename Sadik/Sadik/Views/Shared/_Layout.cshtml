@@ -62,23 +62,23 @@
                 }}));
             };
 
-        SadikGlobalSettings.EmotionTypes = [
-            {Id:@((int)EmotionType.Agressive), DisplayName:'@Html.Raw(EmotionType.Agressive.DisplayName())'},
-            {Id:@((int)EmotionType.Cheery), DisplayName:'@Html.Raw(EmotionType.Cheery.DisplayName())'},
-            {Id:@((int)EmotionType.Crying), DisplayName:'@Html.Raw(EmotionType.Crying.DisplayName())'},
-            {Id:@((int)EmotionType.Fighting), DisplayName:'@Html.Raw(EmotionType.Fighting.DisplayName())'},
-            {Id:@((int)EmotionType.Grumpy), DisplayName:'@Html.Raw(EmotionType.Grumpy.DisplayName())'},
-            {Id:@((int)EmotionType.Happy), DisplayName:'@Html.Raw(EmotionType.Happy.DisplayName())'},
-            {Id:@((int)EmotionType.Histerical), DisplayName:'@Html.Raw(EmotionType.Histerical.DisplayName())'},
-            {Id:@((int)EmotionType.Neutral), DisplayName:'@Html.Raw(EmotionType.Neutral.DisplayName())'},
-            {Id:@((int)EmotionType.Sad), DisplayName:'@Html.Raw(EmotionType.Sad.DisplayName())'},
-            {Id:@((int)EmotionType.Smiley), DisplayName:'@Html.Raw(EmotionType.Smiley.DisplayName())'}
-        ];
-        SadikGlobalSettings.ActivityDurations = [
-            {Id:@((int)ActivityDuration.Brief), DisplayName:'@Html.Raw(ActivityDuration.Brief.DisplayName())'},
-            {Id:@((int)ActivityDuration.Short), DisplayName:'@Html.Raw(ActivityDuration.Short.DisplayName())'},
-            {Id:@((int)ActivityDuration.Long), DisplayName:'@Html.Raw(ActivityDuration.Long.DisplayName())'}
-        ];
+        SadikGlobalSettings.EmotionTypes = {};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Agressive)] = {Id:@((int)EmotionType.Agressive), DisplayName:'@Html.Raw(EmotionType.Agressive.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Cheery)] =     {Id:@((int)EmotionType.Cheery), DisplayName:'@Html.Raw(EmotionType.Cheery.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Crying)] =     {Id:@((int)EmotionType.Crying), DisplayName:'@Html.Raw(EmotionType.Crying.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Fighting)] =     {Id:@((int)EmotionType.Fighting), DisplayName:'@Html.Raw(EmotionType.Fighting.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Grumpy)] =     {Id:@((int)EmotionType.Grumpy), DisplayName:'@Html.Raw(EmotionType.Grumpy.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Happy)] =     {Id:@((int)EmotionType.Happy), DisplayName:'@Html.Raw(EmotionType.Happy.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Histerical)] =     {Id:@((int)EmotionType.Histerical), DisplayName:'@Html.Raw(EmotionType.Histerical.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Neutral)] =     {Id:@((int)EmotionType.Neutral), DisplayName:'@Html.Raw(EmotionType.Neutral.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Sad)] =     {Id:@((int)EmotionType.Sad), DisplayName:'@Html.Raw(EmotionType.Sad.DisplayName())'};
+        SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Smiley)] =     {Id:@((int)EmotionType.Smiley), DisplayName:'@Html.Raw(EmotionType.Smiley.DisplayName())'};
+        
+        SadikGlobalSettings.ActivityDurations = {};
+        SadikGlobalSettings.ActivityDurations[@((int)ActivityDuration.Brief)]=    {Id:@((int)ActivityDuration.Brief), DisplayName:'@Html.Raw(ActivityDuration.Brief.DisplayName())'};
+        SadikGlobalSettings.ActivityDurations[@((int)ActivityDuration.Short)]=    {Id:@((int)ActivityDuration.Short), DisplayName:'@Html.Raw(ActivityDuration.Short.DisplayName())'};
+        SadikGlobalSettings.ActivityDurations[@((int)ActivityDuration.Long)]= {Id:@((int)ActivityDuration.Long), DisplayName:'@Html.Raw(ActivityDuration.Long.DisplayName())'};
+        
         SadikGlobalSettings.presentationUrl = '@Url.Action("Presentation", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
         SadikGlobalSettings.skillUrl = '@Url.Action("Skill", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
         SadikGlobalSettings.itemUsageDetailsUrl = '@Url.Action("ItemUsageDetails", "Observation", new { KindergartenId = ViewBag.KindergartenId })';

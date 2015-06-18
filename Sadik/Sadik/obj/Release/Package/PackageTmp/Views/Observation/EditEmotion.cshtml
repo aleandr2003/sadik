@@ -7,7 +7,7 @@
     <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
 }
 <h2>Редактировать запись</h2>
-@Html.Partial("LogEmotionForm", new LogEmotionModel() {
+@*@Html.Partial("LogEmotionForm", new LogEmotionModel() {
     Id = Model.Id, 
     KidId = Model.KidId, 
     Comment = Model.Comment,
@@ -16,26 +16,42 @@
     Minutes = Model.DateObserved.Minute,
     Emotion = Model.Emotion,
     UniqueId = Model.UniqueId
-})
-
+})*@
+<div id="EditObservationContainer">
+    @Html.Partial("LogEmotionFormTemplate")
+</div>
 @Html.ActionLink("Отменить","View","Kids",new {Id = Model.KidId, KindergartenId = ViewBag.KindergartenId}, null)
 <script type="text/javascript">
     $.validator.setDefaults({ ignore: "" });
 
-    var emotionUrl = '@Url.Action("Emotion", "Observation", new { KindergartenId = ViewBag.KindergartenId })';
-
     var kidsSource = @Html.Action("IndexShortJsonSerialized", "Kids", new { KindergartenId = ViewBag.KindergartenId });
+
+    Activity.loadLocal('Activities');
+    ItemUsageDetails.loadLocal('ItemUsageDetails');
+    CameInClass.loadLocal('CameInClasses');
+    Emotion.loadLocal('Emotions');
+
     var kidId = '@Model.KidId';
+    var observationModel = @Html.Raw(Json.Encode(new
+{
+    Id = Model.Id,
+    KidId = Model.KidId,
+    UniqueId = Model.UniqueId,
+    DateObserved = Model.DateObservedMilliseconds,
+    Emotion = (int)Model.Emotion,
+    TeacherId = Model.User.Id,
+    TeacherName = Model.User.FirstName,
+    Comment = Model.Comment,
+    Type = "Emotion"
+}));
 
     $(function () {
         var observationLoggerModule = new ObservationLoggerModule({
-            emotionLogger: {
-                block:$('.js_logObservationBlock_emotion'),
-                saveObservationUrl: emotionUrl
-            },
+            block:$('#EditObservationContainer'),
             hideUseCurrentTime:true
         });
         observationLoggerModule.SetKidsSource(kidsSource);
         observationLoggerModule.SelectKid(kidId);
+        observationLoggerModule.editObservation(observationModel,'Emotion');
     });
 </script>

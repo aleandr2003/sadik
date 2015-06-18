@@ -1,8 +1,8 @@
 Math.guid = function(){
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-    return v.toString(16);
-  }).toUpperCase();      
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });//.toUpperCase();   Не знаю, зачем здесь был toUpperCase
 };
 
 Math.defaultGuid = '00000000-0000-0000-0000-000000000000';
@@ -43,13 +43,26 @@ Model.extend({
    // Reset model & records
    this.records = {};
    
-   for (var i=0, il = values.length; i < il; i++) {    
+   for (var i = 0, il = values.length; i < il; i++) {
        var record = this.inst(values[i]);
-     record.newRecord = false;
+       record.newRecord = false;
      this.records[record.UniqueId] = record;
    }
  },
  
+ merge: function (values) {
+     if (!this.records) this.records = {};
+     if (!values) return; 
+     for (var i = 0, il = values.length; i < il; i++) {
+         var record = this.records[values[i].UniqueId];
+         if (!record || !record.isDirty) {
+             record = this.inst(values[i]);
+             record.newRecord = false;
+             this.records[record.UniqueId] = record;
+         }
+     }
+ },
+
  select: function(callback){
    var result = [];
    
@@ -96,7 +109,14 @@ Model.extend({
  count: function(){
    return this.recordsValues().length;
  },
+ countDirty: function () {
+     var counter = 0;
+     for (var key in this.records)
+         if (this.records[key].isDirty)
+             counter++;
 
+     return counter;
+ },
  deleteAll: function(){
    for (var key in this.records)
      delete this.records[key];
@@ -143,14 +163,24 @@ Model.extend({
          result.push(this.records[i])
      localStorage[name] = JSON.stringify(result);
  },
+ saveLocalDirtyOnly:function(name){
+     var result = [];
+     for (var i in this.records){
+         if(this.records[i].isDirty)
+             result.push(this.records[i]);
+     }
+     localStorage[name] = JSON.stringify(result);
+ },
  loadLocal: function (name) {
      var result = JSON.parse(localStorage[name]);
      this.populate(result);
- }
+ },
+ autoSaveRemote: false
 });
  
 Model.include({
   newRecord: true,
+  isDirty: false,
 
   init: function(atts){
     if (atts) this.load(atts);
@@ -203,6 +233,9 @@ Model.include({
   destroy: function(){
     this.publish("beforeDestroy");
     delete this.parent.records[this.UniqueId];
+    if (this.parent.autoSaveRemote) {
+        this.destroyRemote();
+    }
     this.publish("afterDestroy");
     this.publish("destroy");
   },
@@ -211,8 +244,10 @@ Model.include({
     return Object.create(this);
   },
 
-  toJSON: function(){
-    return(this.attributes());
+  toJSON: function () {
+      var attrs = this.attributes();
+      attrs.isDirty = this.isDirty;//добавляем сюда isDirty потому что нам оно нужно при локальном сохранении.
+      return (attrs);
   },
   
   // Private
@@ -220,6 +255,10 @@ Model.include({
   update: function(){
     this.publish("beforeUpdate");
     this.parent.records[this.UniqueId] = this.dup();
+    this.isDirty = true;
+    if (this.parent.autoSaveRemote) {
+        this.updateRemote();
+    }
     this.publish("afterUpdate");
     this.publish("update");
   },
@@ -233,6 +272,10 @@ Model.include({
     if (!this.UniqueId) this.UniqueId = this.generateID();
     this.newRecord = false;
     this.parent.records[this.UniqueId] = this.dup();
+    this.isDirty = true;
+    if (this.parent.autoSaveRemote) {
+        this.createRemote();
+    }
     this.publish("afterCreate");
     this.publish("create");
   },
@@ -241,24 +284,72 @@ Model.include({
     this.parent.publish(channel, this);
   },
 
-  createRemote: function (url, callback) {
-      $.ajax({
-          url: url,
-          data: this.attributes(),
-          success: callback,
-          dataType: 'json',
-          type: "POST"
-      });
+  createRemote: function (callback) {
+      var url = this.parent.remoteUrl;
+      if (url) {
+          var self = this;
+          this.publish("beforeCreateRemote");
+          this.publish("beforeSaveRemote");
+          $.ajax({
+              url: url,
+              data: this.attributes(),
+              success: function () {
+                  self.isDirty = false;
+                  self.publish("afterCreateRemote");
+                  self.publish("afterSaveRemote");
+                  if (callback && typeof callback == 'function') {
+                      callback.apply(self, arguments);
+                  }
+              },
+              dataType: 'json',
+              type: "POST"
+          });
+      }
   },
 
-  updateRemote: function (url, callback) {
-      $.ajax({
-          url: url,
-          data: this.attributes(),
-          success: callback,
-          dataType: 'json',
-          type: "PUT"
-      });
+  updateRemote: function (callback) {
+      var url = this.parent.remoteUrl;
+      if (url) {
+          var self = this;
+          this.publish("beforeUpdateRemote");
+          this.publish("beforeSaveRemote");
+          $.ajax({
+              url: url,
+              data: this.attributes(),
+              success: function () {
+                  self.isDirty = false;
+                  self.publish("afterUpdateRemote");
+                  self.publish("afterSaveRemote");
+                  if (callback && typeof callback == 'function') {
+                      callback.apply(self, arguments);
+                  }
+              },
+              dataType: 'json',
+              type: "PUT"
+          });
+      }
+  },
+  destroyRemote: function (callback) {
+      var url = this.parent.remoteUrl;
+      if (url) {
+          var self = this;
+          this.publish("beforeDestroyRemote");
+          this.publish("beforeSaveRemote");
+          $.ajax({
+              url: url,
+              data: { UniqueId: self.UniqueId },
+              success: function () {
+                  self.isDirty = false;
+                  self.publish("afterDestroyRemote");
+                  self.publish("afterSaveRemote");
+                  if (callback && typeof callback == 'function') {
+                      callback.apply(self, arguments);
+                  }
+              },
+              dataType: 'json',
+              type: "DELETE"
+          });
+      }
   }
 });
 

@@ -1,5 +1,5 @@
 ﻿function EmotionLogger(options) {
-    EmotionLogger.superclass.constructor.call(this, options.block, options.saveObservationUrl);
+    EmotionLogger.superclass.constructor.call(this, options.block);
     var self = this;
     this._block = options.block;
     this._emotionRadio = this._block.find('.js_emotion_radio');
@@ -14,25 +14,25 @@
     this.submitObservation = function () {
         //var settingDummy = jQuery.ajaxSettings.traditional;
         //jQuery.ajaxSettings.traditional = true;
-        var hours = self._hoursField.val();
-        var minutes = self._minutesField.val();
-        var date = self._dateField.val();
+        //var hours = self._hoursField.val();
+        //var minutes = self._minutesField.val();
+        var date = self.getSelectedDate();
         if (self._useCurrentTimeCheckBox.is(':visible') && self._useCurrentTimeCheckBox.prop('checked')) {
-            var dt = new Date();
-            hours = dt.getHours();
-            minutes = dt.getMinutes();
-            date = self.getCurrentDate();
-            self._dateField.val(date);
+            date = new Date();
+            self._dateField.val(self.getCurrentDate());
         }
-        var uniqueId = self._uniqueId.val().toUpperCase();
+        //var uniqueId = self._uniqueId.val().toUpperCase(); //не помню, зачем сделал тут upperCase. возможно иначе сервер не парсил Guid.
+        var uniqueId = self._uniqueId.val();
         var attributes = {
             Id: self._observationId.val(),
             KidId: self._kidIdField.val(),
             DateObserved: date,
-            Hours: hours,
-            Minutes: minutes,
+            //Hours: hours,
+            //Minutes: minutes,
             Comment: self._commentField.val(),
-            Emotion: self._block.find('.js_emotion_radio:checked').val()
+            Emotion: self._block.find('.js_emotion_radio:checked').val(),
+            TeacherId: SadikGlobalSettings.CurrentUser.Id,
+            TeacherName: SadikGlobalSettings.CurrentUser.FirstName
         };
         var emotion;
         if (uniqueId != '' && uniqueId != Math.defaultGuid) {
@@ -48,58 +48,67 @@
             return;
         }
         self.saved();
-        //$.ajax({
-        //    'url': self._submitObservationUrl,
-        //    'type': 'POST',
-        //    'data': obs.toJSON(),
-        //    'dataType': 'json',
-        //    'success': self.OnSuccessSubmitObservation,
-        //    'error': function () { },
-        //    'beforeSubmit': self.OnBeginSubmitObservation,
-        //    'complete': self.OnCompleteSubmitObservation
-        //});
-        //jQuery.ajaxSettings.traditional = settingDummy;
+       
     }
 
-    self.OnSuccessSubmitObservation = function (data, status, xhr) {
-        if (data.UniqueId) {
-            var emotion = Emotion.exists(data.UniqueId.toUpperCase());
-            if (emotion) emotion.destroy();
+    self.editObservation = function (observation) {
+        self._observationId.val(observation.Id);
+        self._uniqueId.val(observation.UniqueId);
+        self.SelectKidById(observation.KidId);
+        self._commentField.val(observation.Comment);
+        self._emotionRadio.prop('checked', false);
+        self._block.find('.js_emotion_radio[value="' + observation.Emotion+ '"]').prop('checked', true);
+        self.setDateTime(observation.DateObserved);
+    }
+
+    self.OnSuccessSubmitObservation = function (observation) {
+        self.publish("observationSubmittedComplete", observation.UniqueId);
+        if (observation.UniqueId) {
+            self.publish("observationSubmittedSuccess");
+        } else {
+            self.publish("observationSubmittedError");
         }
     }
 
-    Emotion.subscribe("create", function (observation) {
-        observation.createRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
+    Emotion.subscribe("afterCreateRemote", function (observation) {
+        self.publish("observationSubmitted");
+        self.OnSuccessSubmitObservation(observation);
     });
-    Emotion.subscribe("update", function (observation) {
-        observation.updateRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
+    Emotion.subscribe("afterUpdateRemote", function (observation) {
+        self.publish("observationSubmitted");
+        self.OnSuccessSubmitObservation(observation);
     });
 
     Emotion.subscribe("create", function () {
-        self.UpdateCounter(Emotion.count());
+        self.UpdateCounter(Emotion.countDirty());
     });
     Emotion.subscribe("update", function () {
-        self.UpdateCounter(Emotion.count());
+        self.UpdateCounter(Emotion.countDirty());
     });
     Emotion.subscribe("destroy", function () {
-        self.UpdateCounter(Emotion.count());
+        self.UpdateCounter(Emotion.countDirty());
+    });
+    Emotion.subscribe("afterSaveRemote", function () {
+        self.UpdateCounter(Emotion.countDirty());
     });
 
-    $(window).unload(function () {
-        Emotion.saveLocal('Emotions');
-    });
-    Emotion.loadLocal('Emotions');
-    self.UpdateCounter(Emotion.count());
-    self.ResubmitObservations = function () {
-        Emotion.each(function (observation) {
-            if (observation.Id == '') {
-                observation.createRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
-            } else {
-                observation.updateRemote(self._submitObservationUrl, self.OnSuccessSubmitObservation);
-            }
-        });
-    }
-    setInterval(self.ResubmitObservations, self._resubmitIntervalTime);
-    self.ResubmitObservations();
+    //$(window).unload(function () {
+    //    Emotion.saveLocalDirtyOnly('Emotions');
+    //});
+    
+    self.UpdateCounter(Emotion.countDirty());
+    //self.ResubmitObservations = function () {
+    //    Emotion.each(function (observation) {
+    //        if (observation.isDirty) {
+    //            if (observation.Id == '') {
+    //                observation.createRemote(self.OnSuccessSubmitObservation);
+    //            } else {
+    //                observation.updateRemote(self.OnSuccessSubmitObservation);
+    //            }
+    //        }
+    //    });
+    //}
+    //setInterval(self.ResubmitObservations, self._resubmitIntervalTime);
+    //self.ResubmitObservations();
 }
 class_extend(EmotionLogger, BaseObservationLogger);
