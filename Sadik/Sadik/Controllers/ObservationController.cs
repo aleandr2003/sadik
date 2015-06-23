@@ -20,30 +20,38 @@ namespace Sadik.Controllers
         {
             using (var context = new SadikEntities())
             {
-                var activities = context.Activities.Include("Inventory").Include("User").Where(a => a.KidId == Id).ToList();
-                var cameInClass = context.CameInClasses.Include("User").Where(a => a.KidId == Id).ToList();
-                var emotions = context.EmotionObservations.Include("User").Where(e => e.KidId == Id).ToList();
-                
                 if (Request.IsAjaxRequest())
                 {
+                    var teacherIds = context.UserKindergartens.Where(uk => uk.KindergartenId == KindergartenId)
+                        .Select(uk => uk.UserId);
+                    var Teachers = context.Users.Where(u => teacherIds.Contains(u.Id))
+                        .ToDictionary(u=> u.Id, u => u);
+
+                    var activities = context.fn_ActivitiesWithDuration(Id).ToList();
+                    var cameInClass = context.CameInClasses.Include("User").Where(a => a.KidId == Id).ToList();
+                    var emotions = context.EmotionObservations.Include("User").Where(e => e.KidId == Id).ToList();
                     System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                     StringBuilder sb = new StringBuilder(32768);
                     sb.Append("[");
+                    var timeTemplate = "STRyyyy-MM-dd-HH-mm-ss";
                     for (int i = 0, l = activities.Count; i < l; i++)
                     {
                         var observation = activities[i];
+                        var TeacherName = Teachers.ContainsKey(observation.TeacherId ?? -1) ? Teachers[observation.TeacherId ?? -1].FirstName : "";
                         sb.Append(serializer.Serialize(new
                         {
                             Id = observation.Id,
                             KidId = observation.KidId,
                             ItemId = observation.ItemId,
                             Comment = observation.Comment,
-                            DateObserved = observation.DateObservedMilliseconds,
-                            Duration = observation.Duration,
+                            //используем префикс, чтобы правильно опознать формат и распарсить на клиенте.
+                            DateObserved = observation.DateObserved.ToString(timeTemplate),
+                            Duration = observation.DurationCalculated,
+                            DurationMinutes = observation.DurationMinutes,
                             Polarization = observation.Polarization,
                             ChoseHimSelf = observation.ChoseHimSelf,
-                            TeacherId = observation.User.Id,
-                            TeacherName = observation.User.FirstName,
+                            TeacherId = observation.TeacherId,
+                            TeacherName = TeacherName,
                             UniqueId = observation.UniqueId,
                             Type = "Activity"
                         }));
@@ -57,7 +65,8 @@ namespace Sadik.Controllers
                             Id = observation.Id,
                             KidId = observation.KidId,
                             UniqueId = observation.UniqueId,
-                            DateObserved = observation.DateObservedMilliseconds,
+                            //используем префикс, чтобы правильно опознать формат и распарсить на клиенте.
+                            DateObserved = observation.DateTimeCameInClass.ToString(timeTemplate),
                             TeacherId = observation.User.Id,
                             TeacherName = observation.User.FirstName,
                             Comment = observation.Comment,
@@ -73,7 +82,8 @@ namespace Sadik.Controllers
                             Id = observation.Id,
                             KidId = observation.KidId,
                             UniqueId = observation.UniqueId,
-                            DateObserved = observation.DateObservedMilliseconds,
+                            //используем префикс, чтобы правильно опознать формат и распарсить на клиенте.
+                            DateObserved = observation.DateObserved.ToString(timeTemplate),
                             Emotion = (int)observation.Emotion,
                             TeacherId = observation.User.Id,
                             TeacherName = observation.User.FirstName,
@@ -88,6 +98,9 @@ namespace Sadik.Controllers
                 }
                 else
                 {
+                    var activities = context.Activities.Include("Inventory").Include("User").Where(a => a.KidId == Id).ToList();
+                    var cameInClass = context.CameInClasses.Include("User").Where(a => a.KidId == Id).ToList();
+                    var emotions = context.EmotionObservations.Include("User").Where(e => e.KidId == Id).ToList();
                     var observations = new List<ObservationModel>();
                     observations.AddRange(activities.Select(a => new ObservationActivityModel(a)));
                     observations.AddRange(cameInClass.Select(c => new ObservationCameInClassModel(c)));
@@ -200,7 +213,7 @@ namespace Sadik.Controllers
                         {
                             KidId = model.KidId ?? 0,
                             ItemId = model.ItemId,
-                            Duration = model.Duration,
+                            DurationMinutes = model.DurationMinutes ?? 0,
                             DateObserved = model.DateObserved,
                             Comment = model.Comment,
                             TeacherId = userSession.CurrentUser.Id,
@@ -292,7 +305,7 @@ namespace Sadik.Controllers
 
                     activity.KidId = model.KidId ?? 0;
                     activity.ItemId = model.ItemId;
-                    activity.Duration = model.Duration;
+                    activity.DurationMinutes = model.DurationMinutes ?? 0;
                     activity.DateObserved = model.DateObserved;
                     activity.Comment = model.Comment;
                     activity.TeacherId = userSession.CurrentUser.Id;

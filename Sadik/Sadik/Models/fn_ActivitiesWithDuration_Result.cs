@@ -10,9 +10,8 @@
 namespace Sadik.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Activity
+    public partial class fn_ActivitiesWithDuration_Result
     {
         public int Id { get; set; }
         public int KidId { get; set; }
@@ -20,14 +19,11 @@ namespace Sadik.Models
         public Nullable<int> TeacherId { get; set; }
         public System.DateTime DateObserved { get; set; }
         public string Comment { get; set; }
-        public ActivityDuration Duration { get; set; }
+        public byte Duration { get; set; }
+        public int DurationMinutes { get; set; }
         public bool Polarization { get; set; }
         public bool ChoseHimSelf { get; set; }
         public System.Guid UniqueId { get; set; }
-        public int DurationMinutes { get; set; }
-    
-        public virtual Inventory Inventory { get; set; }
-        public virtual Kid Kid { get; set; }
-        public virtual User User { get; set; }
+        public int DurationCalculated { get; set; }
     }
 }

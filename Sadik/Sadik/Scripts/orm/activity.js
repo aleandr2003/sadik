@@ -1,4 +1,4 @@
-﻿var Activity = Observation.setup('Activity', Observation.attributes.concat(['ItemId', 'Duration', 'Polarization', 'ChoseHimSelf']));
+﻿var Activity = Observation.setup('Activity', Observation.attributes.concat(['ItemId', 'DurationMinutes', 'Polarization', 'ChoseHimSelf']));
 Activity.extend({
     remoteUrl: SadikGlobalSettings.activityUrl,
     autoSaveRemote: true
@@ -6,6 +6,7 @@ Activity.extend({
 Activity.include({
     ItemId: null,
     Duration: null,
+    DurationMinutes:null,
     Polarization: null,
     ChoseHimSelf: null,
     Type: 'Activity',
@@ -15,7 +16,7 @@ Activity.include({
         //if (this.Hours == null) return "Пожалуйста, укажите время или выберите текущее время";
         //if (this.Minutes == null) return "Пожалуйста, укажите время или выберите текущее время";
         if (this.ItemId == null) return "Пожалуйста, выберите материал";
-        if (this.Duration == null) return "Пожалуйста, выберите продолжительность";
+        //if (this.Duration == null) return "Пожалуйста, выберите продолжительность";
         if (this.Polarization == null) return "Не установлено поле Поляризация";
         if (this.ChoseHimSelf == null) return "Не установлено поле Выбрал сам";
 

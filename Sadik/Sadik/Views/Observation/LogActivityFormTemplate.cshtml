@@ -64,12 +64,13 @@
                 new SelectListItem { Text = ActivityDuration.Short.DisplayName(), Value = ((int) ActivityDuration.Short).ToString() },
                 new SelectListItem { Text = ActivityDuration.Long.DisplayName(), Value = ((int) ActivityDuration.Long).ToString() }
             };*@
-   	    <label for="Duration">Продолжительность</label>
-	    <select name="Duration" class="js_Duration" data-val="true" data-val-required="Пожалуйста, выберите продолжительность">
-            <option value="@(((int)ActivityDuration.Brief).ToString())" >@ActivityDuration.Brief.DisplayName()</option>
-            <option value="@(((int)ActivityDuration.Short).ToString())" >@ActivityDuration.Short.DisplayName()</option>
-            <option value="@(((int)ActivityDuration.Long).ToString())" >@ActivityDuration.Long.DisplayName()</option>
-	    </select>
+   	    <label for="Duration">Продолжительность (мин)</label>
+        <input name="Duration" class="js_Duration timebox_minutes" 
+            data-val-number="Пожалуйста, введите число в поле Продолжительность." 
+            data-val-range="Пожалуйста, Введите число меньше 120-ти" 
+            data-val-range-min="0" 
+            data-val-range-max="120"
+            data-val="true" value=""/>
         <div><span class="field-validation-valid" data-valmsg-for="Duration" data-valmsg-replace="true"></span></div>
         @*}*@
 	<br />

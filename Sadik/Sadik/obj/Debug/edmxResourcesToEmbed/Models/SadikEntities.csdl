@@ -135,6 +135,9 @@
       <End Role="User" EntitySet="Users" />
       <End Role="ItemUsageDetail" EntitySet="ItemUsageDetails" />
     </AssociationSet>
+    <FunctionImport Name="fn_ActivitiesWithDuration" IsComposable="true" ReturnType="Collection(Sadik.Models.fn_ActivitiesWithDuration_Result)">
+      <Parameter Name="KidId" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="User">
     <Key>
@@ -212,6 +215,7 @@
     <Property Type="Boolean" Name="Polarization" Nullable="false" />
     <Property Type="Boolean" Name="ChoseHimSelf" Nullable="false" />
     <Property Type="Guid" Name="UniqueId" Nullable="false" />
+    <Property Type="Int32" Name="DurationMinutes" Nullable="false" />
   </EntityType>
   <Association Name="FK_Activities_Inventory">
     <End Type="Sadik.Models.Inventory" Role="Inventory" Multiplicity="0..1" />
@@ -737,4 +741,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <ComplexType Name="fn_ActivitiesWithDuration_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="Int32" Name="KidId" Nullable="false" />
+    <Property Type="Int32" Name="ItemId" Nullable="true" />
+    <Property Type="Int32" Name="TeacherId" Nullable="true" />
+    <Property Type="DateTime" Name="DateObserved" Nullable="false" Precision="23" />
+    <Property Type="String" Name="Comment" Nullable="true" />
+    <Property Type="Byte" Name="Duration" Nullable="false" />
+    <Property Type="Int32" Name="DurationMinutes" Nullable="false" />
+    <Property Type="Boolean" Name="Polarization" Nullable="false" />
+    <Property Type="Boolean" Name="ChoseHimSelf" Nullable="false" />
+    <Property Type="Guid" Name="UniqueId" Nullable="false" />
+    <Property Type="Int32" Name="DurationCalculated" Nullable="false" />
+  </ComplexType>
 </Schema>

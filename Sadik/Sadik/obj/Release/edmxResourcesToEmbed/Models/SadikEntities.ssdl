@@ -139,6 +139,7 @@
     <Property Name="DateObserved" Type="datetime" Nullable="false" />
     <Property Name="Comment" Type="nvarchar(max)" />
     <Property Name="Duration" Type="tinyint" Nullable="false" />
+    <Property Name="DurationMinutes" Type="int" Nullable="false" />
     <Property Name="Polarization" Type="bit" Nullable="false" />
     <Property Name="ChoseHimSelf" Type="bit" Nullable="false" />
     <Property Name="UniqueId" Type="uniqueidentifier" Nullable="false" />
@@ -666,6 +667,27 @@
     <Parameter Name="KidId" Type="int" Mode="In" />
     <Parameter Name="startPeriod" Type="datetime" Mode="In" />
     <Parameter Name="endPeriod" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="fn_ActivitiesWithDuration" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="KidId" Type="int" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="KidId" Type="int" Nullable="false" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="TeacherId" Type="int" />
+          <Property Name="DateObserved" Type="datetime" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="Duration" Type="tinyint" Nullable="false" />
+          <Property Name="DurationMinutes" Type="int" Nullable="false" />
+          <Property Name="Polarization" Type="bit" Nullable="false" />
+          <Property Name="ChoseHimSelf" Type="bit" Nullable="false" />
+          <Property Name="UniqueId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DurationCalculated" Type="int" Nullable="false" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
   </Function>
   <Function Name="UpdateKidActivityStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="KidId" Type="int" Mode="In" />

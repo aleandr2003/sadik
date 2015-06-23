@@ -174,6 +174,9 @@
       <DependentUpon>SadikEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EmotionType.cs" />
+    <Compile Include="Models\fn_ActivitiesWithDuration_Result.cs">
+      <DependentUpon>SadikEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FutureCustomer.cs">
       <DependentUpon>SadikEntities.tt</DependentUpon>
     </Compile>
@@ -403,7 +406,6 @@
     <Content Include="Scripts\Sadik\Misc.js" />
     <Content Include="Scripts\ObservationLogger\ActivityLogger.js" />
     <Content Include="Scripts\ObservationLogger\CameInClassLogger.js" />
-    <Content Include="Scripts\Sadik\templates.js" />
     <Content Include="Scripts\templates.js" />
     <Content Include="ViewsAngular\Observation\ActivityListItem.html" />
     <Content Include="ViewsAngular\Observation\CameInClassListItem.html" />

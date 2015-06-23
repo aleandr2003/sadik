@@ -28,6 +28,15 @@ Observation.include({
             } else if (typeof atts.DateObserved == 'string') {
                 if (/^-?\d+$/.test(atts.DateObserved)) {
                     this.DateObserved = new Date(parseInt(/^-?\d+$/.exec(atts.DateObserved)[0]));
+                } else if (atts.DateObserved.indexOf('STR') === 0) {
+                    var dateParts = atts.DateObserved.substring(3).split('-');
+                    var years = parseInt(dateParts[0]);
+                    var months = parseInt(dateParts[1]);
+                    var days = parseInt(dateParts[2]);
+                    var hours = parseInt(dateParts[3]);
+                    var minutes = parseInt(dateParts[4]);
+                    var seconds = parseInt(dateParts[5]);
+                    this.DateObserved = new Date(years, months - 1, days, hours, minutes, seconds);
                 } else {
                     this.DateObserved = new Date(atts.DateObserved);
                 }

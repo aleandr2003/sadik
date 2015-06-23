@@ -144,6 +144,7 @@
           <Property Name="DateObserved" Type="datetime" Nullable="false" />
           <Property Name="Comment" Type="nvarchar(max)" />
           <Property Name="Duration" Type="tinyint" Nullable="false" />
+          <Property Name="DurationMinutes" Type="int" Nullable="false" />
           <Property Name="Polarization" Type="bit" Nullable="false" />
           <Property Name="ChoseHimSelf" Type="bit" Nullable="false" />
           <Property Name="UniqueId" Type="uniqueidentifier" Nullable="false" />
@@ -672,6 +673,27 @@
           <Parameter Name="startPeriod" Type="datetime" Mode="In" />
           <Parameter Name="endPeriod" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="fn_ActivitiesWithDuration" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="KidId" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Id" Type="int" Nullable="false" />
+                <Property Name="KidId" Type="int" Nullable="false" />
+                <Property Name="ItemId" Type="int" />
+                <Property Name="TeacherId" Type="int" />
+                <Property Name="DateObserved" Type="datetime" Nullable="false" />
+                <Property Name="Comment" Type="nvarchar(max)" />
+                <Property Name="Duration" Type="tinyint" Nullable="false" />
+                <Property Name="DurationMinutes" Type="int" Nullable="false" />
+                <Property Name="Polarization" Type="bit" Nullable="false" />
+                <Property Name="ChoseHimSelf" Type="bit" Nullable="false" />
+                <Property Name="UniqueId" Type="uniqueidentifier" Nullable="false" />
+                <Property Name="DurationCalculated" Type="int" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
         <Function Name="UpdateKidActivityStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="KidId" Type="int" Mode="In" />
         </Function>
@@ -814,6 +836,9 @@
             <End Role="User" EntitySet="Users" />
             <End Role="ItemUsageDetail" EntitySet="ItemUsageDetails" />
           </AssociationSet>
+          <FunctionImport Name="fn_ActivitiesWithDuration" IsComposable="true" ReturnType="Collection(Sadik.Models.fn_ActivitiesWithDuration_Result)">
+            <Parameter Name="KidId" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="User">
           <Key>
@@ -891,6 +916,7 @@
           <Property Type="Boolean" Name="Polarization" Nullable="false" />
           <Property Type="Boolean" Name="ChoseHimSelf" Nullable="false" />
           <Property Type="Guid" Name="UniqueId" Nullable="false" />
+          <Property Type="Int32" Name="DurationMinutes" Nullable="false" />
         </EntityType>
         <Association Name="FK_Activities_Inventory">
           <End Type="Sadik.Models.Inventory" Role="Inventory" Multiplicity="0..1" />
@@ -1416,6 +1442,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="fn_ActivitiesWithDuration_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="KidId" Nullable="false" />
+          <Property Type="Int32" Name="ItemId" Nullable="true" />
+          <Property Type="Int32" Name="TeacherId" Nullable="true" />
+          <Property Type="DateTime" Name="DateObserved" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Comment" Nullable="true" />
+          <Property Type="Byte" Name="Duration" Nullable="false" />
+          <Property Type="Int32" Name="DurationMinutes" Nullable="false" />
+          <Property Type="Boolean" Name="Polarization" Nullable="false" />
+          <Property Type="Boolean" Name="ChoseHimSelf" Nullable="false" />
+          <Property Type="Guid" Name="UniqueId" Nullable="false" />
+          <Property Type="Int32" Name="DurationCalculated" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1465,6 +1505,7 @@
           <EntitySetMapping Name="Activities">
             <EntityTypeMapping TypeName="Sadik.Models.Activity">
               <MappingFragment StoreEntitySet="Activities">
+                <ScalarProperty Name="DurationMinutes" ColumnName="DurationMinutes" />
                 <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
                 <ScalarProperty Name="ChoseHimSelf" ColumnName="ChoseHimSelf" />
                 <ScalarProperty Name="Polarization" ColumnName="Polarization" />
@@ -1664,6 +1705,24 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="fn_ActivitiesWithDuration" FunctionName="Хранилище Sadik.Models.fn_ActivitiesWithDuration">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Sadik.Models.fn_ActivitiesWithDuration_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="KidId" ColumnName="KidId" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="TeacherId" ColumnName="TeacherId" />
+                <ScalarProperty Name="DateObserved" ColumnName="DateObserved" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="DurationMinutes" ColumnName="DurationMinutes" />
+                <ScalarProperty Name="Polarization" ColumnName="Polarization" />
+                <ScalarProperty Name="ChoseHimSelf" ColumnName="ChoseHimSelf" />
+                <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
+                <ScalarProperty Name="DurationCalculated" ColumnName="DurationCalculated" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

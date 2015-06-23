@@ -44,6 +44,7 @@
     <EntitySetMapping Name="Activities">
       <EntityTypeMapping TypeName="Sadik.Models.Activity">
         <MappingFragment StoreEntitySet="Activities">
+          <ScalarProperty Name="DurationMinutes" ColumnName="DurationMinutes" />
           <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
           <ScalarProperty Name="ChoseHimSelf" ColumnName="ChoseHimSelf" />
           <ScalarProperty Name="Polarization" ColumnName="Polarization" />
@@ -243,5 +244,23 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="fn_ActivitiesWithDuration" FunctionName="Хранилище Sadik.Models.fn_ActivitiesWithDuration">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="Sadik.Models.fn_ActivitiesWithDuration_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="KidId" ColumnName="KidId" />
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="TeacherId" ColumnName="TeacherId" />
+          <ScalarProperty Name="DateObserved" ColumnName="DateObserved" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="Duration" ColumnName="Duration" />
+          <ScalarProperty Name="DurationMinutes" ColumnName="DurationMinutes" />
+          <ScalarProperty Name="Polarization" ColumnName="Polarization" />
+          <ScalarProperty Name="ChoseHimSelf" ColumnName="ChoseHimSelf" />
+          <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
+          <ScalarProperty Name="DurationCalculated" ColumnName="DurationCalculated" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

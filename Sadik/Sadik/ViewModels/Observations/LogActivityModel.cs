@@ -12,8 +12,7 @@ namespace Sadik.ViewModels.Observations
         [Required(ErrorMessage = "Пожалуйста, выберите материал")]
         public int? ItemId { get; set; }
 
-        [Required(ErrorMessage = "Пожалуйста, укажите продолжительность")]
-        public ActivityDuration Duration { get; set; }
+        public int? DurationMinutes { get; set; }
 
         public bool Polarization { get; set; }
 

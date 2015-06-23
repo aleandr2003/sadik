@@ -17,7 +17,12 @@
     <div ng-switch-default class="nbsp"></div>
 </div>
 <div class="ActivityListItemContainer_Duration observationCell">
-    {{observation.Duration | ActivityDuration}}
+    <span ng-if="observation.DurationMinutes > 0" style="font-style:italic">
+        {{observation.DurationMinutes}}
+    </span>
+    <span ng-if="observation.DurationMinutes == 0">
+        {{observation.Duration}}
+    </span>
 </div>
 <div class="ActivityListItemContainer_TeacherName observationCell">
     {{observation.TeacherName}}

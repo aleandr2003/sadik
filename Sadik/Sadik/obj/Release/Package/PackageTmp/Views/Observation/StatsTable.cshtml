@@ -37,7 +37,7 @@
 <h3>Краткая статистика</h3>
 <table>
     <tr>
-        <th>Зона</th><th>Поляр.</th><th>Сам</th><th>@ActivityDuration.Brief.DisplayName()</th><th>@ActivityDuration.Short.DisplayName()</th><th>@ActivityDuration.Long.DisplayName()</th><th>Всего</th>
+        <th>Зона</th><th>Поляр.</th><th>Сам</th><th>&lt;&nbsp;5</th><th>5&nbsp;-&nbsp;20</th><th>&gt;&nbsp;20</th><th>Всего</th>
     </tr>
     @foreach (var line in Model.Where(l => l is ZoneStatReportLine && l.ZonePath.Count == 1))
     {
@@ -73,7 +73,7 @@
                 <th>Зона</th>
             }
         }
-        <th>Материал</th><th>Навык</th><th>Презентация</th><th>Поляр.</th><th>Сам</th><th>@ActivityDuration.Brief.DisplayName()</th><th>@ActivityDuration.Short.DisplayName()</th><th>@ActivityDuration.Long.DisplayName()</th><th>Всего</th>
+        <th>Материал</th><th>Навык</th><th>Презентация</th><th>Поляр.</th><th>Сам</th><th>&lt;&nbsp;5</th><th>5&nbsp;-&nbsp;20</th><th>&gt;&nbsp;20</th><th>Всего</th>
     </tr>
     @{
         foreach (var line in Model)

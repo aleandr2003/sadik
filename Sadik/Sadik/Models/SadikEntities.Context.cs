@@ -72,5 +72,15 @@ namespace Sadik.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CalculateKidActivityStats_Result>("CalculateKidActivityStats", kidIdParameter, startPeriodParameter, endPeriodParameter);
         }
+    
+        [EdmFunction("SadikEntities", "fn_ActivitiesWithDuration")]
+        public virtual IQueryable<fn_ActivitiesWithDuration_Result> fn_ActivitiesWithDuration(Nullable<int> kidId)
+        {
+            var kidIdParameter = kidId.HasValue ?
+                new ObjectParameter("KidId", kidId) :
+                new ObjectParameter("KidId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<fn_ActivitiesWithDuration_Result>("[SadikEntities].[fn_ActivitiesWithDuration](@KidId)", kidIdParameter);
+        }
     }
 }

@@ -247,7 +247,7 @@
             //Minutes: minutes,
             Comment: self._commentField.val(),
             ItemId: self._itemIdField.val(),
-            Duration: self._durationField.val(),
+            DurationMinutes: self._durationField.val(),
             Polarization: self._polarizationField.is(':checked'),
             ChoseHimSelf: self._choseHimselfField.is(':checked'),
             TeacherId: SadikGlobalSettings.CurrentUser.Id,
@@ -292,7 +292,8 @@
 
         self.SelectItem(observation.ItemId);
 
-        self._durationField.val(observation.Duration);
+        self._durationField.val(observation.DurationMinutes > 0 ? observation.DurationMinutes : '');
+
         self._polarizationField.prop('checked', observation.Polarization);
         self._choseHimselfField.prop('checked', observation.ChoseHimSelf);
         self.setDateTime(observation.DateObserved);
