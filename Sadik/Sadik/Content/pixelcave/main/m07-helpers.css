@@ -1,0 +1,121 @@
+﻿
+/*
+=================================================================
+(#m07hes) HELPERS
+=================================================================
+*/
+
+
+.border-top {
+    border-top: 1px solid #eeeeee;
+}
+
+.border-right {
+    border-right: 1px solid #eeeeee;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #eeeeee;
+}
+
+.border-left {
+    border-left: 1px solid #eeeeee;
+}
+
+.push {
+    margin-bottom: 15px !important;
+}
+
+.push-top {
+    margin-top: 15px !important;
+}
+
+.push-top-bottom {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.push-bit {
+    margin-bottom: 10px !important;
+}
+
+.push-bit-top {
+    margin-top: 10px !important;
+}
+
+.push-bit-top-bottom {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.push-right {
+    margin-right: 15px;
+}
+
+.push-left {
+    margin-left: 15px;
+}
+
+.push-right-left {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.push-inner-top-bottom {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.display-none {
+    display: none;
+}
+
+.remove-margin {
+    margin: 0 !important;
+}
+
+.remove-margin-bottom {
+    margin-bottom: 0 !important;
+}
+
+.remove-padding {
+    padding: 0 !important;
+}
+
+.remove-radius {
+    border-radius: 0 !important;
+}
+
+.remove-radius-top {
+    border-top-right-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+}
+
+.remove-radius-bottom {
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.lt-ie10 .hidden-lt-ie10 {
+    display: none !important;
+}
+
+.visible-lt-ie10 {
+    display: none;
+}
+
+.lt-ie10 .visible-lt-ie10 {
+    display: block;
+}
+
+.placeholder {
+    color: #999;
+}
+
+:focus {
+    outline: 0 !important;
+}

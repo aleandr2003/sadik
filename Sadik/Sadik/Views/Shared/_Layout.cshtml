@@ -38,7 +38,6 @@
             $(".js_datetimebox_past_future").datepicker({
                 maxDate: null
             });
-            
         });
         function sadikAjaxStart() {
             //		alert('ПОказать крутилку');
@@ -91,10 +90,23 @@
 </head>
 
 <body>
-    
-    <div id="header"><div id="header_inner">@Html.Action("Header", "Layout", new { KindergartenId = ViewBag.KindergartenId, tab = ViewData["SelectedTab"] == null ? null : (int?)((int)ViewData["SelectedTab"]) })</div></div>
-    <div>
-        @RenderBody()
+    <div id="page-wrapper" class="">
+        <div id="page-container" class="header-fixed-top sidebar-visible-lg-full">
+            @*<div id="sidebar">
+                <!-- Sidebar Brand -->
+                <div id="sidebar-brand" class="themed-background"></div>
+                <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 188px;"></div>
+                <div id="sidebar-extra-info" class="sidebar-content sidebar-nav-mini-hide"></div>
+            </div>*@
+            <div id="main-container">
+                <header class="navbar navbar-inverse navbar-fixed-top">
+                    <div id="header"><div id="header_inner">@Html.Action("Header", "Layout", new { KindergartenId = ViewBag.KindergartenId, tab = ViewData["SelectedTab"] == null ? null : (int?)((int)ViewData["SelectedTab"]) })</div></div>
+                </header>
+                <div id="page-content" style="min-height: 342px;">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

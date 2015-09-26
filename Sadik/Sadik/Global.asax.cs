@@ -80,8 +80,19 @@ namespace Sadik
         {
             Bundle bundle = new Bundle("~/Scripts/js", new JsMinify());
 
-            bundle.AddFile("~/Scripts/jquery-ui/jquery.js");
+            bundle.AddFile("~/Scripts/vendor/modernizr-2.8.3.min.js");
+            bundle.AddFile("~/Scripts/jquery-ui/jquery-2.1.4.min.js");
+            
+            bundle.AddFile("~/Scripts/vendor/bootstrap.min.js");
+
             bundle.AddFile("~/Scripts/jquery-ui/jquery-ui.min.js");
+            bundle.AddFile("~/Scripts/plugins/consoleFix.js");
+            bundle.AddFile("~/Scripts/plugins/jquery.placeholder.js");
+            bundle.AddFile("~/Scripts/plugins/jquery.slimscroll.js");
+            bundle.AddFile("~/Scripts/plugins/bootstrap-timepicker.js");
+            bundle.AddFile("~/Scripts/plugins/js-cookie.js");
+            bundle.AddFile("~/Scripts/app.js");
+
             bundle.AddFile("~/Scripts/jquery.ui.datepicker-ru.js");
             bundle.AddFile("~/Scripts/jquery.validate.min.js");
             bundle.AddFile("~/Scripts/jquery.validate.unobtrusive.min.js");
@@ -122,9 +133,9 @@ namespace Sadik
         {
             Bundle bundle = new Bundle("~/Scripts/js_jqPlot", new JsMinify());
 
-            bundle.AddFile("~/Scripts/jqPlot/excanvas.min.js");
-            bundle.AddFile("~/Scripts/jqPlot/jquery.jqplot.min.js");
-            bundle.AddFile("~/Scripts/jqPlot/jqplot.dateAxisRenderer.min.js");
+            bundle.AddFile("~/Scripts/plugins/jqPlot/excanvas.min.js");
+            bundle.AddFile("~/Scripts/plugins/jqPlot/jquery.jqplot.min.js");
+            bundle.AddFile("~/Scripts/plugins/jqPlot/jqplot.dateAxisRenderer.min.js");
             return bundle;
         }
 
@@ -132,13 +143,34 @@ namespace Sadik
         {
             Bundle bundle = new Bundle("~/Content/css");
 
-            bundle.AddFile("~/Content/Site.css");
+            //bundle.AddFile("~/Content/Site.css");
             bundle.AddFile("~/Content/ObservationList.css");
-            bundle.AddFile("~/Content/ObservationLogger.css");
+            //sbundle.AddFile("~/Content/ObservationLogger.css");
             bundle.AddFile("~/Content/Modifiers.css");
             bundle.AddFile("~/Content/jquery-ui.min.css");
             bundle.AddFile("~/Content/jquery-ui.structure.min.css");
             bundle.AddFile("~/Content/jquery-ui.theme.min.css");
+
+            bundle.AddFile("~/Content/pixelcave/bootstrap.min.css");
+            bundle.AddFile("~/Content/pixelcave/plugins/animations.css");
+            bundle.AddFile("~/Content/pixelcave/plugins/fontawesome.css");
+            bundle.AddFile("~/Content/pixelcave/plugins/glyphicons.css");
+            bundle.AddFile("~/Content/pixelcave/plugins/bootstrap-timepicker.css");
+
+            bundle.AddFile("~/Content/pixelcave/main/m01-main-layout.css");
+            bundle.AddFile("~/Content/pixelcave/main/m02-header.css");
+            bundle.AddFile("~/Content/pixelcave/main/m03-sidebar-navigation.css");
+            bundle.AddFile("~/Content/pixelcave/main/m04-main-content.css");
+            bundle.AddFile("~/Content/pixelcave/main/m05-pages.css");
+            bundle.AddFile("~/Content/pixelcave/main/m06-bootstrap-overwrite-extend-styles.css");
+            bundle.AddFile("~/Content/pixelcave/main/m07-helpers.css");
+            bundle.AddFile("~/Content/pixelcave/main/m08-themes.css");
+            bundle.AddFile("~/Content/pixelcave/main/m09-responsive.css");
+            bundle.AddFile("~/Content/pixelcave/main/m10-print.css");
+
+            bundle.AddFile("~/Content/pixelcave/themes.css");
+
+            //add animations
 
             return bundle;
         }

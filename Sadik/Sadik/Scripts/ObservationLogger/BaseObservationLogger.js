@@ -97,12 +97,12 @@
         self.reset();
     }
 
-    var _commentCollapsible = new Collapsible(self._expandCommentLink, self._commentField);
-    if (self._commentField.val().length > 0) {
-        _commentCollapsible.Expand();
-    } else {
-        _commentCollapsible.Collapse();
-    }
+    //var _commentCollapsible = new Collapsible(self._expandCommentLink, self._commentField);
+    //if (self._commentField.val().length > 0) {
+    //    _commentCollapsible.Expand();
+    //} else {
+    //    _commentCollapsible.Collapse();
+    //}
 
     this.submitButtonOnClick = function (event) {
         //if (!self.performValidation()) {

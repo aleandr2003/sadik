@@ -1,0 +1,17 @@
+﻿
+/*
+=================================================================
+(#18bts) Bootstrap Typeahead
+=================================================================
+*/
+
+.typeahead.dropdown-menu {
+    -webkit-transform: scale(1) !important;
+    transform: scale(1) !important;
+    -webkit-transition: none !important;
+    transition: none !important;
+}
+
+.lt-ie10 .typeahead.dropdown-menu {
+    display: block;
+}

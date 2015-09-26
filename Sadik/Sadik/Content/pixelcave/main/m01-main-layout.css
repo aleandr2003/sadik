@@ -1,0 +1,260 @@
+﻿/*
+=================================================================
+(#m01mls) MAIN LAYOUT
+=================================================================
+*/
+
+/* Include Lato font from Google Web Fonts */
+@import url('//fonts.googleapis.com/css?family=Lato:300,400,400italic,500,500italic,600,600italic,700,700italic');
+
+/* Preloader */
+#page-wrapper.page-loading {
+    overflow: hidden;
+}
+
+#page-wrapper.page-loading .preloader {
+    display: block;
+}
+
+#page-wrapper.page-loading #page-container {
+    opacity: 0;
+}
+
+.preloader {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 99999;
+}
+
+.preloader .inner {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    margin: 0 0 0 -50px;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+}
+
+.preloader-spinner {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    background-color: #cccccc;
+    -webkit-animation: rotateplane .8s infinite ease-in-out;
+    animation: rotateplane .8s infinite ease-in-out;
+}
+
+@-webkit-keyframes rotateplane {
+    0% {
+        -webkit-transform: perspective(120px);
+    }
+    50% {
+        -webkit-transform: perspective(120px) rotateY(180deg);
+    }
+    100% {
+        -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg);
+    }
+}
+
+@keyframes rotateplane {
+    0% {
+        transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    } 50% {
+        transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+    } 100% {
+        transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+        -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    }
+}
+
+/* Main Structure */
+body {
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #454e59;
+    background-color: #454e59;
+}
+
+#login-container {
+    position: absolute;
+    width: 300px;
+    top: 30px;
+    left: 50%;
+    margin-left: -150px;
+    z-index: 1000;
+}
+
+#page-container,
+#main-container {
+    min-width: 320px;
+}
+
+#page-container {
+    opacity: 1;
+    width: 100%;
+    padding: 0;
+    margin: 0 auto;
+    overflow-x: hidden;
+    -webkit-transition: background-color .2s ease-out, opacity .3s ease-out;
+    transition: background-color .2s ease-out, opacity .3s ease-out;
+}
+
+#page-content {
+    padding: 10px 5px 1px;
+    background-color: #ebeef2;
+}
+
+#page-content-sidebar {
+    padding: 10px;
+    margin: -10px -5px 10px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #dae0e8;
+}
+
+#page-container,
+#sidebar {
+    background-color: #454e59;
+}
+
+#sidebar,
+#sidebar-alt,
+#sidebar-alt-close,
+#main-container,
+header.navbar.navbar-fixed-top,
+header.navbar.navbar-fixed-bottom {
+    -webkit-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+}
+
+#sidebar,
+#sidebar-alt,
+#sidebar-alt-close {
+    z-index: 1029;
+}
+
+/* Alternative Sidebar */
+#sidebar-alt,
+#sidebar-alt-close {
+    background: rgba(69, 78, 89, .9);
+}
+
+#sidebar-alt {
+    position: fixed;
+    top: 50px;
+    right: -220px;
+    bottom: 0;
+    width: 220px;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+#page-container.header-fixed-bottom #sidebar-alt {
+    top: 0;
+    bottom: 50px;
+}
+
+#sidebar-alt-close {
+    display: inline-block;
+    position: fixed;
+    right: -30px;
+    top: 50px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    opacity: 0;
+}
+
+#page-container.header-fixed-top #sidebar-alt-close,
+#page-container.header-fixed-bottom #sidebar-alt-close {
+    display: none !important;
+}
+
+#page-container.sidebar-alt-visible-xs #sidebar-alt {
+    -webkit-transform: translateX(-220px);
+    transform: translateX(-220px);
+}
+
+#page-container.sidebar-alt-visible-xs #sidebar-alt-close {
+    -webkit-transform: translateX(-250px);
+    transform: translateX(-250px);
+    opacity: 1;
+}
+
+/* Sidebar + Static Layout */
+#sidebar {
+    position: absolute;
+    overflow: hidden;
+    width: 220px;
+    left: -220px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+#page-container.sidebar-visible-xs #sidebar,
+#page-container.sidebar-visible-xs #main-container {
+    -webkit-transform: translateX(220px);
+    transform: translateX(220px);
+}
+
+/* Sidebar + Fixed Layout */
+#page-container.header-fixed-top #page-content {
+    padding-top: 60px;
+}
+
+#page-container.header-fixed-bottom #page-content {
+    padding-bottom: 60px;
+}
+
+#page-container.header-fixed-top #sidebar {
+    position: fixed;
+    top: 50px;
+    bottom: 0;
+}
+
+#page-container.header-fixed-bottom #sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 50px;
+}
+
+#page-container.header-fixed-top.sidebar-visible-xs #main-container,
+#page-container.header-fixed-bottom.sidebar-visible-xs #main-container {
+    -webkit-transform: none;
+    transform: none;
+}
+
+#page-container.header-fixed-top #sidebar-extra-info,
+#page-container.header-fixed-bottom #sidebar-extra-info {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#page-container.header-fixed-top #sidebar-brand,
+#page-container.header-fixed-bottom #sidebar-brand {
+    display: none;
+}
+
+/* Fixed Width Layout */
+#page-container.fixed-width {
+    position: relative;
+    max-width: 1280px;
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+}
+
+#page-container.fixed-width #sidebar-alt,
+#page-container.fixed-width #sidebar-alt-close {
+    background: rgba(25, 25, 25, .8) !important;
+}

@@ -1,0 +1,44 @@
+﻿
+/*
+=================================================================
+(#m08ths) THEMES
+=================================================================
+*/
+
+/* Default Color Theme specific colors */
+.themed-color {
+    color: #5ccdde !important;
+}
+
+.themed-background {
+    background-color: #5ccdde !important;
+}
+
+.themed-color-dark {
+    color: #454e59 !important;
+}
+
+.themed-background-dark {
+    background-color: #454e59 !important;
+}
+
+/* Contextual Background Colors */
+.themed-background-danger {
+    background-color: #de815c !important;
+}
+
+.themed-background-warning {
+    background-color: #deb25c !important;
+}
+
+.themed-background-info {
+    background-color: #5cafde !important;
+}
+
+.themed-background-success {
+    background-color: #afde5c !important;
+}
+
+.themed-background-muted {
+    background-color: #f9f9f9 !important;
+}
