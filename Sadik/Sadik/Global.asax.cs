@@ -132,10 +132,12 @@ namespace Sadik
         {
             Bundle bundle = new Bundle("~/Content/css");
 
-            bundle.AddFile("~/Content/Site.css");
+            bundle.AddFile("~/Content/bootstrap.min.css");
+            bundle.AddFile("~/Content/main.css");
+            bundle.AddFile("~/Content/themes.css");
+            bundle.AddFile("~/Content/sadik.css");
             bundle.AddFile("~/Content/ObservationList.css");
             bundle.AddFile("~/Content/ObservationLogger.css");
-            bundle.AddFile("~/Content/Modifiers.css");
             bundle.AddFile("~/Content/jquery-ui.min.css");
             bundle.AddFile("~/Content/jquery-ui.structure.min.css");
             bundle.AddFile("~/Content/jquery-ui.theme.min.css");

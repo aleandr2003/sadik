@@ -91,10 +91,30 @@
 </head>
 
 <body>
-    
-    <div id="header"><div id="header_inner">@Html.Action("Header", "Layout", new { KindergartenId = ViewBag.KindergartenId, tab = ViewData["SelectedTab"] == null ? null : (int?)((int)ViewData["SelectedTab"]) })</div></div>
-    <div>
-        @RenderBody()
+    <div id="page-wrapper">
+        <div id="page-container" class="header-fixed-top">
+            <div id="main-container">
+                <header class="navbar navbar-inverse navbar-fixed-top">
+                    <!-- Left Header Navigation -->
+                    <ul class="nav navbar-nav-custom">
+                        <!-- Header Link -->
+                        <li class="hidden-xs animation-fadeInQuick">
+                            @Html.Action("Header", "Layout", new { KindergartenId = ViewBag.KindergartenId, tab = ViewData["SelectedTab"] == null ? null : (int?)((int)ViewData["SelectedTab"]) })
+                        </li>
+                        <!-- END Header Link -->
+                    </ul>
+                    <!-- END Left Header Navigation -->
+                    <!-- Right Header Navigation -->
+                    <ul class="nav navbar-nav-custom pull-right">
+
+                    </ul>
+                    <!-- END Right Header Navigation -->
+                </header>
+                <div id="page-content">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
