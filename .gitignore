@@ -48,6 +48,9 @@ backup
 Sadik/Sadik/bin
 Sadik/Sadik/obj
 Sadik/Sadik/node_modules
+Sadik/.vs
+Sadik/Backup1
+Sadik/UpgradeLog.htm
 Lib/dist/docs
 Lib/dist/examples
 Lib/maccman-book-assets-68bfaec
