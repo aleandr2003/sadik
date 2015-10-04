@@ -2,88 +2,96 @@
     Layout = null;
 }
 <div class="js_logObservationBlock_emotion">
-<form action="" method="post" novalidate="novalidate">
+<form action="" method="post" novalidate="novalidate"  class="form-horizontal">
     <input class="js_ObservationId" data-val="true" data-val-number="Значением поля Id должно быть число." id="Id" name="Id" type="hidden" value=""/>
     <input class="js_UniqueId" data-val="true" data-val-required="Уникальный идентификатор наблюдения отсутствует." id="UniqueId" name="UniqueId" type="hidden" value="00000000-0000-0000-0000-000000000000"/>
 
-    <div class="js_useCurrentTimeBlock">
-        <input type="checkbox" name="useCurrentTime" class="js_useCurrentTime"/> <span>Использовать текущее время</span>
+    <div class="form-group">
+        <div class="checkbox col-md-2 ">
+            <label for="useCurrentTime" class="control-label js_useCurrentTimeBlock">
+                <input type="checkbox" name="useCurrentTime" class="js_useCurrentTime"/> Время 
+            </label>
+        </div>
+        <div class="checkbox col-md-5 js_currentTimeLabel">
+            <label for="useCurrentTime" class="control-label">
+                Использовать текущее время
+            </label>
+        </div>
+        <div class="col-md-5 js_inputTimeBlock">
+            <input class="js_datetimebox js_DateObserved form-control" id="DateObservedEmotion" name="DateObserved" type="text"
+                data-val-regex-pattern="^(0?[1-9]|[12][0-9]|3[01])[-](0?[1-9]|1[012])[-](19|20)?\d\d$"
+                data-val-regex="Дата должна быть в формате (ДД-ММ-ГГГГ)" data-val="true"/>
+        </div>
+        <div class="col-md-3 input-group bootstrap-timepicker bootstrap-timepicker-noseconds js_inputTimeBlock">
+            <input name="Time" class="form-control input-timepicker24 js_TimeObserved" 
+                    data-val-required="Пожалуйста, укажите время (минуты)" 
+                    data-val-number="Пожалуйста, введите число в поле Минуты." 
+                    data-val-range="Пожалуйста, Введите число меньше 60-ти" 
+                    data-val-range-min="0" 
+                    data-val-range-max="59"
+                    data-val="true" value=""/>
+            <span class="input-group-btn">
+                <a href="javascript:void(0)" class="btn btn-effect-ripple btn-primary"><i class="fa fa-clock-o"></i></a>
+            </span>
+        </div>
+        <div class="help-block"><span class="field-validation-valid" data-valmsg-for="DateObserved" data-valmsg-replace="true"></span></div>
+        <div class="help-block"><span class="field-validation-valid" data-valmsg-for="Time" data-valmsg-replace="true"></span></div>
     </div>
-    <div class="js_inputTimeBlock">
-        <label for="DateObserved">Дата наблюдения</label>
-        <input class="js_datetimebox js_DateObserved" id="DateObservedEmotion" name="DateObserved" type="text"
-            data-val-regex-pattern="^(0?[1-9]|[12][0-9]|3[01])[-](0?[1-9]|1[012])[-](19|20)?\d\d$"
-            data-val-regex="Дата должна быть в формате (ДД-ММ-ГГГГ)" data-val="true"/>
-        <span class="field-validation-valid" data-valmsg-for="DateObserved" data-valmsg-replace="true"></span>
-
-        <br />
-        <span>Время </span>
-        <select name="Hours" class="js_HoursObserved" data-val-required="Пожалуйста, укажите время (час)" data-val="true">
-            <option value=""></option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-        </select>
-        <span> : </span>
-        <input name="Minutes" class="js_MinutesObserved timebox_minutes" 
-            data-val-required="Пожалуйста, укажите время (минуты)"
-            data-val-number="Пожалуйста, введите число в поле Минуты." 
-            data-val-range="Пожалуйста, Введите число меньше 60-ти" 
-            data-val-range-min="0" 
-            data-val-range-max="59" 
-            data-val="true" value=""/>
-        <br/>
-        <div><span class="field-validation-valid" data-valmsg-for="Hours" data-valmsg-replace="true"></span></div>
-        <div><span class="field-validation-valid" data-valmsg-for="Minutes" data-valmsg-replace="true"></span></div>
+    <div class="js_KidSelectorContainer form-group">
+        <label for="KidId" class="col-md-2 control-label">Ребенок</label>
+        <div class="col-md-5">
+            <input class="js_KidIdSelect form-control" name="KidIdSelect"/>
+            <input class="js_KidId" data-val="true" data-val-number="Значением поля KidId должно быть число." data-val-required="Пожалуйста, выберите ребенка" id="KidId" name="KidId" type="hidden" value=""/>
+            <div class="help-block"><span class="field-validation-valid" data-valmsg-for="KidId" data-valmsg-replace="true"></span></div>
+        </div>
     </div>
-    <div class="js_KidSelectorContainer">
-        <label for="KidId">Ребенок</label>
-        <input class="js_KidIdSelect" name="KidIdSelect"/>
-        <input class="js_KidId" data-val="true" data-val-number="Значением поля KidId должно быть число." data-val-required="Пожалуйста, выберите ребенка" id="KidId" name="KidId" type="hidden" value=""/>
+    <div class="form-group">
+        <div class="col-md-9 col-md-offset-2">
+            <ul class="toggle-menu">
+                <li>
+                    <a href="javascript:void(0)" class="submenu"><i class="fa fa-angle-right"></i> Комментарии (не обязательно)</a>
+                    <div>
+                        <textarea class="js_commentTextArea" cols="30" id="Comment" name="Comment" rows="4"></textarea>
+                        <div class="help-block"><span class="field-validation-valid" data-valmsg-for="Comment" data-valmsg-replace="true"></span></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div><span class="field-validation-valid" data-valmsg-for="KidId" data-valmsg-replace="true"></span></div>
-    <br />   
-	<a href="javascript:void(0)" class="js_addCommentLink">Комментарии (не обязательно)</a>
-    <br />
-	<textarea class="js_commentTextArea" cols="30" id="Comment" name="Comment" rows="4"></textarea>
-    <br />
-    <span class="field-validation-valid" data-valmsg-for="Comment" data-valmsg-replace="true"></span>
-
-    <br />
-
-    <table>
-        <tr>
-            <td><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Sad)" />@EmotionType.Sad.DisplayName()</label></td>
-            <td><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Crying)" />@EmotionType.Crying.DisplayName()</label></td>
-            <td><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Histerical)" />@EmotionType.Histerical.DisplayName()</label></td>
-        </tr>
-        <tr>
-            <td><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Grumpy)" />@EmotionType.Grumpy.DisplayName()</label></td>
-            <td><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Agressive)" />@EmotionType.Agressive.DisplayName()</label></td>
-            <td><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Fighting)" />@EmotionType.Fighting.DisplayName()</label></td>
-        </tr>
-        <tr>
-            <td><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Smiley)" />@EmotionType.Smiley.DisplayName()</label></td>
-            <td><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Happy)" />@EmotionType.Happy.DisplayName()</label></td>
-            <td><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Cheery)" />@EmotionType.Cheery.DisplayName()</label></td>
-        </tr>
-    </table>
-	<div id="errorMessage" class="errorMessage"></div>
-    <br />
-	<input class="js_submitButton" type="submit" value="Сохранить" autofocus/>
-    <div id="resultMessageEmotion" class="resultMessage js_resultMessage"><span></span></div> 
-    <div id="counterEmotion" class="resultMessage js_counter">
-        <img src="@Url.Content("~/Content/images/spinner.gif")" width="15" height="15" alt="wait"/>
-        <span></span>
-    </div> 
+    <div class="form-group">
+        <label class="col-md-2">Настроение</label>
+        <div class="col-md-9">
+            <table>
+                <tr>
+                    <td class="col-md-3"><div class="radio"><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Sad)" />@EmotionType.Sad.DisplayName()</label></div></td>
+                    <td class="col-md-3"><div class="radio"><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Crying)" />@EmotionType.Crying.DisplayName()</label></div></td>
+                    <td class="col-md-3"><div class="radio"><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Histerical)" />@EmotionType.Histerical.DisplayName()</label></div></td>
+                </tr>
+                <tr>
+                    <td class="col-md-3"><div class="radio"><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Grumpy)" />@EmotionType.Grumpy.DisplayName()</label></div></td>
+                    <td class="col-md-3"><div class="radio"><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Agressive)" />@EmotionType.Agressive.DisplayName()</label></div></td>
+                    <td class="col-md-3"><div class="radio"><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Fighting)" />@EmotionType.Fighting.DisplayName()</label></div></td>
+                </tr>
+                <tr>
+                    <td class="col-md-3"><div class="radio"><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Smiley)" />@EmotionType.Smiley.DisplayName()</label></div></td>
+                    <td class="col-md-3"><div class="radio"><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Happy)" />@EmotionType.Happy.DisplayName()</label></div></td>
+                    <td class="col-md-3"><div class="radio"><label><input type="radio" name="Emotion" class="js_emotion_radio" value="@((int)EmotionType.Cheery)" />@EmotionType.Cheery.DisplayName()</label></div></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="form-group form-actions">
+        <div class="col-md-3 col-md-offset-2">
+	        <button class="js_submitButton btn btn-effect-ripple btn-primary" type="submit" autofocus>Сохранить</button>
+        </div>
+        <div class="col-md-8">
+	        <div id="errorMessage" class="errorMessage help-block"></div>
+            <div id="resultMessageEmotion" class="resultMessage js_resultMessage"><span></span></div> 
+            <div id="counterEmotion" class="resultMessage js_counter">
+                <img src="@Url.Content("~/Content/images/spinner.gif")" width="15" height="15" alt="wait"/>
+                <span></span>
+            </div>
+        </div>
+    </div>
 </form>
 </div>

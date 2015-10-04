@@ -13,8 +13,9 @@
     this._kidIdField = $('.js_KidId');
 
     this._dateField = this._block.find('.js_DateObserved');
-    this._hoursField = this._block.find('.js_HoursObserved');
-    this._minutesField = this._block.find('.js_MinutesObserved');
+    this._timeField = this._block.find('.js_TimeObserved');
+    //this._hoursField = this._block.find('.js_HoursObserved');
+    //this._minutesField = this._block.find('.js_MinutesObserved');
 
     this._commentField = this._block.find('.js_commentTextArea');
     this._expandCommentLink = this._block.find('.js_addCommentLink');
@@ -22,6 +23,7 @@
     this._submitButton = this._block.find('.js_submitButton');
     this._resultMessage = this._block.find('.js_resultMessage');
     this._useCurrentTimeCheckBox = this._block.find('.js_useCurrentTime');
+    this._currentTimeLabel = this._block.find('.js_currentTimeLabel');
     this._inputTimeBlock = this._block.find('.js_inputTimeBlock');
 
     this._counter = this._block.find('.js_counter');
@@ -81,8 +83,9 @@
 
     this.reset = function () {
         self._commentField.val('');
-        self._hoursField.val('');
-        self._minutesField.val('');
+        self._timeField.val('');
+        //self._hoursField.val('');
+        //self._minutesField.val('');
     };
 
     this.saved = function () {
@@ -183,19 +186,18 @@
     this._useCurrentTimeCheckBox.change(function () {
         if ($(this).prop('checked')) {
             self._inputTimeBlock.hide();
-            self._hoursField.prop('disabled', true);
-            self._minutesField.prop('disabled', true);
+            self._timeField.prop('disabled', true);
             self._dateField.prop('disabled', true);
+            self._currentTimeLabel.show();
         } else {
             self._inputTimeBlock.show();
-            self._hoursField.prop('disabled', false);
-            self._minutesField.prop('disabled', false);
+            self._timeField.prop('disabled', false);
             self._dateField.prop('disabled', false);
+            self._currentTimeLabel.hide();
         }
         var dt = new Date();
         self._dateField.val(self.getCurrentDate());
-        self._hoursField.val(dt.getHours());
-        self._minutesField.val(dt.getMinutes());
+        self._timeField.val(dt.getHours() + ':' + dt.getMinutes());
     });
 
     this.SetUseCurrentTime = function (use) {
@@ -238,8 +240,10 @@
             return;
         }
         self._dateField.val(DateCustom.printDate(dt));
-        self._hoursField.val(dt.getHours());
-        self._minutesField.val(dt.getMinutes());
+        
+        self._timeField.val(dt.getHours() + ':' + dt.getMinutes());
+        //self._hoursField.val(dt.getHours());
+        //self._minutesField.val(dt.getMinutes());
     }
     this.getSelectedDate = function () {
         var dateStr = self._dateField.val();
@@ -247,8 +251,9 @@
         var years = parseInt(dateParts[2]);
         var months = parseInt(dateParts[1]);
         var days = parseInt(dateParts[0]);
-        var hours = parseInt(self._hoursField.val());
-        var minutes = parseInt(self._minutesField.val());
+        var time = self._timeField.val();
+        var hours = parseInt(time.split(':')[0]);
+        var minutes = parseInt(time.split(':')[1]);
         return new Date(years, months - 1, days, hours, minutes, 0);
     }
 

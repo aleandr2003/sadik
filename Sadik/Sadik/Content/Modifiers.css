@@ -9,3 +9,7 @@
 .shortTextField {
     width:100px;
 }
+
+.bootstrap-timepicker-noseconds .dropdown-menu{
+    min-width:80px;
+}

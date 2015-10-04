@@ -27,7 +27,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="block">
             <div class="block-title">
                 <h2>Дети</h2>
@@ -37,26 +37,33 @@
             </form>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-8">
     @{
         int KindergartenId = ViewBag.KindergartenId;
         <div id="LogObservationContainer" class="block">
             <div class="block-title">
-                <h2 class="LogObservationAreaHeader">Наблюдение</h2>
+                <ul class="nav nav-tabs" data-toggle="tabs">
+                    <li class="active"><a href="#block-tabs-activity">Работа с материалами</a></li>
+                    <li><a href="#block-tabs-came-in-class">Зашел в класс</a></li>
+                    <li><a href="#block-tabs-emotion">Настроение</a></li>
+                </ul>
             </div>
-            <ul class="nav nav-pills">
-                <li class="active"><a href="javascript:void(0)">Работа с материалами</a></li>
-                <li><a href="javascript:void(0)">Зашел в класс</a></li>
-                <li><a href="javascript:void(0)">Настроение</a></li>
-            </ul>
-            <div class="LogObservationArea">
-                @Html.Action("LogActivity", "Observation", new { KindergartenId = KindergartenId})
-            </div>
-            <div class="LogObservationArea">
-                @Html.Action("LogCameInClass", "Observation", new { KindergartenId = KindergartenId})
-            </div>
-            <div class="LogObservationArea">
-                @Html.Action("LogEmotion", "Observation", new { KindergartenId = KindergartenId})
+            <div class="tab-content">
+                <div class="tab-pane active" id="block-tabs-activity">
+                    <div class="LogObservationArea">
+                        @Html.Action("LogActivity", "Observation", new { KindergartenId = KindergartenId})
+                    </div>
+                </div>
+                <div class="tab-pane" id="block-tabs-came-in-class">
+                    <div class="LogObservationArea">
+                        @Html.Action("LogCameInClass", "Observation", new { KindergartenId = KindergartenId})
+                    </div>
+                </div>
+                <div class="tab-pane" id="block-tabs-emotion">
+                    <div class="LogObservationArea">
+                        @Html.Action("LogEmotion", "Observation", new { KindergartenId = KindergartenId})
+                    </div>
+                </div>
             </div>
         </div>
     }
