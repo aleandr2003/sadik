@@ -143,7 +143,6 @@ namespace Sadik
         {
             Bundle bundle = new Bundle("~/Content/css");
 
-            bundle.AddFile("~/Content/ObservationList.css");
             bundle.AddFile("~/Content/bootstrap.min.css");
 
             bundle.AddFile("~/Content/pixelcave/main/m01-main-layout.css");
@@ -164,7 +163,6 @@ namespace Sadik
             bundle.AddFile("~/Content/jquery-ui.structure.min.css");
             bundle.AddFile("~/Content/jquery-ui.theme.min.css");
 
-            bundle.AddFile("~/Content/pixelcave/bootstrap.min.css");
             bundle.AddFile("~/Content/pixelcave/plugins/animations.css");
             bundle.AddFile("~/Content/pixelcave/plugins/fontawesome.css");
             bundle.AddFile("~/Content/pixelcave/plugins/glyphicons.css");

@@ -35,4 +35,3 @@ C:\rabota\sadik\Sadik\Sadik\bin\ru\EntityFramework.resources.dll
 C:\rabota\sadik\Sadik\Sadik\bin\ru\System.Web.Providers.resources.dll
 C:\rabota\sadik\Sadik\Sadik\obj\Debug\Sadik.dll
 C:\rabota\sadik\Sadik\Sadik\obj\Debug\Sadik.pdb
-C:\rabota\sadik\Sadik\Sadik\obj\Debug\Sadik.csprojResolveAssemblyReference.cache

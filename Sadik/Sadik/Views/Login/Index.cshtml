@@ -2,30 +2,56 @@
 @{
     ViewBag.Title = "Вход";
 }
-<div id="main">
-<h2>Вход</h2>
+<div class="col-md-4">
+    <div id="main" class="block">
+        <div class="block-title">
+            <h2>Вход</h2>
+        </div>
 
-@using (Html.BeginForm<LoginController>(x => x.LogIn(null, null), FormMethod.Post))
-  {
-		<fieldset>
-            @Html.Hidden("returnUrl", (string)ViewBag.returnUrl)
-			<br />
-			@Html.LabelFor(x => x.Email, "E-mail")
-			@Html.TextBoxFor(x => x.Email, new { placeholder = "alepush@gmail.com" })
-            @Html.ValidationMessageFor(x => x.Email)
-
-			<br />
-			@Html.LabelFor(x => x.Password, "Пароль")
-			@Html.PasswordFor(x => x.Password, new { placeholder = "введите пароль" })
-			@Html.ValidationMessageFor(x => x.Password)
-            <br />
-            @Html.ActionLink("Забыли пароль?", "ForgotPassword","Login")
-		</fieldset>
-        if (ViewBag.ErrorMessage != null)
+    @using (Html.BeginForm<LoginController>(x => x.LogIn(null, null), FormMethod.Post, new { @class="form-horizontal"}))
+    {
+        @Html.Hidden("returnUrl", (string)ViewBag.returnUrl)
+        <div class="form-group">
+            <label for="Email" class=" control-label col-md-3">E-mail</label>
+			<div  class="col-md-9">
+                <input class="form-control"
+                    data-val="true" data-val-email="Введен некорректный e-mail" 
+                    data-val-email-email="true" 
+                    data-val-required="Пожалуйста, введите e-mail" 
+                    id="Email" name="Email" placeholder="alepush@gmail.com" type="text" value="">
+                <div class="help-block"><span class="field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span></div>
+			</div>
+        </div>
+        <div class="form-group">
+			<label for="Password" class=" control-label col-md-3">Пароль</label>
+            <div class="col-md-9">
+			    <input class="form-control"
+                    data-val="true" data-val-length="Пароль должен быть не короче 3 и не длиннее 32 символов" 
+                    data-val-length-max="32" 
+                    data-val-length-min="3" 
+                    data-val-required="Пожалуйста, введите пароль" 
+                    id="Password" name="Password" placeholder="введите пароль" type="password">
+			    <div class="help-block"><span class="field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-9 col-md-offset-3">
+                @Html.ActionLink("Забыли пароль?", "ForgotPassword", "Login")
+            </div>
+        </div>
+        <div class="form-group form-actions">
+            <div class="col-md-3 col-md-offset-3">
+	            <button class="js_submitButton btn btn-effect-ripple btn-primary" type="submit" autofocus>Войти</button>
+            </div>
+        </div>
+        if(ViewBag.ErrorMessage != null)
         {
-		<div id="errorMessage" class="errorMessage">@ViewBag.ErrorMessage</div>
+        <div class="form-group">
+            <div class=" col-md-offset-3 col-md-9">
+		            <div id="errorMessage" class="errorMessage help-block">@ViewBag.ErrorMessage</div>
+            </div>
+        </div>
         }
-		@Html.SubmitButton(null, "Войти")
-  }
-
+    }
+    </div>
 </div>

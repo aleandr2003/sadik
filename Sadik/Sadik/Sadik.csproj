@@ -303,7 +303,6 @@
     <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\main.css" />
     <Content Include="Content\ObservationList.css" />
-    <Content Include="Content\pixelcave\bootstrap.min.css" />
     <Content Include="Content\pixelcave\fonts\fontawesome\fontawesome-webfont.svg" />
     <Content Include="Content\pixelcave\fonts\Glyphicons PRO %28License%29.txt" />
     <Content Include="Content\pixelcave\fonts\glyphicons.filetypes.pro\glyphicons-filetypes-regular.svg" />
