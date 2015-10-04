@@ -145,20 +145,6 @@ namespace Sadik
 
             bundle.AddFile("~/Content/ObservationList.css");
             bundle.AddFile("~/Content/bootstrap.min.css");
-            bundle.AddFile("~/Content/main.css");
-            bundle.AddFile("~/Content/themes.css");
-            bundle.AddFile("~/Content/sadik.css");
-            bundle.AddFile("~/Content/ObservationList.css");
-            bundle.AddFile("~/Content/ObservationLogger.css");
-            bundle.AddFile("~/Content/jquery-ui.min.css");
-            bundle.AddFile("~/Content/jquery-ui.structure.min.css");
-            bundle.AddFile("~/Content/jquery-ui.theme.min.css");
-
-            bundle.AddFile("~/Content/pixelcave/bootstrap.min.css");
-            bundle.AddFile("~/Content/pixelcave/plugins/animations.css");
-            bundle.AddFile("~/Content/pixelcave/plugins/fontawesome.css");
-            bundle.AddFile("~/Content/pixelcave/plugins/glyphicons.css");
-            bundle.AddFile("~/Content/pixelcave/plugins/bootstrap-timepicker.css");
 
             bundle.AddFile("~/Content/pixelcave/main/m01-main-layout.css");
             bundle.AddFile("~/Content/pixelcave/main/m02-header.css");
@@ -170,6 +156,21 @@ namespace Sadik
             bundle.AddFile("~/Content/pixelcave/main/m08-themes.css");
             bundle.AddFile("~/Content/pixelcave/main/m09-responsive.css");
             bundle.AddFile("~/Content/pixelcave/main/m10-print.css");
+
+            bundle.AddFile("~/Content/themes.css");
+            bundle.AddFile("~/Content/sadik.css");
+            bundle.AddFile("~/Content/ObservationList.css");
+            bundle.AddFile("~/Content/jquery-ui.min.css");
+            bundle.AddFile("~/Content/jquery-ui.structure.min.css");
+            bundle.AddFile("~/Content/jquery-ui.theme.min.css");
+
+            bundle.AddFile("~/Content/pixelcave/bootstrap.min.css");
+            bundle.AddFile("~/Content/pixelcave/plugins/animations.css");
+            bundle.AddFile("~/Content/pixelcave/plugins/fontawesome.css");
+            bundle.AddFile("~/Content/pixelcave/plugins/glyphicons.css");
+            bundle.AddFile("~/Content/pixelcave/plugins/bootstrap-timepicker.css");
+
+
 
             bundle.AddFile("~/Content/pixelcave/themes.css");
 

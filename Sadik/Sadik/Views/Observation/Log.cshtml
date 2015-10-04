@@ -17,15 +17,7 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/ObservationLogger/ObservationLoggerModule.js")"></script>*@
     <script type="text/javascript" src="@BundleTable.Bundles.ResolveBundleUrl("~/scripts/js_observ")"></script>
 }
-<div class="content-header">
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="header-section">
-                <h1>Записать наблюдение</h1>
-            </div>
-        </div>
-    </div>
-</div>
+
 <div class="row">
     <div class="col-md-4">
         <div class="block">
@@ -33,7 +25,7 @@
                 <h2>Дети</h2>
             </div>
             <form action="/" method="post" class="form-horizontal form-bordered" onsubmit="return false;">
-                <select class="js_KidIdCommonSelector"></select>
+                <select class="js_KidIdCommonSelector form-control"></select>
             </form>
         </div>
     </div>

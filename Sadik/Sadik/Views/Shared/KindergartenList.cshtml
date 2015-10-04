@@ -5,12 +5,16 @@
 
 @if(Model.Count > 1)
 {
-    <ul class="siteNavigator">
-        @foreach(var kindergarten in Model)
-        {
-            <li class="siteNavigator_item @(ViewBag.SelectedKindergartenId == kindergarten.Id ? "siteNavigator_item_current" : "")">
-                @Html.ActionLink(kindergarten.Name, "Log", "Observation", new { KindergartenId = kindergarten.Id }, new { @class = "siteNavigator_item_link" })
-            </li>
-        }
-    </ul>
+    <!-- Header Link -->
+    <li class="hidden-xs animation-fadeInQuick">
+        <ul class="siteNavigator">
+            @foreach(var kindergarten in Model)
+            {
+                <li class="siteNavigator_item @(ViewBag.SelectedKindergartenId == kindergarten.Id ? "siteNavigator_item_current" : "")">
+                    @Html.ActionLink(kindergarten.Name, "Log", "Observation", new { KindergartenId = kindergarten.Id }, new { @class = "siteNavigator_item_link" })
+                </li>
+            }
+        </ul>
+    </li>
+    <!-- END Header Link -->
 }

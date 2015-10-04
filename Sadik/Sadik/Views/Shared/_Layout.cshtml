@@ -48,18 +48,18 @@
             //		alert('Убрать крутилку');
             $('input[type=submit]').removeAttr('disabled');
         }
-        SadikGlobalSettings = 
+        var SadikGlobalSettings = {};
             @if(ViewBag.currentUser != null && ViewBag.currentUser is User)
             {
+                @Html.Raw("SadikGlobalSettings.CurrentUser = ");
                 var currentUser = ViewBag.currentUser as User;
                 @Html.Raw(Json.Encode(new {
-                CurrentUser = new
-                {
                     Id = currentUser.Id,
                     FirstName = currentUser.FirstName,
                     LastName = currentUser.LastName
-                }}));
-            };
+                }));
+                @Html.Raw(";");
+            }
 
         SadikGlobalSettings.EmotionTypes = {};
         SadikGlobalSettings.EmotionTypes[@((int)EmotionType.Agressive)] = {Id:@((int)EmotionType.Agressive), DisplayName:'@Html.Raw(EmotionType.Agressive.DisplayName())'};
@@ -93,22 +93,7 @@
     <div id="page-wrapper">
         <div id="page-container" class="header-fixed-top">
             <div id="main-container">
-                <header class="navbar navbar-inverse navbar-fixed-top">
-                    <!-- Left Header Navigation -->
-                    <ul class="nav navbar-nav-custom">
-                        <!-- Header Link -->
-                        <li class="hidden-xs animation-fadeInQuick">
-                            @Html.Action("Header", "Layout", new { KindergartenId = ViewBag.KindergartenId, tab = ViewData["SelectedTab"] == null ? null : (int?)((int)ViewData["SelectedTab"]) })
-                        </li>
-                        <!-- END Header Link -->
-                    </ul>
-                    <!-- END Left Header Navigation -->
-                    <!-- Right Header Navigation -->
-                    <ul class="nav navbar-nav-custom pull-right">
-
-                    </ul>
-                    <!-- END Right Header Navigation -->
-                </header>
+                @Html.Action("Header", "Layout", new { KindergartenId = ViewBag.KindergartenId, tab = ViewData["SelectedTab"] == null ? null : (int?)((int)ViewData["SelectedTab"]) })
                 <div id="page-content">
                     @RenderBody()
                 </div>

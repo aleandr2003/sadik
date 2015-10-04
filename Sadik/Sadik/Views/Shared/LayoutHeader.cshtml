@@ -2,6 +2,10 @@
     Layout = null;
 }
 
+<header class="navbar navbar-inverse navbar-fixed-top">
+    <!-- Left Header Navigation -->
+    <ul class="nav navbar-nav-custom">
+
 @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
 {
     if (ViewBag.KindergartenId != null)
@@ -26,9 +30,9 @@
         <li class="hidden-xs animation-fadeInQuick @(ViewBag.SelectedTab == HeaderTabs.Admin ? "active" : "")">
             @Html.ActionLink("Пользователи", "Index", "User", null, new { @class = "siteNavigator_item_link" })
         </li>
-            <li class="hidden-xs animation-fadeInQuick @(ViewBag.SelectedTab == HeaderTabs.Kindergarten ? "active" : "")">
-                @Html.ActionLink("Садики", "Index", "Kindergarten", null, new { @class = "siteNavigator_item_link" })
-            </li>
+        <li class="hidden-xs animation-fadeInQuick @(ViewBag.SelectedTab == HeaderTabs.Kindergarten ? "active" : "")">
+            @Html.ActionLink("Садики", "Index", "Kindergarten", null, new { @class = "siteNavigator_item_link" })
+        </li>
     }
     if (ViewBag.CanCreateKindergarten == true)
     {
@@ -36,37 +40,51 @@
             @Html.ActionLink("Добавить садик", "Create", "Kindergarten", null, new { @class = "siteNavigator_item_link" })
         </li>
     }
-
-    <li class="siteNavigator_item">
-        <div class="LogOutForm">
-            <form action="@Url.Action("LogOut", "Login", null)" method="post">
-                <input type="submit" value="выйти" />
-            </form>
-        </div>
+}
+ </ul>
+<!-- END Left Header Navigation -->
+<!-- Right Header Navigation -->
+<ul class="nav navbar-nav-custom pull-right">
+@if (ViewBag.currentUser as User != null)
+{
+    <li class="hidden-xs animation-fadeInQuick">
+        <a id="logout-button" href="javascript:void(0)" title=""><i class="fa fa-power-off fa-fw"></i></a>
+        <form id="logout-form" action="@Url.Action("LogOut", "Login", null)" method="post" style="display:none;">
+            <input id="logout-input" type="submit"/>
+        </form>
     </li>
-
+    <script type="text/javascript">
+        $(function () {
+            $('#logout-button').click(function () {
+                $('#logout-form').submit();
+            });
+        });
+    </script>
 }
 else
 {
     <li class="hidden-xs animation-fadeInQuick @(Request.Url.AbsoluteUri.EndsWith("Login") ? "active" : "")">
         @Html.ActionLink("Вход", "Index", "Login", null, new { @class = "siteNavigator_item_link" })
     </li>
-        <li class="hidden-xs animation-fadeInQuick @(Request.Url.AbsoluteUri.EndsWith("Register") ? "active" : "")">
-            @Html.ActionLink("Регистрация", "Register", "User", null, new { @class = "siteNavigator_item_link" })
-        </li>
+    <li class="hidden-xs animation-fadeInQuick @(Request.Url.AbsoluteUri.EndsWith("Register") ? "active" : "")">
+        @Html.ActionLink("Регистрация", "Register", "User", null, new { @class = "siteNavigator_item_link" })
+    </li>
 }
+</ul>
+<!-- END Right Header Navigation -->
 
 @if (ViewBag.currentUser as User != null && ((User)ViewBag.currentUser).RoleId == UserRole.Teacher)
 {
     <div id="upcomingADRContainer">
         @if (ViewBag.KindergartenId != null)
         {
-        @Html.Action("UpcomingIndex", "ADR", new { KindergartenId = ViewBag.KindergartenId})
+        @Html.Action("UpcomingIndex", "ADR", new { KindergartenId = ViewBag.KindergartenId })
         }
         else if (ViewBag.userKindergartenIds != null && ViewBag.userKindergartenIds.Count > 0)
         {
-        @Html.Action("UpcomingIndex", "ADR", new { KindergartenId = ViewBag.userKindergartenIds[0]})
+        @Html.Action("UpcomingIndex", "ADR", new { KindergartenId = ViewBag.userKindergartenIds[0] })
         }
     </div>
 }
+</header>
 

@@ -1,3 +1,11 @@
 #upcomingADRContainer {
     display: none;
 }
+
+.alignCenter {
+    text-align:center;
+}
+
+.bootstrap-timepicker-noseconds .dropdown-menu{
+    min-width:80px;
+}

@@ -274,6 +274,7 @@
     <Compile Include="ViewModels\CreateKindergartenModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\fonts\fontawesome\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\Glyphicons PRO %28License%29.txt" />
     <Content Include="Content\fonts\glyphicons.filetypes.pro\glyphicons-filetypes-regular.svg" />
@@ -300,9 +301,8 @@
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\jquery-ui.structure.min.css" />
     <Content Include="Content\jquery-ui.theme.min.css" />
-    <Content Include="Content\Modifiers.css" />
+    <Content Include="Content\main.css" />
     <Content Include="Content\ObservationList.css" />
-    <Content Include="Content\ObservationLogger.css" />
     <Content Include="Content\pixelcave\bootstrap.min.css" />
     <Content Include="Content\pixelcave\fonts\fontawesome\fontawesome-webfont.svg" />
     <Content Include="Content\pixelcave\fonts\Glyphicons PRO %28License%29.txt" />
@@ -344,6 +344,8 @@
     <Content Include="Content\pixelcave\themes\flat.css" />
     <Content Include="Content\pixelcave\themes\passion.css" />
     <Content Include="Content\pixelcave\themes\social.css" />
+    <Content Include="Content\sadik.css" />
+    <Content Include="Content\themes.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />

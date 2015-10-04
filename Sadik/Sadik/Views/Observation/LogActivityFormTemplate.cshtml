@@ -19,23 +19,22 @@
         </div>
         <div class="col-md-5 js_inputTimeBlock">
             <input class="js_datetimebox js_DateObserved form-control" id="DateObservedActivity" name="DateObserved" type="text"
+                data-val-required="Пожалуйста, укажите дату" 
                 data-val-regex-pattern="^(0?[1-9]|[12][0-9]|3[01])[-](0?[1-9]|1[012])[-](19|20)?\d\d$"
                 data-val-regex="Дата должна быть в формате (ДД-ММ-ГГГГ)" data-val="true"/>
+            <div class="help-block"><span class="field-validation-valid" data-valmsg-for="DateObserved" data-valmsg-replace="true"></span></div>
         </div>
         <div class="col-md-3 input-group bootstrap-timepicker bootstrap-timepicker-noseconds js_inputTimeBlock">
             <input name="Time" class="form-control input-timepicker24 js_TimeObserved" 
-                    data-val-required="Пожалуйста, укажите время (минуты)" 
-                    data-val-number="Пожалуйста, введите число в поле Минуты." 
-                    data-val-range="Пожалуйста, Введите число меньше 60-ти" 
-                    data-val-range-min="0" 
-                    data-val-range-max="59"
+                    data-val-required="Пожалуйста, укажите время" 
+                    data-val-regex-pattern="^(0?[1-9]|1[0-9]|2[0-3])[:](0?[0-9]|[1-5][0-9])$"
+                    data-val-regex="Время должно быть в формате (ЧЧ:ММ)"
                     data-val="true" value=""/>
             <span class="input-group-btn">
                 <a href="javascript:void(0)" class="btn btn-effect-ripple btn-primary"><i class="fa fa-clock-o"></i></a>
             </span>
+            <div class="help-block"><span class="field-validation-valid" data-valmsg-for="Time" data-valmsg-replace="true"></span></div>
         </div>
-        <div class="help-block"><span class="field-validation-valid" data-valmsg-for="DateObserved" data-valmsg-replace="true"></span></div>
-        <div class="help-block"><span class="field-validation-valid" data-valmsg-for="Time" data-valmsg-replace="true"></span></div>
     </div>
     
     <div class="js_KidSelectorContainer form-group">
