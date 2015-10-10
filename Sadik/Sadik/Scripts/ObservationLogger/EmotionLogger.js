@@ -6,8 +6,7 @@
 
     this.reset = function () {
         self._commentField.val('');
-        self._hoursField.val('');
-        self._minutesField.val('');
+        self._timeField.val('');
         self._emotionRadio.prop('checked', false);
     };
 

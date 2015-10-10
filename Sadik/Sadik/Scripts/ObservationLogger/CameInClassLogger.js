@@ -2,6 +2,11 @@
     CameInClassLogger.superclass.constructor.call(this, options.block);
     var self = this;
 
+    this.reset = function () {
+        self._commentField.val('');
+        self._timeField.val('');
+    };
+
     this.submitObservation = function () {
         //var settingDummy = jQuery.ajaxSettings.traditional;
         //jQuery.ajaxSettings.traditional = true;

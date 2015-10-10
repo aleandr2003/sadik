@@ -3,118 +3,176 @@
     ViewBag.Title = "Садик " + Model.Name;
 }
 
-<h2>Садик @Model.Name</h2>
+<div class="content-header">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="header-section">
+                <h1>Садик @Model.Name</h1>
+            </div>
+        </div>
+    </div>
+</div>
 
- @using (Html.BeginForm("Edit", "Kindergarten", new { Id = Model.Id }, FormMethod.Post, null))
+<div class="row">
+    <div class="col-md-4">
+        <div class="block">
+ @using (Html.BeginForm("Edit", "Kindergarten", new { Id = Model.Id }, FormMethod.Post, new { @class = "form-horizontal" }))
  {
-        @Html.LabelFor(x => x.Name, "Название")
-		@Html.TextBoxFor(x => x.Name, new { placeholder = "Ракушка" })
-        @Html.ValidationMessageFor(x => x.Name)
-
-        <br />
+     <div class="form-group">
+         <label class=" control-label col-md-5" for="Name">Название</label>
+         <div  class="col-md-7">
+             @Html.TextBoxFor(x => x.Name, new { placeholder = "Ракушка", @class="form-control"})
+             <span class="field-validation-valid" data-valmsg-for="Name" data-valmsg-replace="true"></span>
+         </div>
+     </div>
+        
+     <div class="form-group">
+        <div class="col-md-7 col-md-offset-5">
+	        <button class="btn btn-effect-ripple btn-primary" type="submit" autofocus>Сохранить</button>
+        </div>
+     </div>
      if (ViewBag.ErrorMessage != null)
-     {
-	        <div id="errorMessage" class="errorMessage">@ViewBag.ErrorMessage</div>
-     }
-        <br />
-	    @Html.SubmitButton(null, "Сохранить")
-        @Html.ActionLink("Отменить", "View", "Kindergarten", new { Id = Model.Id }, null)
- }
-
-<h3>Воспитатели</h3>
-<table>
-    <tr><th>Имя</th><th></th></tr>
-    @foreach (User teacher in ViewBag.KindergartenUsers)
     {
-        <tr>
-            <td>
-                @if (ViewBag.currentUser as User != null){
-                    @Html.ActionLink(teacher.FirstName + " " + teacher.LastName, "View", "User", new {Id = teacher.Id }, null)
-                }else{
-                    <span>@teacher.FirstName @teacher.LastName</span>
-                }
-            </td>
-            <td>
-                @if (ViewBag.CanManageEmployees == true)
-                {
-                    using (Html.BeginForm("RemoveUser", "Kindergarten", new { userId = teacher.Id, KindergartenId = Model.Id }, FormMethod.Post, null))
-                    {
-                        @Html.SubmitButton(null, "Удалить")
-                    }
-                }
-            </td>
-        </tr>
+	    <div class="form-group">
+            <div class=" col-md-offset-5 col-md-7">
+		        <div id="errorMessage" class="errorMessage help-block">@ViewBag.ErrorMessage</div>
+            </div>
+        </div>
     }
-</table>
+ }
+        </div>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-md-6">
+        <div class="block">
+            <div class="block-title">
+                <h2>Воспитатели</h2>
+            </div>
+            <table class="table table-striped table-borderless table-vcenter">
+                <thead><tr><th>Имя</th><th></th></tr></thead>
+                <tbody>
+                @foreach (User teacher in ViewBag.KindergartenUsers)
+                {
+                    <tr>
+                        <td>
+                            @if (ViewBag.currentUser as User != null){
+                                @Html.ActionLink(teacher.FirstName + " " + teacher.LastName, "View", "User", new {Id = teacher.Id }, null)
+                            }else{
+                                <span>@teacher.FirstName @teacher.LastName</span>
+                            }
+                        </td>
+                        <td>
+                            @if (ViewBag.CanManageEmployees == true)
+                            {
+                                using (Html.BeginForm("RemoveUser", "Kindergarten", new { userId = teacher.Id, KindergartenId = Model.Id }, FormMethod.Post, null))
+                                {
+                                    @Html.SubmitButton(null, "Удалить")
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
 @if (ViewBag.CanManageEmployees == true)
 {
+    <div class="col-md-4">
     @Html.Partial("AddUser", @Model.Id)
+    </div>
 }
+</div>
+
 
 @if (ViewBag.KindergartenKids.Count > 0){
-    <h2>Дети</h2>
-    <table>
-        <tr><th>Имя</th><th>Возраст</th><th>Принят в садик</th><th></th></tr>
-        @foreach (Kid kid in ViewBag.KindergartenKids)
-        {
-            <tr>
-                <td>
-                    @if (ViewBag.currentUser as User != null){
-                        @Html.ActionLink(kid.FirstName + " " + kid.LastName, "View", "Kids", new {Id = kid.Id, KindergartenId = kid.KindergartenId }, null)
-                    }else{
-                        <span>@kid.FirstName @kid.LastName</span>
-                    }
-                </td>
-                <td>@kid.GetFormattedAge()</td>
-                <td>@kid.DateAccepted.ToString("d MMMM yyyy")</td>
-                <td>
-                    @if (ViewBag.CanManageKids == true)
-                    {
-                        using (Html.BeginForm("Dismiss", "Kids", new{kid.Id, KindergartenId = ViewBag.KindergartenId}, FormMethod.Post, null))
-                        {
-                            @Html.SubmitButton(null, "Удалить")
-                        }
-                    }
-                </td>
-            </tr>
-        }
-    </table>
+    
+<div class="row">
+    <div class="col-md-6">
+        <div class="block">
+            <div class="block-title">
+                <h2>Дети</h2>
+            </div>
+            <table class="table table-striped table-borderless table-vcenter">
+                <thead><tr><th>Имя</th><th>Возраст</th><th>Принят в садик</th><th></th></tr></thead>
+                <tbody>
+                @foreach (Kid kid in ViewBag.KindergartenKids)
+                {
+                    <tr>
+                        <td>
+                            @if (ViewBag.currentUser as User != null){
+                                @Html.ActionLink(kid.FirstName + " " + kid.LastName, "View", "Kids", new {Id = kid.Id, KindergartenId = kid.KindergartenId }, null)
+                            }else{
+                                <span>@kid.FirstName @kid.LastName</span>
+                            }
+                        </td>
+                        <td>@kid.GetFormattedAge()</td>
+                        <td>@kid.DateAccepted.ToString("d MMMM yyyy")</td>
+                        <td>
+                            @if (ViewBag.CanManageKids == true)
+                            {
+                                using (Html.BeginForm("Dismiss", "Kids", new{kid.Id, KindergartenId = ViewBag.KindergartenId}, FormMethod.Post, null))
+                                {
+                                    @Html.SubmitButton(null, "Удалить")
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @if (ViewBag.CanAcceptKids == true)
+    {
+        <div class="col-md-4">
+            @Html.Partial("AcceptKid", new AcceptKidModel())
+        </div>
+    }
+</div>
 }
 @if (ViewBag.FormerKids.Count > 0)
 {
-    <h2>Бывшие</h2>
-    <table>
-        <tr><th>Имя</th><th>Возраст</th><th>Принят(а) в садик</th><th>Ушел/ушла из садика</th><th></th></tr>
-        @foreach (Kid kid in ViewBag.FormerKids)
-        {
-            <tr>
-                <td>
-                    @if (ViewBag.currentUser as User != null){
-                        @Html.ActionLink(kid.FirstName + " " + kid.LastName, "View", "Kids", new {Id = kid.Id, KindergartenId = kid.KindergartenId }, null)
-                    }else{
-                        <span>@kid.FirstName @kid.LastName</span>
-                    }
-                </td>
-                <td>@kid.GetFormattedAge()</td>
-                <td>@kid.DateAccepted.ToString("d MMMM yyyy")</td>
-                <td>@(kid.DateDismissed.HasValue ? kid.DateDismissed.Value.ToString("d MMMM yyyy") : "")</td>
-                <td>
-                    @if (ViewBag.CanManageKids == true)
-                    {
-                        using (Html.BeginForm("Restore", "Kids", new{kid.Id, KindergartenId = ViewBag.KindergartenId}, FormMethod.Post, null))
-                        {
-                            @Html.SubmitButton(null, "Вернуть")
-                        }
-                    }
-                </td>
-            </tr>
-        }
-    </table>
+<div class="row">
+    <div class="col-md-8">
+        <div class="block">
+            <div class="block-title">
+                <h2>Бывшие</h2>
+            </div>
+            <table class="table table-striped table-borderless table-vcenter">
+                <thead><tr><th>Имя</th><th>Возраст</th><th>Принят(а) в садик</th><th>Ушел/ушла из садика</th><th></th></tr></thead>
+                <tbody>
+                @foreach (Kid kid in ViewBag.FormerKids)
+                {
+                    <tr>
+                        <td>
+                            @if (ViewBag.currentUser as User != null){
+                                @Html.ActionLink(kid.FirstName + " " + kid.LastName, "View", "Kids", new {Id = kid.Id, KindergartenId = kid.KindergartenId }, null)
+                            }else{
+                                <span>@kid.FirstName @kid.LastName</span>
+                            }
+                        </td>
+                        <td>@kid.GetFormattedAge()</td>
+                        <td>@kid.DateAccepted.ToString("d MMMM yyyy")</td>
+                        <td>@(kid.DateDismissed.HasValue ? kid.DateDismissed.Value.ToString("d MMMM yyyy") : "")</td>
+                        <td>
+                            @if (ViewBag.CanManageKids == true)
+                            {
+                                using (Html.BeginForm("Restore", "Kids", new{kid.Id, KindergartenId = ViewBag.KindergartenId}, FormMethod.Post, null))
+                                {
+                                    @Html.SubmitButton(null, "Вернуть")
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 }
 
-@if (ViewBag.CanAcceptKids == true)
-{
-    @Html.Partial("AcceptKid", new AcceptKidModel())
-}
-@Html.ActionLink("Отменить", "View", "Kindergarten", new { Id = Model.Id}, null)
+

@@ -3,25 +3,42 @@
     ViewBag.Title = "Дети";
 }
 
-<h2>Дети</h2>
-
-<table>
-    <tr><th>Имя</th><th>Возраст</th><th>Принят в садик</th></tr>
-    @foreach(var kid in Model){
-        <tr>
-            <td>
-                @if (ViewBag.currentUser as User != null){
-                    @Html.ActionLink(kid.LastName + " " + kid.FirstName, "View", "Kids", new {Id = kid.Id, KindergartenId = kid.KindergartenId }, null)
-                }else{
-                    <span>@kid.FirstName @kid.LastName</span>
+<div class="content-header">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="header-section">
+                <h1>Дети</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="block">
+            <table class="table table-striped table-borderless table-vcenter">
+                <thead><tr><th>Имя</th><th>Возраст</th><th>Принят в садик</th></tr></thead>
+                <tbody>
+                @foreach(var kid in Model){
+                    <tr>
+                        <td>
+                            @if (ViewBag.currentUser as User != null){
+                                @Html.ActionLink(kid.LastName + " " + kid.FirstName, "View", "Kids", new {Id = kid.Id, KindergartenId = kid.KindergartenId }, null)
+                            }else{
+                                <span>@kid.FirstName @kid.LastName</span>
+                            }
+                        </td>
+                        <td>@kid.GetFormattedAge()</td>
+                        <td>@kid.DateAccepted.ToString("d MMMM yyyy")</td>
+                    </tr>
                 }
-            </td>
-            <td>@kid.GetFormattedAge()</td>
-            <td>@kid.DateAccepted.ToString("d MMMM yyyy")</td>
-        </tr>
-    }
-</table>
+                </tbody>
+            </table>
+        </div>
+    </div>
 @if (ViewBag.CanAcceptKids == true)
 {
-    @Html.Partial("AcceptKid", new AcceptKidModel())
+    <div class="col-md-4">
+        @Html.Partial("AcceptKid", new AcceptKidModel())
+    </div>
 }
+</div>

@@ -301,7 +301,6 @@
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\jquery-ui.structure.min.css" />
     <Content Include="Content\jquery-ui.theme.min.css" />
-    <Content Include="Content\main.css" />
     <Content Include="Content\ObservationList.css" />
     <Content Include="Content\pixelcave\fonts\fontawesome\fontawesome-webfont.svg" />
     <Content Include="Content\pixelcave\fonts\Glyphicons PRO %28License%29.txt" />

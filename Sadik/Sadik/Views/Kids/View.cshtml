@@ -11,10 +11,6 @@
     
 }
 <style>
-    #tabs-addObservation .LogObservationArea {
-        margin:5px 20px 5px 0;
-        float:left;
-    }
     .chartContainer {
         width: 600px;
         float:left;
@@ -24,12 +20,12 @@
         display:none;
     }
 </style>
-<style>
+@*<style>
     #EditObservationContainer .LogObservationArea {
         margin:5px 0 0 5px;
         float:left;
     }
-</style>
+</style>*@
 <script type="text/javascript">
     
     $.validator.setDefaults({ ignore: "" });
@@ -110,20 +106,35 @@
     {
         if((bool)ViewBag.CanAddObservation){
             var returnUrl = Url.Action("View", "Kids", new { Id = Model.Id, KindergartenId = Model.KindergartenId });
-            <div id="tabs-addObservation">
-                <div class="LogObservationArea">
-                    <h3 class="LogObservationAreaHeader">Записать наблюдение</h3>
-                    @Html.Action("LogActivity", "Observation", new { returnUrl = returnUrl, KindergartenId = Model.KindergartenId })
+            <div id="tabs-addObservation" class="row">
+                <div class="col-md-8">
+                    <div class="block">
+                        <div class="block-title">
+                            <ul class="nav nav-tabs" data-toggle="tabs">
+                                <li class="active"><a href="#block-tabs-activity">Работа с материалами</a></li>
+                                <li><a href="#block-tabs-came-in-class">Зашел в класс</a></li>
+                                <li><a href="#block-tabs-emotion">Настроение</a></li>
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="block-tabs-activity">
+                                <div class="LogObservationArea">
+                                    @Html.Action("LogActivity", "Observation", new { returnUrl = returnUrl, KindergartenId = Model.KindergartenId })
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="block-tabs-came-in-class">
+                                <div class="LogObservationArea">
+                                    @Html.Action("LogCameInClass", "Observation", new { returnUrl = returnUrl, KindergartenId = Model.KindergartenId })
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="block-tabs-emotion">
+                                <div class="LogObservationArea">
+                                    @Html.Action("LogEmotion", "Observation", new { returnUrl = returnUrl, KindergartenId = Model.KindergartenId })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="LogObservationArea">
-                    <h3 class="LogObservationAreaHeader">Зашел в класс</h3>
-                    @Html.Action("LogCameInClass", "Observation", new { returnUrl = returnUrl, KindergartenId = Model.KindergartenId })
-                </div>
-                <div class="LogObservationArea">
-                    <h3 class="LogObservationAreaHeader">Настроение</h3>
-                    @Html.Action("LogEmotion", "Observation", new { returnUrl = returnUrl, KindergartenId = Model.KindergartenId })
-                </div>
-                <div class="clearFloatBoth"></div>
             </div>
         }
         <div id="tabs-editKid">

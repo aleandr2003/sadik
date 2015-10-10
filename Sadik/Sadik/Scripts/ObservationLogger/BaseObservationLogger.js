@@ -68,6 +68,10 @@
     }
 
     this.performValidation = function () {
+        if (self._kidIdField.val() == '') {
+            alert("Пожалуйста, выберите ребенка");
+            return false;
+        }
         //if (self._dateField.val() != '' && !self._useCurrentTimeCheckBox.prop('checked')) {
         //    if (self._hoursField.val() == '') {
         //        alert("Не указано время. Поле час");
@@ -84,8 +88,6 @@
     this.reset = function () {
         self._commentField.val('');
         self._timeField.val('');
-        //self._hoursField.val('');
-        //self._minutesField.val('');
     };
 
     this.saved = function () {
@@ -100,17 +102,10 @@
         self.reset();
     }
 
-    //var _commentCollapsible = new Collapsible(self._expandCommentLink, self._commentField);
-    //if (self._commentField.val().length > 0) {
-    //    _commentCollapsible.Expand();
-    //} else {
-    //    _commentCollapsible.Collapse();
-    //}
-
     this.submitButtonOnClick = function (event) {
-        //if (!self.performValidation()) {
-        //    event.preventDefault();
-        //}
+        if (!self.performValidation()) {
+            event.preventDefault();
+        }
     }
 
     this.OnSuccessSubmitObservation = function (data, status, xhr) {
@@ -127,8 +122,6 @@
         //var settingDummy = jQuery.ajaxSettings.traditional;
         //jQuery.ajaxSettings.traditional = true;
 
-        //var hours = self._hoursField.val();
-        //var minutes = self._minutesField.val();
         var date = self.getSelectedDate();
         if (self._useCurrentTimeCheckBox.is(':visible') && self._useCurrentTimeCheckBox.prop('checked')) {
             date = new Date();
@@ -139,8 +132,6 @@
             Id: self._observationId.val(),
             KidId: self._kidIdField.val(),
             DateObserved: date,
-            //Hours: hours,
-            //Minutes: minutes,
             Comment: self._commentField.val(),
             TeacherId: SadikGlobalSettings.CurrentUser.Id,
             TeacherName: SadikGlobalSettings.CurrentUser.FirstName
@@ -242,8 +233,6 @@
         self._dateField.val(DateCustom.printDate(dt));
         
         self._timeField.val(dt.getHours() + ':' + dt.getMinutes());
-        //self._hoursField.val(dt.getHours());
-        //self._minutesField.val(dt.getMinutes());
     }
     this.getSelectedDate = function () {
         var dateStr = self._dateField.val();

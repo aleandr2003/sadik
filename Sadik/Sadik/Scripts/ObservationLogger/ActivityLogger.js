@@ -303,8 +303,7 @@
 
     this.reset = function () {
         self._commentField.val('');
-        self._hoursField.val('');
-        self._minutesField.val('');
+        self._timeField.val('');
         self._itemIdSelector.val('');
         self._itemIdField.val('');
         var firstOptionValue = self._durationField.find('option').first().attr('value');
@@ -318,12 +317,12 @@
         self._skillBlock.hide();
     };
 
-    this.submitButtonOnClick = function (event) {
-        //if (!self.performValidation()) {
-        //    event.preventDefault();
-        //    return;
-        //}
-    }
+    //this.submitButtonOnClick = function (event) {
+    //    //if (!self.performValidation()) {
+    //    //    event.preventDefault();
+    //    //    return;
+    //    //}
+    //}
 
     this._isPresentationPerformedField.change(function () {
         if (self._isPresentationPerformedField.prop('checked')) {
