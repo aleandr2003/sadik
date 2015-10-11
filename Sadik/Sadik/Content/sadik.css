@@ -9,3 +9,7 @@
 .bootstrap-timepicker-noseconds .dropdown-menu{
     min-width:80px;
 }
+
+.nowrap {
+    white-space: nowrap;
+}
